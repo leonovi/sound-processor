@@ -4,7 +4,7 @@ module.exports = {
   mode: 'development',
   entry: './src/index.tsx',
   output: {
-    path: __dirname + '/dist/',
+    path: __dirname + '/public/',
   },
   module: {
     rules: [
@@ -18,9 +18,19 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['css-loader'],
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              import: true,
+            },
+          },
+        ],
       },
-    ]
+    ],
   },
   devtool: 'source-map',
   plugins: [
