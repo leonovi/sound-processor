@@ -1,3 +1,5 @@
+const path = require('node:path');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -38,4 +40,9 @@ module.exports = {
       template: './src/index.html',
     }),
   ],
+  resolve: {
+    alias: {
+      components: path.join(__dirname, '/src/components'),
+    }
+  }
 };
