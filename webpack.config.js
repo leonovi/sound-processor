@@ -43,6 +43,8 @@ module.exports = {
   resolve: {
     alias: {
       components: path.join(__dirname, '/src/components'),
+      models: path.join(__dirname, '/src/models'),
+      context: path.join(__dirname, '/src/context'),
     }
   }
 };
