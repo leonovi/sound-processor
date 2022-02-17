@@ -4,4 +4,6 @@ import './index.css';
 
 import { App } from 'components';
 
-ReactDOM.render(<App />, document.body);
+ReactDOM.render((
+    <App />
+), document.querySelector('#root'));
