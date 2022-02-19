@@ -28,4 +28,4 @@ const AudioContextProvider: FC = ({ children }) => {
   );
 };
 
-export default AudioContextProvider;
+export { AudioContextProvider };

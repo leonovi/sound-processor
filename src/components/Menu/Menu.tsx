@@ -11,4 +11,4 @@ const Menu: FC = () => {
   )
 }
 
-export default Menu;
+export { Menu };
