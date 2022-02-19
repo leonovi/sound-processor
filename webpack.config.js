@@ -48,7 +48,6 @@ module.exports = {
       components: path.join(__dirname, '/src/components'),
       context: path.join(__dirname, '/src/context'),
       models: path.join(__dirname, '/src/models'),
-      utils: path.join(__dirname, '/src/utils'),
     },
   },
 };
