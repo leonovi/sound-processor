@@ -5,8 +5,9 @@ import './index.css';
 import { App } from 'components/App/App';
 import { AudioContextProvider } from 'components/AudioContextProvider/AudioContextProvider';
 
-ReactDOM.render((
+ReactDOM.render(
   <AudioContextProvider>
     <App />
-  </AudioContextProvider>
-), document.querySelector('#root'));
+  </AudioContextProvider>,
+  document.querySelector('#root')
+);
