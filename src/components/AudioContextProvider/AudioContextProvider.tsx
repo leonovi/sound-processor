@@ -1,13 +1,10 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { AudioContext } from 'context/AudioContext';
+import { buildWorkletUrl } from 'utils/buildWorkletUrl';
 
-import { WorkerUrl } from 'worker-url';
-
-const noiseProcessorWorkletUrl = new WorkerUrl(
-  new URL('../../worklets/noise-processor.worklet.ts', import.meta.url),
-  {
-    name: 'noiseProcessor',
-  }
+const noiseProcessorWorkletUrl = buildWorkletUrl(
+  '../../worklets/noise-processor.worklet.ts',
+  'noiseProcessor'
 );
 
 const AudioContextProvider: FC = ({ children }) => {
