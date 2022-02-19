@@ -1,0 +1,13 @@
+.volume-warning {
+  display: block;
+  width: 420px;
+
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 135%;
+}
+
+.volume-warning__accent-word {
+  color: var(--color-blue);
+}

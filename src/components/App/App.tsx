@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react';
 
 import { UserGestureHandler } from 'components/UserGestureHandler/UserGestureHandler';
 import { AudioContextProvider } from 'components/AudioContextProvider/AudioContextProvider';
+import { VolumeWarning } from 'components/VolumeWarning/VolumeWarning';
 // import { Menu } from 'components/Menu/Menu';
 
 import './App.css';
@@ -13,7 +14,7 @@ const App: FC = () => {
     <AudioContextProvider>Hello</AudioContextProvider>
   ) : (
     <UserGestureHandler onClick={() => setWasThereUserGesture(true)}>
-      Please click!
+      <VolumeWarning />
     </UserGestureHandler>
   );
 
