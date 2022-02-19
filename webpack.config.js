@@ -1,12 +1,14 @@
 const path = require('node:path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WorkerUrlPlugin = require('worker-url/plugin');
 
 module.exports = {
   mode: 'development',
   entry: './src/index.tsx',
   output: {
     path: __dirname + '/public/',
+    publicPath: '',
   },
   module: {
     rules: [
@@ -39,12 +41,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
     }),
+    new WorkerUrlPlugin(),
   ],
   resolve: {
     alias: {
       components: path.join(__dirname, '/src/components'),
-      models: path.join(__dirname, '/src/models'),
       context: path.join(__dirname, '/src/context'),
-    }
-  }
+      models: path.join(__dirname, '/src/models'),
+    },
+  },
 };
