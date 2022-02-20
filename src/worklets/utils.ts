@@ -16,4 +16,4 @@ class StoppableAudioWorkletProcessor extends AudioWorkletProcessor {
   }
 }
 
-export default StoppableAudioWorkletProcessor;
+export { StoppableAudioWorkletProcessor };

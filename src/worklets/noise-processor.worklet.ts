@@ -1,4 +1,4 @@
-import StoppableAudioWorkletProcessor from './utils';
+import { StoppableAudioWorkletProcessor } from './utils';
 
 enum NoiseType {
   Brown = 'Brown',

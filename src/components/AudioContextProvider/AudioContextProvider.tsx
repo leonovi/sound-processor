@@ -5,7 +5,7 @@ import { WorkerUrl } from 'worker-url';
 const noiseProcessorWorkletUrl = new WorkerUrl(
   new URL('../../worklets/noise-processor.worklet.ts', import.meta.url),
   {
-    name: 'noiseProcessor',
+    name: 'noise-processor',
   }
 );
 
