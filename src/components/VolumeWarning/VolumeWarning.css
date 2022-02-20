@@ -1,10 +1,10 @@
 .volume-warning {
   display: block;
-  width: 420px;
+  width: 600px;
 
   font-style: normal;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 24px;
   line-height: 135%;
 }
 
