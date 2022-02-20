@@ -8,20 +8,10 @@ const elements = [
   { id: 'e1-2', source: '1', target: '2', animated: true },
 ];
 
-/*
-AudioNodes
-AudioGraph
-WorkletNodes
-NodesCanvas
-WorkletCanvas
-AudioWorklets
-AudioCanvas
-*/
-
-const Flow: FC = () => {
+const AudioNodes: FC = () => {
   return (
     <ReactFlow elements={elements} />
   )
 }
 
-export { Flow };
+export { AudioNodes };
