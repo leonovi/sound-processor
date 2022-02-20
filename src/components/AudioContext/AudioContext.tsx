@@ -2,7 +2,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import { AudioContext } from 'context/AudioContext';
 import { WorkerUrl } from 'worker-url';
 
-const noiseProcessorWorkletUrl = new WorkerUrl(
+const noiseProcessorUrl = new WorkerUrl(
   new URL('../../worklets/noise-processor.worklet.ts', import.meta.url),
   {
     name: 'noise-processor',
@@ -23,7 +23,7 @@ const AudioContextProvider: FC = ({ children }) => {
 
     const loadAudioWorklets = async () => {
       await Promise.all([
-        audioContext.audioWorklet.addModule(noiseProcessorWorkletUrl),
+        audioContext.audioWorklet.addModule(noiseProcessorUrl),
       ]);
 
       setShouldShowLoader(false);
@@ -44,4 +44,4 @@ const AudioContextProvider: FC = ({ children }) => {
   );
 };
 
-export { AudioContextProvider };
+export { AudioContextProvider as AudioContext };
