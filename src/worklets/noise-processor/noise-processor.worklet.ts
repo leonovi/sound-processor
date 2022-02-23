@@ -1,10 +1,5 @@
-import { StoppableAudioWorkletProcessor } from './utils';
-
-enum NoiseType {
-  Brown = 'Brown',
-  Pink = 'Pink',
-  White = 'White',
-}
+import { StoppableAudioWorkletProcessor } from '../utils';
+import { NoiseType } from 'worklets/noise-processor/noise-processor.types';
 
 class NoiseProcessor extends StoppableAudioWorkletProcessor {
   fillWithNoise: (data: Float32Array) => void;

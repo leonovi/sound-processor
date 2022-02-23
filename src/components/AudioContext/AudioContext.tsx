@@ -3,7 +3,7 @@ import { AudioContext } from 'context/AudioContext';
 import { WorkerUrl } from 'worker-url';
 
 const noiseProcessorUrl = new WorkerUrl(
-  new URL('../../worklets/noise-processor.worklet.ts', import.meta.url),
+  new URL('../../worklets/noise-processor/noise-processor.worklet.ts', import.meta.url),
   {
     name: 'noise-processor',
   }
