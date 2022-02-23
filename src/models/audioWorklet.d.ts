@@ -7,6 +7,14 @@ interface AudioWorkletProcessor {
   ): void;
 }
 
+interface AudioParamDescriptor {
+  automationRate?: AutomationRate;
+  defaultValue?: number;
+  maxValue?: number;
+  minValue?: number;
+  name: string;
+}
+
 declare var AudioWorkletProcessor: {
   prototype: AudioWorkletProcessor;
   new (options?: AudioWorkletNodeOptions): AudioWorkletProcessor;
