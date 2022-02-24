@@ -1,4 +1,5 @@
-import { createContext } from 'react';
-import { AudioContextT } from 'models/audioContext';
+import { createContext, useContext } from 'react';
 
-export const AudioContext = createContext<AudioContextT>(null);
+export const AudioContext = createContext<AudioContext>(null!);
+
+export const useAudioContext = () => useContext(AudioContext);

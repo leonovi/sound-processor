@@ -3,7 +3,8 @@ import React, { FC, useState } from 'react';
 import { UserGestureHandler } from 'components/UserGestureHandler/UserGestureHandler';
 import { AudioContext } from 'components/AudioContext/AudioContext';
 import { VolumeWarning } from 'components/VolumeWarning/VolumeWarning';
-import { AudioNodes } from 'components/AudioNodes/AudioNodes';
+import { Project } from 'components/Project/Project';
+import { PopperMenuContext } from 'components/PopperMenuContext/PopperMenuContext';
 
 const App: FC = () => {
   const [wasThereUserGesture, setWasThereUserGesture] = useState(false);
@@ -18,7 +19,9 @@ const App: FC = () => {
 
   return (
     <AudioContext>
-      <AudioNodes />
+      <PopperMenuContext>
+        <Project />
+      </PopperMenuContext>
     </AudioContext>
   );
 };
