@@ -4,6 +4,7 @@ import ReactFlow, {
   Connection as ConnectionT,
   Controls,
   Edge as EdgeT,
+  Node as NodeT,
   Elements as ElementsT,
   isEdge,
   isNode,
@@ -27,24 +28,16 @@ const EDGE_TYPES = {
   edge: Edge,
 };
 
-const initialElements = [
-  {
-    id: '1',
-    type: 'input',
-    data: { label: 'Node 1' },
-    position: { x: 250, y: 5 },
+const DESTINATION_NODE: NodeT = {
+  id: 'destination',
+  type: 'destination',
+  position: {
+    x: 50,
+    y: 50,
   },
-  { id: '2', data: { label: <div>Node 2</div> }, position: { x: 100, y: 100 } },
-  { id: 'e1-2', source: '1', target: '2' },
-  {
-    id: '3',
-    type: 'input',
-    data: { label: 'Node 3' },
-    position: { x: 250, y: 5 },
-  },
-  { id: '4', data: { label: <div>Node 4</div> }, position: { x: 100, y: 100 } },
-  { id: 'e3-4', source: '3', target: '4' },
-];
+};
+
+const initialElements = [DESTINATION_NODE];
 
 const AudioNodes: FC = () => {
   const popperMenuContext = usePopperMenuContext();
