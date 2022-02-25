@@ -14,32 +14,32 @@ import ReactFlow, {
 
 import { usePopperMenuContext } from 'context/PopperMenuContext';
 
-import { Destination } from 'components/AudioNodes/Destination/Destination';
-import { Edge } from 'components/AudioNodes/Edge/Edge';
+import { Destination } from 'components/Nodes/Destination/Destination';
 import { ContextMenu } from 'components/ContextMenu/ContextMenu';
+import { NoiseProcessor } from 'components/Nodes/NoiseProcessor/NoiseProcessor';
+import { NodeTypes } from 'models/nodeTypes';
 
 const BACKSPACE_KEYCODE = 8;
 
 const NODE_TYPES = {
-  destination: Destination,
+  [NodeTypes.DESTINATION]: Destination,
+  [NodeTypes.NOISE_PROCESSOR]: NoiseProcessor,
 };
 
-const EDGE_TYPES = {
-  edge: Edge,
-};
+const EDGE_TYPES = {}; // TODO create custom edge
 
 const DESTINATION_NODE: NodeT = {
   id: 'destination',
-  type: 'destination',
+  type: NodeTypes.DESTINATION,
   position: {
-    x: 50,
-    y: 50,
+    x: 1200,
+    y: 300,
   },
 };
 
 const initialElements = [DESTINATION_NODE];
 
-const AudioNodes: FC = () => {
+const Nodes: FC = () => {
   const popperMenuContext = usePopperMenuContext();
 
   const [elements, setElements] = useState<ElementsT>(initialElements);
@@ -147,4 +147,4 @@ const AudioNodes: FC = () => {
   );
 };
 
-export { AudioNodes };
+export { Nodes };

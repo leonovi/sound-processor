@@ -29,7 +29,7 @@ const PopperMenuContextProvider: FC = ({ children }) => {
   const [popperRef, setPopperRef] = useState<PopperRefT>(null);
 
   const setPopperRefWrapper = (htmlNode: PopperRefT) => {
-    isNull(htmlNode) && setPopperRef(htmlNode);
+    !isNull(htmlNode) && setPopperRef(htmlNode);
   };
 
   const popperObject = usePopper(virtualReference.current, popperRef);

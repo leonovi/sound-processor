@@ -1,43 +1,46 @@
 import React, { FC } from 'react';
 
-import './ContextMenu.css';
+import { isEmpty } from 'utils/isEmpty';
 
-const contextMenuItems = [
-  {
-    items: [{ label: 'Noise', nodeType: 'Noise' }],
-    label: 'Sources',
-  },
-  {
-    items: [{ label: 'Destination', nodeType: 'destination' }],
-    label: 'Destinations',
-  },
-];
+import { contextMenuItems } from './contextMenuItems';
+
+import b_ from 'b_';
+import './ContextMenu.css';
 
 type ContextMenuPropsT = {
   addNode: (type: string) => void;
 };
 
+const b = b_.with('context-menu');
+
 const ContextMenu: FC<ContextMenuPropsT> = ({ addNode }) => {
   return (
-    <ul className="context-menu">
-      {contextMenuItems.map((item) => (
-        <li key={item.label}>
-          {item.label}
-          <span>&#x276F;</span>
-          {item.items && (
-            <ul className="context-menu sub">
-              {item.items.map((subItem) => (
-                <li
-                  key={subItem.label}
-                  onClick={() => addNode(subItem.nodeType)}
-                >
-                  {subItem.label}
-                </li>
-              ))}
-            </ul>
-          )}
-        </li>
-      ))}
+    <ul className={b()}>
+      {contextMenuItems.map((item) => {
+        const { label, items } = item;
+
+        // TODO make react components
+        return (
+          <li key={label} className={b('item')}>
+            <span>{label}</span>
+            <span className={b('item-arrow')}>‣</span> {/* TODO make svg icon */}
+
+            {!isEmpty(items) && (
+              <ul className={b('sub-menu')}>
+                {items.map(({ label, nodeType }) => (
+                  <li
+                    key={label}
+                    className={b('item')}
+                    onClick={() => addNode(nodeType)}
+                  >
+                    <span>{label}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
 };

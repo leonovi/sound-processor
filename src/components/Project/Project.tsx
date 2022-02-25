@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 
-import { AudioNodes } from 'components/AudioNodes/AudioNodes';
+import { Nodes } from 'components/Nodes/Nodes';
 
 const Project: FC = () => {
   return (
-    <AudioNodes />
+    <Nodes />
   )
 };
 

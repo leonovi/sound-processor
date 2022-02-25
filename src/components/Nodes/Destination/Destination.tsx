@@ -1,27 +1,17 @@
 import React, { FC, useState } from 'react';
-import { Handle, Position } from 'react-flow-renderer';
 
 import { useAudioContext } from 'context/AudioContext';
+
+import {
+  NodeHandle,
+  NodeHandlePositions,
+  NodeHandleTypes,
+  SoundChannels,
+} from 'components/Nodes/NodeHandle/NodeHandle';
 
 import { stringCapitalize } from 'utils/stringCapitalize';
 
 import './Destination.css';
-
-type DestinationHandlePropsT = {
-  soundChannel: 'left' | 'right';
-};
-
-const DestinationHandle: FC<DestinationHandlePropsT> = ({ soundChannel }) => {
-  const className = `destination-node__sound-channel ${soundChannel}`;
-  const soundChannelLabel = stringCapitalize(soundChannel);
-
-  return (
-    <div className="destination-node__sound-channel-wrapper">
-      <Handle className={className} type="target" position={Position.Left} />
-      <span>{soundChannelLabel}</span>
-    </div>
-  );
-};
 
 const Destination: FC = () => {
   const { state } = useAudioContext();
@@ -39,14 +29,26 @@ const Destination: FC = () => {
       <span className="destination-node__label">Destination</span>
 
       <div className="destination-node__sound-channels">
-        <DestinationHandle soundChannel="left" />
-        <DestinationHandle soundChannel="right" />
+        <NodeHandle
+          id="DestinationLeftInput"
+          nodeType={NodeHandleTypes.TARGET}
+          soundChannel={SoundChannels.LEFT}
+          position={NodeHandlePositions.LEFT}
+        />
+        <NodeHandle
+          id="DestinationRightInput"
+          nodeType={NodeHandleTypes.TARGET}
+          soundChannel={SoundChannels.RIGHT}
+          position={NodeHandlePositions.LEFT}
+        />
       </div>
 
       <button
         className={`destination-node__button ${buttonState}`}
         onClick={onButtonClick}
-      />
+      >
+        {stringCapitalize(buttonState)}
+      </button>
     </div>
   );
 };

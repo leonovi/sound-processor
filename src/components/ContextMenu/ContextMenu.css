@@ -1,48 +1,55 @@
 .context-menu {
-  background: #eee;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 2px 2px 10px #ccc;
   list-style: none;
   margin: 0;
-  padding: 5px;
+  padding: calc(var(--u) * 1.5);
+  border-radius: calc(var(--u) * 3);
+  background: var(--color-white);
+  box-shadow: var(--node-box-shadow);
 }
 
-.context-menu li {
-  align-items: center;
-  border-radius: 5px;
-  cursor: pointer;
-  display: flex;
-  font-size: 14px;
-  justify-content: space-between;
-  line-height: 1;
-  padding: 5px 10px;
+.context-menu__item {
   position: relative;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 6px 12px;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+  line-height: 14px;
   white-space: nowrap;
+
+  cursor: pointer;
 }
 
-.context-menu li:hover,
-.context-menu li:hover .sub li:hover {
-  background: #bbb;
-  color: #fff;
+.context-menu__item-arrow {
+  margin-left: calc(var(--u) * 2);
 }
 
-.context-menu li:hover .sub {
-  color: #000;
-}
-
-.context-menu span {
-  margin-left: 8px;
-}
-
-.context-menu .sub {
+.context-menu__sub-menu {
   display: none;
   left: 100%;
   position: absolute;
   top: -6px;
   z-index: 1;
+
+  list-style: none;
+  margin: 0;
+  padding: calc(var(--u) * 1.5);
+  border-radius: calc(var(--u) * 3);
+  background: var(--color-white);
+  box-shadow: var(--node-box-shadow);
 }
 
-.context-menu li:hover .sub {
+.context-menu__item:hover .context-menu__sub-menu {
   display: block;
+  color: var(--color-black);
+}
+
+.context-menu__item:hover {
+  background: var(--color-blue);
+  color: var(--color-white);
 }

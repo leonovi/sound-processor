@@ -19,7 +19,7 @@ body {
   height: 100%;
 
   margin: 0;
-  background-color: var(--color-grey);
+  background-color: var(--color-grey_100);
 }
 
 #root {

@@ -1,5 +1,5 @@
 import { StoppableAudioWorkletProcessor } from '../utils';
-import { NoiseType } from 'worklets/noise-processor/noise-processor.types';
+import { NoiseTypes } from 'worklets/noise-processor/noise-processor.types';
 
 class NoiseProcessor extends StoppableAudioWorkletProcessor {
   fillWithNoise: (data: Float32Array) => void;
@@ -7,7 +7,7 @@ class NoiseProcessor extends StoppableAudioWorkletProcessor {
   constructor(options?: AudioWorkletNodeOptions) {
     super(options);
 
-    const type: NoiseType = options?.processorOptions?.type ?? NoiseType.White;
+    const type: NoiseTypes = options?.processorOptions?.type ?? NoiseTypes.WHITE;
     this.fillWithNoise = generators[type];
   }
 
@@ -23,9 +23,9 @@ class NoiseProcessor extends StoppableAudioWorkletProcessor {
 }
 
 const generators = {
-  [NoiseType.Brown]: fillWithBrownNoise,
-  [NoiseType.Pink]: fillWithPinkNoise,
-  [NoiseType.White]: fillWithWhiteNoise,
+  [NoiseTypes.BROWN]: fillWithBrownNoise,
+  [NoiseTypes.PINK]: fillWithPinkNoise,
+  [NoiseTypes.WHITE]: fillWithWhiteNoise,
 };
 
 // See: https://noisehack.com/generate-noise-web-audio-api/
