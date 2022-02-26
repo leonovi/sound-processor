@@ -1,7 +1,7 @@
-import { StoppableAudioWorkletProcessor } from '../utils';
+import { StoppableProcessor } from 'utils/StoppableProcessor';
 import { NoiseTypes } from 'worklets/noise-processor/noise-processor.types';
 
-class NoiseProcessor extends StoppableAudioWorkletProcessor {
+class NoiseProcessor extends StoppableProcessor {
   fillWithNoise: (data: Float32Array) => void;
 
   constructor(options?: AudioWorkletNodeOptions) {

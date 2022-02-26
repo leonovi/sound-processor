@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import { isEmpty } from 'utils/isEmpty';
+import { NodeTypes } from 'utils/nodeTypes';
 
 import { contextMenuItems } from './contextMenuItems';
 
@@ -8,7 +9,7 @@ import b_ from 'b_';
 import './ContextMenu.css';
 
 type ContextMenuPropsT = {
-  addNode: (type: string) => void;
+  addNode: (type: NodeTypes) => void;
 };
 
 const b = b_.with('context-menu');

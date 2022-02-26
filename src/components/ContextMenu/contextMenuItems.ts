@@ -1,4 +1,4 @@
-import { NodeTypes } from "models/nodeTypes";
+import { NodeTypes } from "utils/nodeTypes";
 
 export const contextMenuItems = [
   {
