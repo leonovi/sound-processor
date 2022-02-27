@@ -1,21 +1,31 @@
-import { StoppableProcessor } from 'utils/StoppableProcessor';
+import { isStopMessage } from 'utils/processorMessages';
 import { NoiseTypes } from 'worklets/noise-processor/noise-processor.types';
 
-class NoiseProcessor extends StoppableProcessor {
-  fillWithNoise: (data: Float32Array) => void;
+class NoiseProcessor extends AudioWorkletProcessor {
+  running: boolean;
+  type: NoiseTypes;
 
   constructor(options?: AudioWorkletNodeOptions) {
     super(options);
 
-    const type: NoiseTypes = options?.processorOptions?.type ?? NoiseTypes.WHITE;
-    this.fillWithNoise = generators[type];
+    this.running = true;
+    this.type = options?.processorOptions?.type ?? NoiseTypes.WHITE;
+
+    this.port.onmessage = ({ data }) => {
+      if (isStopMessage(data)) {
+        this.running = false;
+      }
+
+      if (data?.type === 'CHANGE_TYPE') {
+        this.type = data.payload;
+      }
+    };
   }
 
   process(inputs: Float32Array[][], outputs: Float32Array[][]) {
     const output = outputs[0];
-
     for (let channel = 0; channel < output.length; ++channel) {
-      this.fillWithNoise(output[channel]);
+      generators[this.type](output[channel]);
     }
 
     return this.running;

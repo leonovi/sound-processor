@@ -1,4 +1,5 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
+import { NodeProps } from 'react-flow-renderer';
 
 import {
   NodeHandle,
@@ -6,16 +7,29 @@ import {
   NodeHandleTypes,
   SoundChannels,
 } from 'components/Nodes/NodeHandle/NodeHandle';
+import { NodeData } from 'components/Nodes/Nodes';
 
 import { NoiseTypes } from 'worklets/noise-processor/noise-processor.types';
+
+import { isAudioWorklet } from 'utils/isAudioWorklet';
 
 import b_ from 'b_';
 import './NoiseProcessor.css';
 
 const b = b_.with('noise-processor-node');
 
-const NoiseProcessor: FC = () => {
+const NoiseProcessor: FC<NodeProps<NodeData>> = ({
+  data: { module: noiseModule },
+}) => {
   const [noiseType, setNoiseType] = useState(NoiseTypes.WHITE);
+
+  useEffect(() => {
+    isAudioWorklet(noiseModule) &&
+      noiseModule.port.postMessage({
+        type: 'CHANGE_TYPE',
+        payload: noiseType,
+      });
+  }, [noiseType]);
 
   return (
     <div

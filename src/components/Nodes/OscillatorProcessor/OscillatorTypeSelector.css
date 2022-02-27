@@ -1,0 +1,82 @@
+.oscillator-type-selector {
+  position: absolute;
+  left: calc(var(--u) * -19);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: calc(var(--u) * 16);
+  height: calc(var(--u) * 10);
+
+  padding-right: 8px;
+
+  border-radius: calc(var(--u) * 4);
+
+  background-color: var(--color-white);
+
+  box-shadow: var(--node-box-shadow);
+
+  overflow: hidden;
+
+  transition: 150ms linear;
+  transition-property: width, transform;
+}
+
+.oscillator-type-selector_expanded {
+  width: calc(var(--u) * 53);
+  transform: translateX(calc(var(--u) * -37));
+}
+
+.oscillator-type-selector__type-button {
+  position: absolute;
+
+  justify-content: center;
+  align-items: center;
+
+  width: calc(var(--u) * 10);
+  height: calc(var(--u) * 6);
+
+  border: 1px solid var(--color-blue);
+  border-radius: 6px;
+
+  background-color: transparent;
+  opacity: 0;
+
+  z-index: -1000;
+
+  transition: 300ms linear;
+  transition-property: opacity;
+
+  cursor: pointer;
+}
+
+.oscillator-type-selector__type-button_selected {
+  position: static;
+  display: flex;
+  background-color: var(--color-blue);
+  opacity: 1;
+  z-index: 1;
+}
+
+.oscillator-type-selector_expanded .oscillator-type-selector__type-button {
+  position: static;
+  display: flex;
+  opacity: 1;
+  z-index: 1;
+}
+
+.oscillator-type-selector__arrow {
+  order: -1;
+  margin-left: 2px;
+
+  color: var(--color-blue);
+  transform: rotate(180deg);
+
+  transition: 300ms linear;
+  transition-property: transform;
+}
+
+.oscillator-type-selector__arrow_expanded {
+  transform: rotate(0deg);
+}

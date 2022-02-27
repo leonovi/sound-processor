@@ -10,6 +10,14 @@ const getModule = (
       return new AudioWorkletNode(audioContext, 'noise-processor');
     }
 
+    case NodeTypes.OSCILLATOR_PROCESSOR: {
+      return new AudioWorkletNode(audioContext, 'oscillator-processor', {
+        processorOptions: {
+          sampleRate: audioContext.sampleRate,
+        },
+      });
+    }
+
     case NodeTypes.DESTINATION: {
       return audioContext.destination;
     }

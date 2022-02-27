@@ -12,6 +12,16 @@ const noiseProcessorUrl = new WorkerUrl(
   }
 );
 
+const oscillatorProcessorUrl = new WorkerUrl(
+  new URL(
+    '../../worklets/oscillator-processor/oscillator-processor.worklet.ts',
+    import.meta.url
+  ),
+  {
+    name: 'oscillator-processor',
+  }
+);
+
 const AudioContextProvider: FC = ({ children }) => {
   const [shouldShowLoader, setShouldShowLoader] = useState(false);
 
@@ -25,6 +35,7 @@ const AudioContextProvider: FC = ({ children }) => {
     const loadAudioWorklets = async () => {
       await Promise.all([
         audioContext.audioWorklet.addModule(noiseProcessorUrl),
+        audioContext.audioWorklet.addModule(oscillatorProcessorUrl),
       ]);
 
       setShouldShowLoader(false);

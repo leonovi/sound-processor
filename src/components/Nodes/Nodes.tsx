@@ -23,6 +23,8 @@ import { getModule } from 'utils/getModule';
 import { isNode } from 'utils/isNode';
 import { isAudioWorklet } from 'utils/isAudioWorklet';
 import { stopModule } from 'utils/stopModule';
+import { OscillatorProcessor } from './OscillatorProcessor/OscillatorProcessor';
+import { startModule } from 'utils/startModule';
 
 export type NodeData = {
   module: AudioNode | null;
@@ -33,6 +35,7 @@ const BACKSPACE_KEYCODE = 8;
 const NODE_TYPES = {
   [NodeTypes.DESTINATION]: Destination,
   [NodeTypes.NOISE_PROCESSOR]: NoiseProcessor,
+  [NodeTypes.OSCILLATOR_PROCESSOR]: OscillatorProcessor,
 };
 
 const EDGE_TYPES = {}; // TODO create custom edge
@@ -87,7 +90,13 @@ const Nodes: FC = () => {
       target
     );
 
-    sourceModule && targetModule && sourceModule.connect(targetModule);
+    if (sourceModule && targetModule) {
+      sourceModule.connect(targetModule);
+
+      if (isAudioWorklet(sourceModule)) {
+        startModule(sourceModule);
+      }
+    }
   };
 
   const disconnectModules = (

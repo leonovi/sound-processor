@@ -1,0 +1,65 @@
+.oscillator-processor-node {
+  display: flex;
+
+  width: calc(var(--u) * 60);
+
+  padding-top: calc(var(--u) * 5);
+  padding-left: calc(var(--u) * 11);
+  padding-bottom: calc(var(--u) * 5);
+
+  border-radius: calc(var(--u) * 3);
+
+  background-color: var(--color-white);
+
+  box-shadow: var(--node-box-shadow);
+}
+
+.oscillator-processor-node__label {
+  position: absolute;
+  top: calc(-18px - 12px);
+  left: 50%;
+  transform: translateX(-50%);
+
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.oscillator-processor-node__parameters {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: calc(var(--u) * 40);
+  margin-right: 18px;
+
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.oscillator-processor-node__parameter {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+
+.oscillator-processor-node__parameter-lable {
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 14px;
+}
+
+.oscillator-processor-node__sound-channels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: calc(var(--u) * 15);
+  height: calc(var(--u) * 15);
+
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 20px;
+}
