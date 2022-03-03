@@ -1,0 +1,7 @@
+.selector-arrow {
+  fill: var(--color-blue);
+}
+
+.selector-arrow_reverse {
+  transform: rotate(180deg);
+}

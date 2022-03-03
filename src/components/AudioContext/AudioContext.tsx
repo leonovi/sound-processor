@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { AudioContext } from 'context/AudioContext';
 import { WorkerUrl } from 'worker-url';
+import { ProcessorsNames } from 'worklets/models/ProcessorNames';
 
 const noiseProcessorUrl = new WorkerUrl(
   new URL(
@@ -8,7 +9,7 @@ const noiseProcessorUrl = new WorkerUrl(
     import.meta.url
   ),
   {
-    name: 'noise-processor',
+    name: ProcessorsNames.NOISE,
   }
 );
 
@@ -18,7 +19,7 @@ const oscillatorProcessorUrl = new WorkerUrl(
     import.meta.url
   ),
   {
-    name: 'oscillator-processor',
+    name: ProcessorsNames.OSCILLATOR,
   }
 );
 

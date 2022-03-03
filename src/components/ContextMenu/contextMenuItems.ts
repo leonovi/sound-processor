@@ -1,13 +1,13 @@
-import { NodeTypes } from 'utils/nodeTypes';
+import { NodeTypes } from 'models/NodeTypes';
 
 export const contextMenuItems = [
   {
     label: 'Processors',
     items: [
-      { label: 'Noise processor', nodeType: NodeTypes.NOISE_PROCESSOR },
+      { label: 'Noise', nodeType: NodeTypes.NOISE },
       {
-        label: 'Oscillator processor',
-        nodeType: NodeTypes.OSCILLATOR_PROCESSOR,
+        label: 'Oscillator',
+        nodeType: NodeTypes.OSCILLATOR,
       },
     ],
   },

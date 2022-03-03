@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import { isEmpty } from 'utils/isEmpty';
-import { NodeTypes } from 'utils/nodeTypes';
+import { NodeTypes } from 'models/NodeTypes';
 
 import { contextMenuItems } from './contextMenuItems';
 

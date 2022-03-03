@@ -1,0 +1,14 @@
+
+.parameter {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 3);
+}
+
+.parameter__label {
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 14px;
+
+  color: var(--color-black);
+}

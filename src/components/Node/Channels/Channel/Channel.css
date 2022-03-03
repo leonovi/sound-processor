@@ -1,0 +1,51 @@
+.channel {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1.5);
+}
+
+.channel_source {
+  justify-content: end;
+  right: -21px;
+}
+
+.channel_target {
+  justify-content: start;
+  left: -20px;
+}
+
+.channel__handle {
+  position: relative;
+
+  width: calc(var(--u) * 4.5);
+  height: calc(var(--u) * 5);
+
+  border: none;
+  border-radius: 5px;
+
+  background-color: var(--color-blue);
+
+  /* Reset react-flow-renderer css */
+  top: 0;
+  left: 0;
+  transform: none;
+}
+
+.channel_source .channel__handle {
+  order: 1;
+}
+
+.channel_target .channel__handle {
+  order: -1;
+}
+
+.channel__label {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 12px;
+
+  color: var(--color-black);
+}

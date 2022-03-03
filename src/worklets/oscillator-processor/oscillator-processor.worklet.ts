@@ -1,31 +1,28 @@
-import { getParameterValue } from 'utils/getParameterValue';
-import { isStopMessage } from 'utils/processorMessages';
-import {
-  OscillatorParameters,
-  OscillatorTypes,
-} from 'worklets/oscillator-processor/oscillator-processor.types';
+import { parseParameter } from 'worklets/utils/parseParameter';
+import { isStopMessage } from 'worklets/utils/isStopMessage';
+import { OscillatorTypes } from 'worklets/oscillator-processor/oscillator-processor.models';
+import { ProcessorsParameters } from 'worklets/models/ProcessorParameters';
+import { ProcessorsMessages } from 'worklets/models/ProcessorMessages';
+import { ProcessorsNames } from 'worklets/models/ProcessorNames';
 
+const OSCILLATOR_PARAMETERS = ProcessorsParameters.OSCILLATOR
+
+const isChangeTypeMessage = (data: any) =>
+  data?.type === ProcessorsMessages.OSCILLATOR.CHANGE_TYPE;
 class OscillatorProcessor extends AudioWorkletProcessor {
-  index: number;
+  periodIndex: number;
   running: boolean;
   sampleRate: number;
   type: OscillatorTypes;
 
   static get parameterDescriptors() {
-    return [
-      {
-        name: 'frequency',
-        defaultValue: 220,
-        minValue: 20,
-        maxValue: 1200,
-      },
-    ];
+    return [OSCILLATOR_PARAMETERS.FREQUENCY];
   }
 
   constructor(options?: AudioWorkletNodeOptions) {
     super(options);
 
-    this.index = 0;
+    this.periodIndex = 0;
     this.running = true;
     this.sampleRate = options?.processorOptions?.sampleRate;
     this.type = options?.processorOptions?.type ?? OscillatorTypes.SINE;
@@ -35,7 +32,7 @@ class OscillatorProcessor extends AudioWorkletProcessor {
         this.running = false;
       }
 
-      if (data?.type === 'CHANGE_TYPE') {
+      if (isChangeTypeMessage(data)) {
         this.type = data.payload;
       }
     };
@@ -48,40 +45,38 @@ class OscillatorProcessor extends AudioWorkletProcessor {
   ) {
     const output = outputs[0];
 
-    const frequencyValue = getParameterValue(
-      OscillatorParameters.FREQUENCY,
-      parameters
-    );
+    const frequency = parseParameter(OSCILLATOR_PARAMETERS.FREQUENCY.name, parameters);
 
     for (let channel = 0; channel < output.length; ++channel) {
       const outputChannel = output[channel];
-      const period = sampleRate / frequencyValue;
+      const sampleFrames = outputChannel.length;
+      const period = this.sampleRate / frequency.value;
 
-      for (let i = 0; i < outputChannel.length; i++) {
+      for (let i = 0; i < sampleFrames; i++) {
         if (this.type === OscillatorTypes.SINE) {
           outputChannel[i] = Math.sin(
-            (2 * Math.PI * frequencyValue * this.index) / sampleRate
+            (2 * Math.PI * frequency.value * this.periodIndex) / this.sampleRate
           );
         }
 
         if (this.type === OscillatorTypes.TRIANGLE) {
           outputChannel[i] =
-            this.index < period / 2
-              ? -1 + (4 * this.index) / period
-              : 3 - (4 * this.index) / period;
+            this.periodIndex < period / 2
+              ? -1 + (4 * this.periodIndex) / period
+              : 3 - (4 * this.periodIndex) / period;
         }
 
         if (this.type === OscillatorTypes.SAW) {
-          outputChannel[i] = (2 * this.index) / period - 1;
+          outputChannel[i] = (2 * this.periodIndex) / period - 1;
         }
 
         if (this.type === OscillatorTypes.SQUARE) {
-          outputChannel[i] = this.index < period / 2 ? 1 : -1;
+          outputChannel[i] = this.periodIndex < period / 2 ? 1 : -1;
         }
 
-        this.index++;
-        if (this.index >= period) {
-          this.index = 0;
+        this.periodIndex++;
+        if (this.periodIndex >= period) {
+          this.periodIndex = 0;
         }
       }
     }
@@ -90,4 +85,4 @@ class OscillatorProcessor extends AudioWorkletProcessor {
   }
 }
 
-registerProcessor('oscillator-processor', OscillatorProcessor);
+registerProcessor(ProcessorsNames.OSCILLATOR, OscillatorProcessor);

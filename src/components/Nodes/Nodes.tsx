@@ -14,17 +14,16 @@ import { nanoid } from 'nanoid';
 import { useAudioContext } from 'context/AudioContext';
 import { usePopperMenuContext } from 'context/PopperMenuContext';
 
-import { Destination } from 'components/Nodes/Destination/Destination';
 import { ContextMenu } from 'components/ContextMenu/ContextMenu';
-import { NoiseProcessor } from 'components/Nodes/NoiseProcessor/NoiseProcessor';
+import { DestinationNode } from 'components/Nodes/DestinationNode/DestinationNode';
+import { NoiseNode } from 'components/Nodes/NoiseNode/NoiseNode';
+import { OscillatorNode } from 'components/Nodes/OscillatorNode/OscillatorNode';
 
-import { NodeTypes } from 'utils/nodeTypes';
-import { getModule } from 'utils/getModule';
+import { NodeTypes } from 'models/NodeTypes';
+import { buildModule } from 'utils/worklet/buildModule';
 import { isNode } from 'utils/isNode';
-import { isAudioWorklet } from 'utils/isAudioWorklet';
-import { stopModule } from 'utils/stopModule';
-import { OscillatorProcessor } from './OscillatorProcessor/OscillatorProcessor';
-import { startModule } from 'utils/startModule';
+import { isAudioWorklet } from 'utils/worklet/isAudioWorklet';
+import { stopModule } from 'utils/worklet/stopModule';
 
 export type NodeData = {
   module: AudioNode | null;
@@ -33,9 +32,9 @@ export type NodeData = {
 const BACKSPACE_KEYCODE = 8;
 
 const NODE_TYPES = {
-  [NodeTypes.DESTINATION]: Destination,
-  [NodeTypes.NOISE_PROCESSOR]: NoiseProcessor,
-  [NodeTypes.OSCILLATOR_PROCESSOR]: OscillatorProcessor,
+  [NodeTypes.DESTINATION]: DestinationNode,
+  [NodeTypes.NOISE]: NoiseNode,
+  [NodeTypes.OSCILLATOR]: OscillatorNode,
 };
 
 const EDGE_TYPES = {}; // TODO create custom edge
@@ -90,13 +89,7 @@ const Nodes: FC = () => {
       target
     );
 
-    if (sourceModule && targetModule) {
-      sourceModule.connect(targetModule);
-
-      if (isAudioWorklet(sourceModule)) {
-        startModule(sourceModule);
-      }
-    }
+    sourceModule && targetModule && sourceModule.connect(targetModule);
   };
 
   const disconnectModules = (
@@ -111,10 +104,7 @@ const Nodes: FC = () => {
 
     if (sourceModule && targetModule) {
       sourceModule.disconnect(targetModule);
-
-      if (isAudioWorklet(sourceModule)) {
-        stopModule(sourceModule);
-      }
+      isAudioWorklet(sourceModule) && stopModule(sourceModule);
     }
   };
 
@@ -139,7 +129,7 @@ const Nodes: FC = () => {
   const patchNode = (node: Node<NodeData>): Node<NodeData> => ({
     ...node,
     data: {
-      module: getModule(audioContext, node.type),
+      module: buildModule(audioContext, node.type),
     },
   });
 
@@ -163,7 +153,7 @@ const Nodes: FC = () => {
           type,
           position,
           data: {
-            module: getModule(audioContext, type),
+            module: buildModule(audioContext, type),
           },
         })
       );
