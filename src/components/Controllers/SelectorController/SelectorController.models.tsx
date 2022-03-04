@@ -1,17 +1,12 @@
 import { ReactNode } from 'react';
 
-export type SelectorControllerOption = {
-  selected: boolean;
-  onClick: () => void;
+export type SelectorControllerOption<T> = {
+  value: T;
   children: ReactNode;
 };
 
-export type SelectorControllerProps = {
-  options: Array<SelectorControllerOption>;
-};
-
-export const DEFAULT_SELECTOR_OPTION: SelectorControllerOption = {
-  selected: false,
-  onClick: () => {},
-  children: 'None',
+export type SelectorControllerProps<T> = {
+  options: Array<SelectorControllerOption<T>>;
+  selectedValue: T;
+  onChange: (value: T) => void;
 };

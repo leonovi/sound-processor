@@ -1,90 +1,108 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 import { NodeProps } from 'react-flow-renderer';
+
+import { useAudioContext } from 'context/AudioContext';
 
 import { NodeData } from 'components/Nodes/Nodes';
 import { Node } from 'components/Node/Node';
 import { OSCILLATOR_OUTPUTS } from 'components/Nodes/OscillatorNode/OscillatorNode.models';
 import { InputController } from 'components/Controllers/InputController/InputController';
-import { ParameterOptions } from 'components/Node/Parameters/Parameter/Parameter.models';
 import { SelectorController } from 'components/Controllers/SelectorController/SelectorController';
+import { NO_LABEL } from 'components/Node/Parameters/Parameter/Parameter.models';
 
-import { isAudioWorklet } from 'utils/worklet/isAudioWorklet';
 import { extractModule } from 'utils/worklet/extractModule';
-import { sendMessage } from 'utils/worklet/sendMessage';
+import { clamp } from 'utils/clamp';
+import { isAudioWorklet } from 'utils/worklet/isAudioWorklet';
 
-import { OscillatorTypes } from 'worklets/oscillator-processor/oscillator-processor.models';
-import { changeOscillatorType } from 'worklets/oscillator-processor/oscillator-processor.portMessages';
-import { ProcessorsParameters } from 'worklets/models/ProcessorParameters';
+import {
+  OscillatorTypes,
+  OSCILLATOR_FREQUENCY_PARAMETER,
+  OSCILLATOR_TYPE_PARAMETER,
+} from 'worklets/OscillatorProcessor/OscillatorProcessor.models';
 
 import b_ from 'b_';
 import './OscillatorNode.css';
 
-const OSCILLATOR_PARAMETERS = ProcessorsParameters.OSCILLATOR;
+const DEFAULT_TYPE = OSCILLATOR_TYPE_PARAMETER.defaultValue;
+const DEFAULT_FREQUENCY = OSCILLATOR_FREQUENCY_PARAMETER.defaultValue;
+const MIN_FREQUENCY = OSCILLATOR_FREQUENCY_PARAMETER.minValue;
+const MAX_FREQUENCY = OSCILLATOR_FREQUENCY_PARAMETER.maxValue;
 
 const b = b_.with('oscillator-node');
 
-const OscillatorNode: FC<NodeProps<NodeData>> = ({ data }) => {
-  const [oscillatorType, setOscillatorType] = useState(OscillatorTypes.SINE);
+const OscillatorNode: FC<NodeProps<NodeData>> = memo(({ data }) => {
+  const { currentTime } = useAudioContext();
 
+  const [type, setType] = useState(DEFAULT_TYPE);
+  const [frequency, setFrequency] = useState(DEFAULT_FREQUENCY);
+
+  const oscillatorModule = extractModule(data);
   useEffect(() => {
-    const oscillatorModule = extractModule(data);
+    const name = OSCILLATOR_TYPE_PARAMETER.name;
 
     isAudioWorklet(oscillatorModule) &&
-      sendMessage(oscillatorModule, changeOscillatorType(oscillatorType));
-  }, [oscillatorType]);
+      oscillatorModule.parameters.get(name).setValueAtTime(type, currentTime);
+  }, [type]);
 
-  const Parameters: Array<ParameterOptions> = [
-    {
-      label: 'Type',
-      controller: (
-        <SelectorController
-          options={[
-            {
-              selected: oscillatorType === OscillatorTypes.SINE,
-              onClick: () => setOscillatorType(OscillatorTypes.SINE),
-              children: 'Sin',
-            },
-            {
-              selected: oscillatorType === OscillatorTypes.TRIANGLE,
-              onClick: () => setOscillatorType(OscillatorTypes.TRIANGLE),
-              children: 'Tri',
-            },
-            {
-              selected: oscillatorType === OscillatorTypes.SAW,
-              onClick: () => setOscillatorType(OscillatorTypes.SAW),
-              children: 'Saw',
-            },
-            {
-              selected: oscillatorType === OscillatorTypes.SQUARE,
-              onClick: () => setOscillatorType(OscillatorTypes.SQUARE),
-              children: 'Squ',
-            },
-          ]}
-        />
-      ),
-    },
-    {
-      label: 'Frequency',
-      controller: (
-        <InputController
-          minValue={OSCILLATOR_PARAMETERS.FREQUENCY.minValue}
-          maxValue={OSCILLATOR_PARAMETERS.FREQUENCY.maxValue}
-          defaultValue={OSCILLATOR_PARAMETERS.FREQUENCY.defaultValue}
-          module={extractModule(data)}
-          controlledParameter={OSCILLATOR_PARAMETERS.FREQUENCY.name}
-        />
-      ),
-    },
-  ];
+  useEffect(() => {
+    const name = OSCILLATOR_FREQUENCY_PARAMETER.name;
+
+    isAudioWorklet(oscillatorModule) &&
+      oscillatorModule.parameters
+        .get(name)
+        .setValueAtTime(
+          clamp(frequency, MIN_FREQUENCY, MAX_FREQUENCY),
+          currentTime
+        );
+  }, [frequency]);
 
   return (
     <Node
       label="Oscillator"
       className={b()}
       outputs={OSCILLATOR_OUTPUTS}
-      parameters={Parameters}
+      parameters={[
+        {
+          label: NO_LABEL,
+          controller: (
+            <SelectorController<OscillatorTypes>
+              options={[
+                {
+                  value: OscillatorTypes.SINE,
+                  children: 'Sin',
+                },
+                {
+                  value: OscillatorTypes.TRIANGLE,
+                  children: 'Tri',
+                },
+                {
+                  value: OscillatorTypes.SAW,
+                  children: 'Saw',
+                },
+                {
+                  value: OscillatorTypes.SQUARE,
+                  children: 'Squ',
+                },
+              ]}
+              selectedValue={type}
+              onChange={(value) => setType(value)}
+            />
+          ),
+        },
+        {
+          label: 'Frequency',
+          controller: (
+            <InputController
+              value={frequency}
+              minValue={OSCILLATOR_FREQUENCY_PARAMETER.minValue}
+              maxValue={OSCILLATOR_FREQUENCY_PARAMETER.maxValue}
+              onChange={(value) => setFrequency(value)}
+            />
+          ),
+        },
+      ]}
     />
   );
-};
+});
 
 export { OscillatorNode };

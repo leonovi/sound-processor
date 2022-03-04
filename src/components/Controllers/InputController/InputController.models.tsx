@@ -1,8 +1,9 @@
 export type InputControllerProps = {
-  value?: number;
+  value: number;
   minValue: number;
   maxValue: number;
-  defaultValue: number;
-  module: AudioNode | null;
-  controlledParameter: any;
+  step?: number;
+  onChange: (value: number) => void;
 };
+
+export const DEFAULT_STEP = 1;

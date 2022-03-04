@@ -1,25 +1,38 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { AudioContext } from 'context/AudioContext';
 import { WorkerUrl } from 'worker-url';
-import { ProcessorsNames } from 'worklets/models/ProcessorNames';
+
+import { NOISE_PROCESSOR_NAME } from 'worklets/NoiseProcessor/NoiseProcessor.models';
+import { OSCILLATOR_PROCESSOR_NAME } from 'worklets/OscillatorProcessor/OscillatorProcessor.models';
+import { GAIN_PROCESSOR_NAME } from 'worklets/GainProcessor/GainProcessor.models';
 
 const noiseProcessorUrl = new WorkerUrl(
   new URL(
-    '../../worklets/noise-processor/noise-processor.worklet.ts',
+    '../../worklets/noiseProcessor/noiseProcessor.worklet.ts',
     import.meta.url
   ),
   {
-    name: ProcessorsNames.NOISE,
+    name: NOISE_PROCESSOR_NAME,
   }
 );
 
 const oscillatorProcessorUrl = new WorkerUrl(
   new URL(
-    '../../worklets/oscillator-processor/oscillator-processor.worklet.ts',
+    '../../worklets/oscillatorProcessor/oscillatorProcessor.worklet.ts',
     import.meta.url
   ),
   {
-    name: ProcessorsNames.OSCILLATOR,
+    name: OSCILLATOR_PROCESSOR_NAME,
+  }
+);
+
+const gainProcessorUrl = new WorkerUrl(
+  new URL(
+    '../../worklets/gainProcessor/gainProcessor.worklet.ts',
+    import.meta.url
+  ),
+  {
+    name: GAIN_PROCESSOR_NAME,
   }
 );
 
@@ -37,6 +50,7 @@ const AudioContextProvider: FC = ({ children }) => {
       await Promise.all([
         audioContext.audioWorklet.addModule(noiseProcessorUrl),
         audioContext.audioWorklet.addModule(oscillatorProcessorUrl),
+        audioContext.audioWorklet.addModule(gainProcessorUrl),
       ]);
 
       setShouldShowLoader(false);

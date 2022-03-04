@@ -1,12 +1,11 @@
 import React, { FC } from 'react';
-import { SelectorControllerOption } from 'components/Controllers/SelectorController/SelectorController.models';
 
 import b_ from 'b_';
 import './SelectorOption.css';
 
 const b = b_.with('selector-option');
 
-const SelectorOption: FC<SelectorControllerOption> = ({
+const SelectorOption: FC<{ selected: boolean; onClick: () => void }> = ({
   selected,
   onClick,
   children,

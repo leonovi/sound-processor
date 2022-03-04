@@ -18,12 +18,15 @@ import { ContextMenu } from 'components/ContextMenu/ContextMenu';
 import { DestinationNode } from 'components/Nodes/DestinationNode/DestinationNode';
 import { NoiseNode } from 'components/Nodes/NoiseNode/NoiseNode';
 import { OscillatorNode } from 'components/Nodes/OscillatorNode/OscillatorNode';
+import { GainNode } from 'components/Nodes/GainNode/GainNode';
 
 import { NodeTypes } from 'models/NodeTypes';
+
 import { buildModule } from 'utils/worklet/buildModule';
 import { isNode } from 'utils/isNode';
 import { isAudioWorklet } from 'utils/worklet/isAudioWorklet';
-import { stopModule } from 'utils/worklet/stopModule';
+
+import { sendStopMessage } from 'worklets/Processor/Processor.messages';
 
 export type NodeData = {
   module: AudioNode | null;
@@ -35,6 +38,7 @@ const NODE_TYPES = {
   [NodeTypes.DESTINATION]: DestinationNode,
   [NodeTypes.NOISE]: NoiseNode,
   [NodeTypes.OSCILLATOR]: OscillatorNode,
+  [NodeTypes.GAIN]: GainNode,
 };
 
 const EDGE_TYPES = {}; // TODO create custom edge
@@ -104,7 +108,7 @@ const Nodes: FC = () => {
 
     if (sourceModule && targetModule) {
       sourceModule.disconnect(targetModule);
-      isAudioWorklet(sourceModule) && stopModule(sourceModule);
+      // isAudioWorklet(sourceModule) && sendStopMessage(sourceModule);
     }
   };
 

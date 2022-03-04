@@ -27,6 +27,8 @@
 
   position: absolute;
   top: calc((var(--label-font-size) + var(--label-offset)) * -1);
+  left: 50%;
+  transform: translate(-50%);
 
   font-weight: bold;
   font-size: var(--label-font-size);

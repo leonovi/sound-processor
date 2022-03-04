@@ -9,6 +9,10 @@ export const contextMenuItems = [
         label: 'Oscillator',
         nodeType: NodeTypes.OSCILLATOR,
       },
+      {
+        label: 'Gain',
+        nodeType: NodeTypes.GAIN,
+      },
     ],
   },
   {

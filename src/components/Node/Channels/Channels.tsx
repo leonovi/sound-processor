@@ -32,7 +32,7 @@ const Channels: FC<ChannelsProps> = ({ mode, channels }) => {
     >
       {channels.map(({ id }, index) => (
         <Channel
-          key={index}
+          key={id}
           id={id}
           type={isInputs ? TARGET_TYPE : SOURCE_TYPE}
           position={isInputs ? Position.Left : Position.Right}

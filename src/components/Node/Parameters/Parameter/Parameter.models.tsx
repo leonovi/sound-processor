@@ -6,3 +6,5 @@ export type ParameterOptions = {
 };
 
 export type ParameterProps = ParameterOptions & {};
+
+export const NO_LABEL = ' ';
