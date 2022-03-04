@@ -20,6 +20,11 @@ import {
   OSCILLATOR_TYPE_PARAMETER,
 } from 'worklets/OscillatorProcessor/OscillatorProcessor.models';
 
+import SineWave from 'icons/sine-wave.svg';
+import TriangleWave from 'icons/triangle-wave.svg';
+import SawWave from 'icons/saw-wave.svg';
+import SquareWave from 'icons/square-wave.svg';
+
 import b_ from 'b_';
 import './OscillatorNode.css';
 
@@ -69,21 +74,21 @@ const OscillatorNode: FC<NodeProps<NodeData>> = memo(({ data }) => {
               options={[
                 {
                   value: OscillatorTypes.SINE,
-                  children: 'Sin',
+                  children: <SineWave />,
                 },
                 {
                   value: OscillatorTypes.TRIANGLE,
-                  children: 'Tri',
+                  children: <TriangleWave />,
                 },
                 {
                   value: OscillatorTypes.SAW,
-                  children: 'Saw',
+                  children: <SawWave />,
                 },
                 {
                   value: OscillatorTypes.SQUARE,
-                  children: 'Squ',
+                  children: <SquareWave />,
                 },
-              ]}
+              ].reverse()}
               selectedValue={type}
               onChange={(value) => setType(value)}
             />

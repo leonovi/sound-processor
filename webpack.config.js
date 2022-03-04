@@ -34,6 +34,10 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.svg$/i,
+        use: ['@svgr/webpack'],
+      },
     ],
   },
   devtool: 'source-map',
@@ -47,6 +51,7 @@ module.exports = {
     alias: {
       components: path.join(__dirname, '/src/components'),
       context: path.join(__dirname, '/src/context'),
+      icons: path.join(__dirname, '/src/icons'),
       models: path.join(__dirname, '/src/models'),
       utils: path.join(__dirname, '/src/utils'),
       worklets: path.join(__dirname, '/src/worklets'),
