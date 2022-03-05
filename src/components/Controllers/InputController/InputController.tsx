@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, FC, useState } from 'react';
+import React, { FC } from 'react';
 
 import {
   DEFAULT_STEP,
