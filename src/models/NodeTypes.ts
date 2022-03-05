@@ -3,4 +3,5 @@ export enum NodeTypes {
   OSCILLATOR = 'Oscillator',
   DESTINATION = 'Destination',
   GAIN = 'Gain',
+  CONSTANT_SOURCE = 'ConstantSource',
 }

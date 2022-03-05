@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { NodeProps } from 'react-flow-renderer';
 
 import { useAudioContext } from 'context/AudioContext';

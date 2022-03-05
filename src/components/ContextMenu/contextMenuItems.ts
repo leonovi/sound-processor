@@ -13,6 +13,10 @@ export const contextMenuItems = [
         label: 'Gain',
         nodeType: NodeTypes.GAIN,
       },
+      {
+        label: 'Constant Source',
+        nodeType: NodeTypes.CONSTANT_SOURCE,
+      },
     ],
   },
   {

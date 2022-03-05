@@ -27,6 +27,7 @@ import { isNode } from 'utils/isNode';
 import { isAudioWorklet } from 'utils/worklet/isAudioWorklet';
 
 import { sendStopMessage } from 'worklets/Processor/Processor.messages';
+import { ConstantSource } from './ConstantSource/ConstantSource';
 
 export type NodeData = {
   module: AudioNode | null;
@@ -39,6 +40,7 @@ const NODE_TYPES = {
   [NodeTypes.NOISE]: NoiseNode,
   [NodeTypes.OSCILLATOR]: OscillatorNode,
   [NodeTypes.GAIN]: GainNode,
+  [NodeTypes.CONSTANT_SOURCE]: ConstantSource,
 };
 
 const EDGE_TYPES = {}; // TODO create custom edge
@@ -126,7 +128,6 @@ const Nodes: FC = () => {
     const { source, target } = connectionParams;
 
     connectModules(source, target);
-
     setElements((elements) => addEdge(connectionParams, elements));
   };
 
