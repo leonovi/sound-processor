@@ -35,7 +35,7 @@ const MAX_FREQUENCY = OSCILLATOR_FREQUENCY_PARAMETER.maxValue;
 
 const b = b_.with('oscillator-node');
 
-const OscillatorNode: FC<NodeProps<NodeData>> = memo(({ data }) => {
+const OscillatorNode: FC<NodeProps<NodeData>> = ({ data }) => {
   const { currentTime } = useAudioContext();
 
   const [type, setType] = useState(DEFAULT_TYPE);
@@ -108,6 +108,6 @@ const OscillatorNode: FC<NodeProps<NodeData>> = memo(({ data }) => {
       ]}
     />
   );
-});
+};
 
 export { OscillatorNode };
