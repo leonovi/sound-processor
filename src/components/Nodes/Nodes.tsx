@@ -28,6 +28,7 @@ import { isAudioWorklet } from 'utils/worklet/isAudioWorklet';
 
 import { sendStopMessage } from 'worklets/Processor/Processor.messages';
 import { ConstantSource } from './ConstantSource/ConstantSource';
+import { Sequencer } from './Sequencer/Sequencer';
 
 export type NodeData = {
   module: AudioNode | null;
@@ -41,6 +42,7 @@ const NODE_TYPES = {
   [NodeTypes.OSCILLATOR]: OscillatorNode,
   [NodeTypes.GAIN]: GainNode,
   [NodeTypes.CONSTANT_SOURCE]: ConstantSource,
+  [NodeTypes.SEQUENCER]: Sequencer,
 };
 
 const EDGE_TYPES = {}; // TODO create custom edge

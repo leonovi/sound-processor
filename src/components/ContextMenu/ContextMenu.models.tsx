@@ -17,6 +17,10 @@ export const CONTEXT_MENU_ITEMS = [
         label: 'Constant Source',
         nodeType: NodeTypes.CONSTANT_SOURCE,
       },
+      {
+        label: 'Sequencer',
+        nodeType: NodeTypes.SEQUENCER,
+      },
     ],
   },
 ];

@@ -4,4 +4,5 @@ export enum NodeTypes {
   DESTINATION = 'Destination',
   GAIN = 'Gain',
   CONSTANT_SOURCE = 'ConstantSource',
+  SEQUENCER = 'Sequencer',
 }
