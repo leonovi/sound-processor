@@ -22,8 +22,6 @@ class GainProcessor extends Processor {
     const output = outputs[0];
     const gain = parameters[GAIN_PARAMETER.name][0];
 
-    console.log(input);
-
     for (let channel = 0; channel < input.length; ++channel) {
       const inputChannel = input[channel];
       const outputChannel = output[channel];

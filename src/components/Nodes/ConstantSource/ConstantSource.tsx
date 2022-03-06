@@ -1,25 +1,21 @@
 import React, { FC, useEffect, useState } from 'react';
-import { NodeProps } from 'react-flow-renderer';
+import { NodeProps, useUpdateNodeInternals } from 'react-flow-renderer';
 
 import { InputController } from 'components/Controllers/InputController/InputController';
 import { Node } from 'components/Node/Node';
-import { NodeData } from '../Nodes';
-import { extractModule } from 'utils/worklet/extractModule';
-import { useAudioContext } from 'context/AudioContext';
-import { isAudioWorklet } from 'utils/worklet/isAudioWorklet';
+import { CONSTANT_SOURCE_OUTPUTS, SourceData } from './ConstantSource.models';
 
-const ConstantSource: FC<NodeProps<NodeData>> = ({ data }) => {
-  const { currentTime } = useAudioContext();
+const ConstantSource: FC<NodeProps<SourceData>> = ({ id, data }) => {
+  const updateNode = useUpdateNodeInternals();
   const [value, setValue] = useState(0);
 
-  const module = extractModule(data);
   useEffect(() => {
-    isAudioWorklet(module) &&
-      module.parameters.get('value').setValueAtTime(value, currentTime);
+    data.value = value;
+    updateNode(id);
   }, [value]);
 
   return (
-    <Node label="Constant" outputs={[{ id: '1' }, { id: '2' }]}>
+    <Node label="Constant" outputs={CONSTANT_SOURCE_OUTPUTS}>
       <InputController
         value={value}
         minValue={0}

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Handle } from 'react-flow-renderer';
+import { Handle, Position } from 'react-flow-renderer';
 
 import {
   ChannelProps,
@@ -7,24 +7,33 @@ import {
   TARGET_TYPE,
 } from 'components/Node/Channels/Channel/Channel.models';
 
+import cn from 'classnames';
 import b_ from 'b_';
 import './Channel.css';
+import { isUndefined } from 'utils/isUndefined';
 
 const b = b_.with('channel');
 
-const Channel: FC<ChannelProps> = ({ id, type, position, label }) => {
+const Channel: FC<ChannelProps> = ({ className, id, type, label }) => {
   const isTarget = type === TARGET_TYPE;
   const isSource = type === SOURCE_TYPE;
-
   return (
     <div
-      className={b({
-        target: isTarget,
-        source: isSource,
-      })}
+      className={cn(
+        b({
+          target: isTarget,
+          source: isSource,
+        }),
+        className
+      )}
     >
-      <Handle className={b('handle')} id={id} type={type} position={position} />
-      <span className={b('label')}>{label}</span>
+      <Handle
+        className={b('handle')}
+        id={id}
+        type={type}
+        position={isTarget ? Position.Left : Position.Right}
+      />
+      {!isUndefined(label) && <span className={b('label')}>{label}</span>}
     </div>
   );
 };

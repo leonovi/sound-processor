@@ -7,5 +7,5 @@ export enum ChannelsMode {
 
 export type ChannelsProps = {
   mode: ChannelsMode;
-  channels: [ChannelOptions, ChannelOptions];
+  channels: Array<ChannelOptions>;
 };

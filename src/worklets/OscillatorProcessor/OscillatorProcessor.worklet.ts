@@ -1,10 +1,9 @@
 import { Processor } from 'worklets/Processor/Processor';
 import {
   OscFunction,
-  OscillatorTypes,
-  OSCILLATOR_FREQUENCY_PARAMETER,
-  OSCILLATOR_PROCESSOR_NAME,
-  OSCILLATOR_TYPE_PARAMETER,
+  OscTypes,
+  OSC_PARAMS,
+  OSC_PROCESSOR_NAME,
 } from 'worklets/OscillatorProcessor/OscillatorProcessor.models';
 import { isUndefined } from 'utils/isUndefined';
 
@@ -13,7 +12,7 @@ class OscillatorProcessor extends Processor {
   sampleRate: number;
 
   static get parameterDescriptors() {
-    return [OSCILLATOR_TYPE_PARAMETER, OSCILLATOR_FREQUENCY_PARAMETER];
+    return [OSC_PARAMS.TYPE, OSC_PARAMS.FREQ];
   }
 
   constructor(options?: AudioWorkletNodeOptions) {
@@ -28,15 +27,14 @@ class OscillatorProcessor extends Processor {
     outputs: Float32Array[][],
     parameters: Record<string, Float32Array>
   ) {
-    // const input = inputs[0];
     const output = outputs[0];
-    const type = parameters[OSCILLATOR_TYPE_PARAMETER.name][0];
-    const freq = parameters[OSCILLATOR_FREQUENCY_PARAMETER.name][0];
+    const type = parameters[OSC_PARAMS.TYPE.name][0];
+    const freq = parameters[OSC_PARAMS.FREQ.name][0];
 
     const osc = generators.get(type);
     for (let channel = 0; channel < output.length; ++channel) {
-      // const inputChannel = input[channel];
       const outputChannel = output[channel];
+
       for (let i = 0; i < outputChannel.length; i++) {
         !isUndefined(osc) &&
           (outputChannel[i] = osc(freq, this.sampleRate, this.index));
@@ -52,27 +50,27 @@ class OscillatorProcessor extends Processor {
   }
 }
 
-const generators = new Map<OscillatorTypes, OscFunction>([
+const generators = new Map<OscTypes, OscFunction>([
   [
-    OscillatorTypes.SINE,
+    OscTypes.SINE,
     (freq, sampleRate, index) =>
       Math.sin((2 * Math.PI * freq * index) / sampleRate),
   ],
   [
-    OscillatorTypes.TRIANGLE,
+    OscTypes.TRIANGLE,
     (freq, sampleRate, index) =>
       index < sampleRate / freq / 2
         ? -1 + (4 * index) / (sampleRate / freq)
         : 3 - (4 * index) / (sampleRate / freq),
   ],
   [
-    OscillatorTypes.SAW,
+    OscTypes.SAW,
     (freq, sampleRate, index) => (2 * index) / (sampleRate / freq) - 1,
   ],
   [
-    OscillatorTypes.SQUARE,
+    OscTypes.SQUARE,
     (freq, sampleRate, index) => (index < sampleRate / freq / 2 ? 1 : -1),
   ],
 ]);
 
-registerProcessor(OSCILLATOR_PROCESSOR_NAME, OscillatorProcessor);
+registerProcessor(OSC_PROCESSOR_NAME, OscillatorProcessor);

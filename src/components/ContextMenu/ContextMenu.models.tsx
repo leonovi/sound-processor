@@ -1,6 +1,6 @@
 import { NodeTypes } from 'models/NodeTypes';
 
-export const contextMenuItems = [
+export const CONTEXT_MENU_ITEMS = [
   {
     label: 'Processors',
     items: [
@@ -18,9 +18,5 @@ export const contextMenuItems = [
         nodeType: NodeTypes.CONSTANT_SOURCE,
       },
     ],
-  },
-  {
-    label: 'Destinations',
-    items: [{ label: 'Destination', nodeType: NodeTypes.DESTINATION }],
   },
 ];

@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { isFirst } from 'utils/isFirst';
 
 import { Channel } from 'components/Node/Channels/Channel/Channel';
 import {
@@ -7,9 +6,6 @@ import {
   ChannelsProps,
 } from 'components/Node/Channels/Channels.models';
 import {
-  LEFT_CHANNEL_LABEL,
-  Position,
-  RIGHT_CHANNEL_LABEL,
   SOURCE_TYPE,
   TARGET_TYPE,
 } from 'components/Node/Channels/Channel/Channel.models';
@@ -30,13 +26,12 @@ const Channels: FC<ChannelsProps> = ({ mode, channels }) => {
         outputs: isOutputs,
       })}
     >
-      {channels.map(({ id }, index) => (
+      {channels.map(({ id, label }) => (
         <Channel
           key={id}
           id={id}
           type={isInputs ? TARGET_TYPE : SOURCE_TYPE}
-          position={isInputs ? Position.Left : Position.Right}
-          label={isFirst(index) ? LEFT_CHANNEL_LABEL : RIGHT_CHANNEL_LABEL}
+          label={label}
         />
       ))}
     </div>

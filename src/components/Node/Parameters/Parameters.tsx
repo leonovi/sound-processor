@@ -5,14 +5,20 @@ import { Parameter } from 'components/Node/Parameters/Parameter/Parameter';
 
 import b_ from 'b_';
 import './Parameters.css';
-import { nanoid } from 'nanoid';
+import { Channel } from '../Channels/Channel/Channel';
+import { TARGET_TYPE } from '../Channels/Channel/Channel.models';
 
 const b = b_.with('parameters');
 
 const Parameters: FC<ParametersProps> = ({ parameters }) => (
   <div className={b()}>
-    {parameters.map(({ controller, label }) => (
-      <Parameter key={label || nanoid()} controller={controller} label={label} />
+    {parameters.map(({ channel, controller, label }) => (
+      <Parameter
+        key={label}
+        controller={controller}
+        label={label}
+        channel={channel}
+      />
     ))}
   </div>
 );

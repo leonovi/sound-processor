@@ -3,7 +3,7 @@ import { AudioContext } from 'context/AudioContext';
 import { WorkerUrl } from 'worker-url';
 
 import { NOISE_PROCESSOR_NAME } from 'worklets/NoiseProcessor/NoiseProcessor.models';
-import { OSCILLATOR_PROCESSOR_NAME } from 'worklets/OscillatorProcessor/OscillatorProcessor.models';
+import { OSC_PROCESSOR_NAME } from 'worklets/OscillatorProcessor/OscillatorProcessor.models';
 import { GAIN_PROCESSOR_NAME } from 'worklets/GainProcessor/GainProcessor.models';
 import { CONSTANT_SOURCE_PROCESSOR_NAME } from 'worklets/ConstantSourceProcessor/ConstantSourceProcessor.models';
 
@@ -23,7 +23,7 @@ const oscillatorProcessorUrl = new WorkerUrl(
     import.meta.url
   ),
   {
-    name: OSCILLATOR_PROCESSOR_NAME,
+    name: OSC_PROCESSOR_NAME,
   }
 );
 

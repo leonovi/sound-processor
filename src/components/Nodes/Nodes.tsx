@@ -121,6 +121,14 @@ const Nodes: FC = () => {
       disconnectModules(source, target)
     );
 
+    const destinationNode = elementsToRemove.find(
+      ({ id }) => id === DESTINATION_NODE.id
+    );
+    if (destinationNode) {
+      console.log('DONT REMOVE DESTINATION');
+      return;
+    }
+
     setElements((elements) => removeElements(elementsToRemove, elements));
   };
 

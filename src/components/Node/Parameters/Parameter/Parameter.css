@@ -1,8 +1,14 @@
 
 .parameter {
+  position: relative;
   display: flex;
   align-items: center;
   gap: calc(var(--u) * 3);
+}
+
+.parameter__channel {
+  position: absolute;
+  left: 0;
 }
 
 .parameter__label {

@@ -4,7 +4,7 @@ import { ParameterOptions } from 'components/Node/Parameters/Parameter/Parameter
 export type NodeProps = {
   className?: string;
   label: string;
-  inputs?: [ChannelOptions, ChannelOptions];
-  outputs?: [ChannelOptions, ChannelOptions];
+  inputs?: Array<ChannelOptions>;
+  outputs?: Array<ChannelOptions>;
   parameters?: Array<ParameterOptions>;
 };

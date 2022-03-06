@@ -1,7 +1,7 @@
 import { Node } from 'react-flow-renderer';
 import { NodeTypes } from 'models/NodeTypes';
 import { NOISE_PROCESSOR_NAME } from 'worklets/NoiseProcessor/NoiseProcessor.models';
-import { OSCILLATOR_PROCESSOR_NAME } from 'worklets/OscillatorProcessor/OscillatorProcessor.models';
+import { OSC_PROCESSOR_NAME } from 'worklets/OscillatorProcessor/OscillatorProcessor.models';
 import { GAIN_PROCESSOR_NAME } from 'worklets/GainProcessor/GainProcessor.models';
 import { CONSTANT_SOURCE_PROCESSOR_NAME } from 'worklets/ConstantSourceProcessor/ConstantSourceProcessor.models';
 
@@ -15,7 +15,7 @@ const buildModule = (
     }
 
     case NodeTypes.OSCILLATOR: {
-      return new AudioWorkletNode(audioContext, OSCILLATOR_PROCESSOR_NAME, {
+      return new AudioWorkletNode(audioContext, OSC_PROCESSOR_NAME, {
         processorOptions: {
           sampleRate: audioContext.sampleRate,
         },
