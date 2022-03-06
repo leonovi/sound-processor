@@ -5,7 +5,7 @@ const extractValue = (node: Node | undefined) => node?.data?.value;
 
 const useSetters = (
   inputs: Map<string | null | undefined, Node | undefined>,
-  setters: Map<string, Dispatch<SetStateAction<number>>>
+  setters: Map<string, Dispatch<SetStateAction<any>>>
 ) => {
   useEffect(() => {
     inputs.forEach((node, inputId) => {
