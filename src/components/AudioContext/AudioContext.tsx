@@ -5,7 +5,6 @@ import { WorkerUrl } from 'worker-url';
 import { NOISE_PROCESSOR_NAME } from 'worklets/NoiseProcessor/NoiseProcessor.models';
 import { OSC_PROCESSOR_NAME } from 'worklets/OscillatorProcessor/OscillatorProcessor.models';
 import { GAIN_PROCESSOR_NAME } from 'worklets/GainProcessor/GainProcessor.models';
-import { CONSTANT_SOURCE_PROCESSOR_NAME } from 'worklets/ConstantSourceProcessor/ConstantSourceProcessor.models';
 
 const noiseProcessorUrl = new WorkerUrl(
   new URL(
@@ -37,16 +36,6 @@ const gainProcessorUrl = new WorkerUrl(
   }
 );
 
-const constantSourceProcessorUrl = new WorkerUrl(
-  new URL(
-    '../../worklets/ConstantSourceProcessor/ConstantSourceProcessor.worklet.ts',
-    import.meta.url
-  ),
-  {
-    name: CONSTANT_SOURCE_PROCESSOR_NAME,
-  }
-);
-
 const AudioContextProvider: FC = ({ children }) => {
   const [shouldShowLoader, setShouldShowLoader] = useState(false);
 
@@ -62,7 +51,6 @@ const AudioContextProvider: FC = ({ children }) => {
         audioContext.audioWorklet.addModule(noiseProcessorUrl),
         audioContext.audioWorklet.addModule(oscillatorProcessorUrl),
         audioContext.audioWorklet.addModule(gainProcessorUrl),
-        audioContext.audioWorklet.addModule(constantSourceProcessorUrl),
       ]);
 
       setShouldShowLoader(false);
