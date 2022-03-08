@@ -2,13 +2,13 @@ import {
   Connection,
   Edge,
   isNode as elementIsNode,
-  Node,
+  Node as FlowNode,
 } from 'react-flow-renderer';
-import { NodeData } from 'components/Nodes/Nodes';
+import { Node } from 'components/Flow/Flow.models';
 
 const isNode = (
-  element: Node | Connection | Edge
-): element is Node<NodeData> => {
+  element: FlowNode | Connection | Edge
+): element is Node<any> => {
   return elementIsNode(element);
 };
 

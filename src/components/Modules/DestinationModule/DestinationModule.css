@@ -1,0 +1,3 @@
+.destination-module {
+  width: calc(var(--u) * 45);
+}

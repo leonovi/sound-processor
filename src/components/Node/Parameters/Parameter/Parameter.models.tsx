@@ -1,4 +1,4 @@
-import { ChannelProps } from 'components/Node/Channels/Channel/Channel.models';
+import { ChannelProps } from 'components/Node/Channel/Channel.models';
 import { ReactNode } from 'react';
 
 export type ParameterOptions = {

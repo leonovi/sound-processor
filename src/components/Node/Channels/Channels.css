@@ -1,5 +1,0 @@
-.channels {
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--u) * 5);
-}

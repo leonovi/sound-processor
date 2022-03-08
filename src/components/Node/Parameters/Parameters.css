@@ -1,6 +1,7 @@
 .parameters {
   position: relative;
-  left: -43px;
+  left: -68px;
+  margin-right: -68px;
 
   display: flex;
   flex-direction: column;

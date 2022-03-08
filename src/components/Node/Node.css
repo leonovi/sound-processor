@@ -15,7 +15,13 @@
   box-shadow: 3px 6px 10px 1px rgba(191, 191, 191, 0.25);
 }
 
-.node__left-wrapper {
+.node__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 6);
+}
+
+.node__outputs {
   display: flex;
   flex-direction: column;
   gap: calc(var(--u) * 6);

@@ -9,14 +9,14 @@ export enum OscTypes {
 
 export type OscFunction = (freq: number, sampleRate: number, index: number) => number;
 
-export const OSC_PARAMS = {
+export const OSC_PARAMETERS = {
   TYPE: {
     name: 'type',
     defaultValue: 0,
     minValue: 0,
     maxValue: 3,
   },
-  FREQ: {
+  FREQUENCY: {
     name: 'frequency',
     defaultValue: 220,
     minValue: 20,

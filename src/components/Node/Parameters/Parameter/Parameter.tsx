@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 
 import { ParameterProps } from 'components/Node/Parameters/Parameter/Parameter.models';
-import { Channel } from 'components/Node/Channels/Channel/Channel';
-import { TARGET_TYPE } from 'components/Node/Channels/Channel/Channel.models';
+import { Channel } from 'components/Node/Channel/Channel';
+import { TARGET_TYPE } from 'components/Node/Channel/Channel.models';
 import { isUndefined } from 'utils/isUndefined';
 
 import b_ from 'b_';

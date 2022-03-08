@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
 
 import { isEmpty } from 'utils/isEmpty';
-import { NodeTypes } from 'models/NodeTypes';
 import { CONTEXT_MENU_ITEMS } from './ContextMenu.models';
 
 import b_ from 'b_';
 import './ContextMenu.css';
+import { NodeTypes } from 'components/Flow/Flow.models';
 
 type ContextMenuPropsT = {
   addNode: (type: NodeTypes) => void;

@@ -10,7 +10,7 @@ const useInputs = (id: string) => {
         targetHandle,
         nodes.at(nodes.findIndex(({ id }) => id === source)),
       ])
-  );
+  ) as any; // TODO TYPE
 };
 
 export { useInputs };

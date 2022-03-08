@@ -4,7 +4,7 @@ import { UserGestureHandler } from 'components/UserGestureHandler/UserGestureHan
 import { AudioContext } from 'components/AudioContext/AudioContext';
 import { VolumeWarning } from 'components/VolumeWarning/VolumeWarning';
 import { PopperMenuContext } from 'components/PopperMenuContext/PopperMenuContext';
-import { Nodes } from 'components/Nodes/Nodes';
+import { Flow } from 'components/Flow/Flow';
 
 const App: FC = () => {
   const [wasThereUserGesture, setWasThereUserGesture] = useState(false);
@@ -20,7 +20,7 @@ const App: FC = () => {
   return (
     <AudioContext>
       <PopperMenuContext>
-        <Nodes />
+        <Flow />
       </PopperMenuContext>
     </AudioContext>
   );

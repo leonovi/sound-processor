@@ -2,7 +2,7 @@ import { Processor } from 'worklets/Processor/Processor';
 import {
   OscFunction,
   OscTypes,
-  OSC_PARAMS,
+  OSC_PARAMETERS,
   OSC_PROCESSOR_NAME,
 } from 'worklets/OscillatorProcessor/OscillatorProcessor.models';
 import { isUndefined } from 'utils/isUndefined';
@@ -12,7 +12,7 @@ class OscillatorProcessor extends Processor {
   sampleRate: number;
 
   static get parameterDescriptors() {
-    return [OSC_PARAMS.TYPE, OSC_PARAMS.FREQ];
+    return [OSC_PARAMETERS.TYPE, OSC_PARAMETERS.FREQUENCY];
   }
 
   constructor(options?: AudioWorkletNodeOptions) {
@@ -28,8 +28,8 @@ class OscillatorProcessor extends Processor {
     parameters: Record<string, Float32Array>
   ) {
     const output = outputs[0];
-    const type = parameters[OSC_PARAMS.TYPE.name][0];
-    const freq = parameters[OSC_PARAMS.FREQ.name][0];
+    const type = parameters[OSC_PARAMETERS.TYPE.name][0];
+    const freq = parameters[OSC_PARAMETERS.FREQUENCY.name][0];
 
     const osc = generators.get(type);
     for (let channel = 0; channel < output.length; ++channel) {

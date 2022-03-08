@@ -5,8 +5,8 @@ import { Parameter } from 'components/Node/Parameters/Parameter/Parameter';
 
 import b_ from 'b_';
 import './Parameters.css';
-import { Channel } from '../Channels/Channel/Channel';
-import { TARGET_TYPE } from '../Channels/Channel/Channel.models';
+import { Channel } from '../Channel/Channel';
+import { TARGET_TYPE } from '../Channel/Channel.models';
 
 const b = b_.with('parameters');
 

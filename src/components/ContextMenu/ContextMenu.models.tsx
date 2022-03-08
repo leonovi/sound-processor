@@ -1,8 +1,8 @@
-import { NodeTypes } from 'models/NodeTypes';
+import { NodeTypes } from 'components/Flow/Flow.models';
 
 export const CONTEXT_MENU_ITEMS = [
   {
-    label: 'Processors',
+    label: 'Modules',
     items: [
       { label: 'Noise', nodeType: NodeTypes.NOISE },
       {
@@ -13,13 +13,22 @@ export const CONTEXT_MENU_ITEMS = [
         label: 'Gain',
         nodeType: NodeTypes.GAIN,
       },
+    ],
+  },
+  {
+    label: 'Sources',
+    items: [
       {
-        label: 'Constant Source',
-        nodeType: NodeTypes.CONSTANT_SOURCE,
+        label: 'Constant',
+        nodeType: NodeTypes.CONSTANT,
       },
       {
         label: 'Sequencer',
-        nodeType: NodeTypes.SEQUENCER,
+        nodeType: NodeTypes.NOTE_SEQUENCER,
+      },
+      {
+        label: 'Gate',
+        nodeType: NodeTypes.GATE,
       },
     ],
   },
