@@ -1,3 +1,4 @@
+import { AdsrModule } from 'components/Modules/AdsrModule/AdsrModule';
 import { DestinationModule } from 'components/Modules/DestinationModule/DestinationModule';
 import { GainModule } from 'components/Modules/GainModule/GainModule';
 import { NoiseModule } from 'components/Modules/NoiseModule/NoiseModule';
@@ -31,6 +32,7 @@ export enum NodeTypes {
   OSCILLATOR = 'MODULE_Osc',
   DESTINATION = 'MODULE_Destination',
   GAIN = 'MODULE_Gain',
+  ADSR = 'MODULE_Adsr',
 
   // Sources
   CONSTANT = 'SOURCE_Constant',
@@ -46,4 +48,5 @@ export const NODE_TYPES = {
   [NodeTypes.CONSTANT]: ConstantSource,
   [NodeTypes.NOTE_SEQUENCER]: NoteSequencerSource,
   [NodeTypes.GATE]: GateSource,
+  [NodeTypes.ADSR]: AdsrModule,
 };

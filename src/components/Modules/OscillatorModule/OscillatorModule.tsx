@@ -1,8 +1,8 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { NodeProps } from 'react-flow-renderer';
 
 import { useInputs } from 'hooks/useInputs';
-import { useParameter } from 'hooks/useParameter';
+import { useProcessorParameter } from 'hooks/useProcessorParameter';
 
 import { Node } from 'components/Node/Node';
 import {
@@ -15,6 +15,7 @@ import { NO_LABEL } from 'components/Node/Parameters/Parameter/Parameter.models'
 import { Module } from 'components/Flow/Flow.models';
 
 import { extractModule } from 'utils/extractModule';
+import { clamp } from 'utils/clamp';
 
 import {
   OscTypes,
@@ -28,8 +29,12 @@ import SquareWave from 'icons/square-wave.svg';
 
 import b_ from 'b_';
 import './OscillatorModule.css';
+import { isUndefined } from 'utils/isUndefined';
 
 const DEFAULT_TYPE = OSC_PARAMETERS.TYPE.defaultValue;
+const MIN_TYPE = OSC_PARAMETERS.TYPE.minValue;
+const MAX_TYPE = OSC_PARAMETERS.TYPE.maxValue;
+
 const DEFAULT_FREQUENCY = OSC_PARAMETERS.FREQUENCY.defaultValue;
 const MIN_FREQUENCY = OSC_PARAMETERS.FREQUENCY.minValue;
 const MAX_FREQUENCY = OSC_PARAMETERS.FREQUENCY.maxValue;
@@ -38,28 +43,42 @@ const b = b_.with('oscillator-module');
 
 const OscillatorModule: FC<NodeProps<Module>> = ({ id, data }) => {
   const inputs = useInputs(id);
+  const typeInputNode = inputs.get(OSCILLATOR_CHANNELS.TYPE.id);
+  const frequencyInputNode = inputs.get(OSCILLATOR_CHANNELS.FREQUENCY.id);
+
+  useEffect(() => {
+    if (isUndefined(typeInputNode)) {
+      return;
+    }
+
+    setType(clamp(typeInputNode.data.value, MIN_TYPE, MAX_TYPE));
+  }, [typeInputNode]);
+
+  useEffect(() => {
+    if (isUndefined(frequencyInputNode)) {
+      return;
+    }
+
+    setFrequency(
+      clamp(frequencyInputNode.data.value, MIN_FREQUENCY, MAX_FREQUENCY)
+    );
+  }, [frequencyInputNode]);
 
   const [type, setType] = useState(DEFAULT_TYPE);
   const [frequency, setFrequency] = useState(DEFAULT_FREQUENCY);
 
   const module = extractModule(data);
 
-  useParameter({
+  useProcessorParameter({
     name: OSC_PARAMETERS.TYPE.name,
     module,
-    state: [type, setType],
-    minValue: OSC_PARAMETERS.TYPE.minValue,
-    maxValue: OSC_PARAMETERS.TYPE.maxValue,
-    input: inputs.get(OSCILLATOR_CHANNELS.TYPE.id),
+    value: type,
   });
 
-  useParameter({
+  useProcessorParameter({
     name: OSC_PARAMETERS.FREQUENCY.name,
     module,
-    state: [frequency, setFrequency],
-    minValue: OSC_PARAMETERS.FREQUENCY.minValue,
-    maxValue: OSC_PARAMETERS.FREQUENCY.maxValue,
-    input: inputs.get(OSCILLATOR_CHANNELS.FREQUENCY.id),
+    value: frequency,
   });
 
   return (

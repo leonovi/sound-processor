@@ -36,6 +36,16 @@ const gainProcessorUrl = new WorkerUrl(
   }
 );
 
+const adsrProcessorUrl = new WorkerUrl(
+  new URL(
+    '../../worklets/AdsrProcessor/AdsrProcessor.worklet.ts',
+    import.meta.url
+  ),
+  {
+    name: GAIN_PROCESSOR_NAME,
+  }
+);
+
 const AudioContextProvider: FC = ({ children }) => {
   const [shouldShowLoader, setShouldShowLoader] = useState(false);
 
@@ -51,6 +61,7 @@ const AudioContextProvider: FC = ({ children }) => {
         audioContext.audioWorklet.addModule(noiseProcessorUrl),
         audioContext.audioWorklet.addModule(oscillatorProcessorUrl),
         audioContext.audioWorklet.addModule(gainProcessorUrl),
+        audioContext.audioWorklet.addModule(adsrProcessorUrl),
       ]);
 
       setShouldShowLoader(false);

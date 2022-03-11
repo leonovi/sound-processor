@@ -13,6 +13,10 @@ export const CONTEXT_MENU_ITEMS = [
         label: 'Gain',
         nodeType: NodeTypes.GAIN,
       },
+      {
+        label: 'ADSR',
+        nodeType: NodeTypes.ADSR,
+      },
     ],
   },
   {

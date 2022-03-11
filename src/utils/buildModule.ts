@@ -29,6 +29,10 @@ const buildModule = (
       return new AudioWorkletNode(audioContext, GAIN_PROCESSOR_NAME);
     }
 
+    case NodeTypes.ADSR: {
+      return new AudioWorkletNode(audioContext, "adsr-processor");
+    }
+
     default: {
       return null;
     }

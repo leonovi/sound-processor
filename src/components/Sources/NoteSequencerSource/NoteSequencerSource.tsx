@@ -21,16 +21,26 @@ import { findNote } from 'utils/findNote';
 import b_ from 'b_';
 import './NoteSequencerSource.css';
 import { NO_LABEL } from 'components/Node/Parameters/Parameter/Parameter.models';
-import { useParameter } from 'hooks/useParameter';
 import { useInputs } from 'hooks/useInputs';
+import { isUndefined } from 'utils/isUndefined';
 
 const b = b_.with('note-sequencer-source');
 
 const NoteSequencerSource: FC<NodeProps<Source<number>>> = ({ id, data }) => {
-  const inputs = useInputs(id);
   const updateNode = useUpdateNodeInternals();
 
-  const [BPM, setBPM] = useState(DEFAULT_BPM);
+  const inputs = useInputs(id);
+  const startedInputNode = inputs.get(NOTE_SEQUENCER_CHANNELS.SYNC.id);
+
+  useEffect(() => {
+    if (isUndefined(startedInputNode)) {
+      return;
+    }
+
+    setStarted(startedInputNode.data.value);
+  }, [startedInputNode]);
+
+  const [bpm, setBpm] = useState(DEFAULT_BPM);
   const [notes, setNotes] = useState(DEFAULT_NOTES);
   const [value, setValue] = useState(DEFAULT_VALUE);
 
@@ -45,7 +55,7 @@ const NoteSequencerSource: FC<NodeProps<Source<number>>> = ({ id, data }) => {
 
     setTimeout(() => {
       setCurrentNoteId((id) => (id + 1 > MAX_ID ? FIRST_NOTE_ID : id + 1));
-    }, bpmToMs(BPM));
+    }, bpmToMs(bpm));
   }, [isStarted, currentNoteId]);
 
   useEffect(() => {
@@ -56,15 +66,6 @@ const NoteSequencerSource: FC<NodeProps<Source<number>>> = ({ id, data }) => {
     data.value = value;
     updateNode(id);
   }, [value]);
-
-  useParameter({
-    name: '',
-    module: null,
-    state: [isStarted, setStarted],
-    minValue: -1000,
-    maxValue: 1000,
-    input: inputs.get(NOTE_SEQUENCER_CHANNELS.SYNC.id),
-  })
 
   return (
     <Node
@@ -84,10 +85,10 @@ const NoteSequencerSource: FC<NodeProps<Source<number>>> = ({ id, data }) => {
           label: 'Bpm',
           controller: (
             <InputController
-              value={BPM}
+              value={bpm}
               minValue={20}
               maxValue={1000}
-              onChange={(bpm) => setBPM(bpm)}
+              onChange={(bpm) => setBpm(bpm)}
             />
           ),
           channel: NOTE_SEQUENCER_CHANNELS.BPM,

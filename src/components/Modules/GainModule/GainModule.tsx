@@ -18,6 +18,7 @@ import b_ from 'b_';
 import './GainModule.css';
 import { clamp } from 'utils/clamp';
 import { Module } from 'components/Flow/Flow.models';
+import { useInputs } from 'hooks/useInputs';
 
 const DEFAULT_GAIN = GAIN_PARAMETER.defaultValue;
 const MIN_GAIN = GAIN_PARAMETER.minValue;
@@ -25,7 +26,10 @@ const MAX_GAIN = GAIN_PARAMETER.maxValue;
 
 const b = b_.with('gain-module');
 
-const GainModule: FC<NodeProps<Module>> = ({ data }) => {
+const GainModule: FC<NodeProps<Module>> = ({ id, data }) => {
+  const inp = useInputs(id)
+  console.log(inp);
+
   const { currentTime } = useAudioContext();
   const [gain, setGain] = useState(DEFAULT_GAIN);
 
