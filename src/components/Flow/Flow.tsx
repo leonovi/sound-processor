@@ -9,43 +9,15 @@ import ReactFlow, {
   Elements,
 } from 'react-flow-renderer';
 import { nanoid } from 'nanoid';
-
 import { useAudioContext } from 'context/AudioContext';
 import { usePopperMenuContext } from 'context/PopperMenuContext';
-
 import { ContextMenu } from 'components/ContextMenu/ContextMenu';
-
-import { buildModule } from 'utils/buildModule';
-import {
-  BACKSPACE_KEYCODE,
-  EDGE_TYPES,
-  Module,
-  MODULE_PREFIX,
-  NodeTypes,
-  NODE_TYPES,
-  Node,
-  Source,
-  SOURCE_PREFIX,
-} from './Flow.models';
-import { isModule } from 'utils/isModule';
-import { isSource } from 'utils/isSource';
 import { isNode } from 'utils/isNode';
-import { buildParameters } from 'utils/buildParameters';
-// import { isAudioWorklet } from 'utils/worklet/isAudioWorklet';
 
-// import { sendStopMessage } from 'worklets/Processor/Processor.messages';
-
-const DESTINATION_NODE: Node<Module> = {
-  id: 'destination',
-  type: NodeTypes.DESTINATION,
-  position: {
-    x: 1200,
-    y: 300,
-  },
-  data: {
-    module: null,
-  },
-};
+import {
+  NodeTypes,
+} from './Flow.models';
+import { BACKSPACE_KEYCODE, EDGE_TYPES, NODE_TYPES } from './Flow.data';
 
 const findModules = (
   elements: Elements,
@@ -73,7 +45,7 @@ const Flow: FC = () => {
   const audioContext = useAudioContext();
   const popperMenuContext = usePopperMenuContext();
 
-  const [elements, setElements] = useState<Elements>([DESTINATION_NODE]);
+  const [elements, setElements] = useState<Elements>([]);
 
   const connectModules = (
     source: string | null,
@@ -85,7 +57,9 @@ const Flow: FC = () => {
       target
     );
 
-    sourceModule && targetModule && sourceModule.connect(targetModule);
+    if (sourceModule && targetModule) {
+      sourceModule.connect(targetModule);
+    }
   };
 
   const disconnectModules = (
@@ -100,7 +74,6 @@ const Flow: FC = () => {
 
     if (sourceModule && targetModule) {
       sourceModule.disconnect(targetModule);
-      // isAudioWorklet(sourceModule) && sendStopMessage(sourceModule); // this permanently stop processor
     }
   };
 
@@ -110,14 +83,6 @@ const Flow: FC = () => {
     edgesToRemove.forEach(({ source, target }) =>
       disconnectModules(source, target)
     );
-
-    const destinationNode = elementsToRemove.find(
-      ({ id }) => id === DESTINATION_NODE.id
-    );
-    if (destinationNode) {
-      console.log('DONT REMOVE DESTINATION');
-      return;
-    }
 
     setElements((elements) => removeElements(elementsToRemove, elements));
   };
@@ -129,28 +94,15 @@ const Flow: FC = () => {
     setElements((elements) => addEdge(connectionParams, elements));
   };
 
-  const patchNode = (node: Node<any>): Node<any> => {
-    if (isModule(node)) {
-      return {
-        ...node,
-        data: {
-          module: buildModule(audioContext, node.type),
-          parameters: buildParameters(node.type),
-        },
-      };
-    }
-
-    if (isSource(node)) {
-      return {
-        ...node,
-        data: {
-          value: null,
-        },
-      };
-    }
-
-    return node;
-  };
+  // const patchNode = (node: Node<any>): Node<any> => {
+  //     return {
+  //       ...node,
+  //       data: {
+  //         //
+  //       },
+  //     };
+  //   }
+  // };
 
   // const patchEdge = (edge: Edge): Edge => ({
   //   ...edge,
@@ -166,32 +118,18 @@ const Flow: FC = () => {
         y: popperMenuContext.getRect().top,
       };
 
-      if (type.startsWith(MODULE_PREFIX)) {
-        setElements((elements: Elements) =>
-          elements.concat({
-            id,
-            type,
-            position,
-            data: {
-              module: buildModule(audioContext, type),
-              parameters: buildParameters(type),
-            },
-          })
-        );
-      }
+      setElements((elements: Elements) =>
+        elements.concat({
+          id,
+          type,
+          position,
+          data: {
+            // module: buildModule(audioContext, type),
+            // parameters: buildParameters(type),
+          },
+        })
+      );
 
-      if (type.startsWith(SOURCE_PREFIX)) {
-        setElements((elements: Elements) =>
-          elements.concat({
-            id,
-            type,
-            position,
-            data: {
-              value: null,
-            },
-          })
-        );
-      }
       popperMenuContext.hide();
     },
     [popperMenuContext, setElements]
@@ -224,7 +162,7 @@ const Flow: FC = () => {
     const nodes = elements.filter(isNode);
     const edges = elements.filter(isEdge);
 
-    const patchedNodes = nodes.map(patchNode);
+    const patchedNodes = nodes; // nodes.map(patchNode);
     const patchedEdges = edges; // edges.map(patchEdge);
 
     const patchedElements = [patchedNodes, patchedEdges].flat();

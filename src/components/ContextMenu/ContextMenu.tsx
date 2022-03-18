@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { isEmpty } from 'utils/isEmpty';
+import { isEmptyArray } from 'utils/isEmpty';
 import { CONTEXT_MENU_ITEMS } from './ContextMenu.models';
 
 import b_ from 'b_';
@@ -25,7 +25,7 @@ const ContextMenu: FC<ContextMenuPropsT> = ({ addNode }) => {
             <span>{label}</span>
             <span className={b('item-arrow')}>‣</span> {/* TODO make svg icon */}
 
-            {!isEmpty(items) && (
+            {!isEmptyArray(items) && (
               <ul className={b('sub-menu')}>
                 {items.map(({ label, nodeType }) => (
                   <li

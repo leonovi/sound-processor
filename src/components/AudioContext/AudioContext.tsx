@@ -1,50 +1,17 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import { AudioContext } from 'context/AudioContext';
-import { WorkerUrl } from 'worker-url';
 
-import { NOISE_PROCESSOR_NAME } from 'worklets/NoiseProcessor/NoiseProcessor.models';
-import { OSC_PROCESSOR_NAME } from 'worklets/OscillatorProcessor/OscillatorProcessor.models';
-import { GAIN_PROCESSOR_NAME } from 'worklets/GainProcessor/GainProcessor.models';
+// import { WorkerUrl } from 'worker-url';
 
-const noiseProcessorUrl = new WorkerUrl(
-  new URL(
-    '../../worklets/noiseProcessor/noiseProcessor.worklet.ts',
-    import.meta.url
-  ),
-  {
-    name: NOISE_PROCESSOR_NAME,
-  }
-);
-
-const oscillatorProcessorUrl = new WorkerUrl(
-  new URL(
-    '../../worklets/oscillatorProcessor/oscillatorProcessor.worklet.ts',
-    import.meta.url
-  ),
-  {
-    name: OSC_PROCESSOR_NAME,
-  }
-);
-
-const gainProcessorUrl = new WorkerUrl(
-  new URL(
-    '../../worklets/gainProcessor/gainProcessor.worklet.ts',
-    import.meta.url
-  ),
-  {
-    name: GAIN_PROCESSOR_NAME,
-  }
-);
-
-const adsrProcessorUrl = new WorkerUrl(
-  new URL(
-    '../../worklets/AdsrProcessor/AdsrProcessor.worklet.ts',
-    import.meta.url
-  ),
-  {
-    name: GAIN_PROCESSOR_NAME,
-  }
-);
+// const someProcessorUrl = new WorkerUrl(
+//   new URL(
+//     '../../worklets/someProcessor/someProcessor.worklet.ts',
+//     import.meta.url
+//   ),
+//   {
+//     name: SOME_PROCESSOR_NAME,
+//   }
+// );
 
 const AudioContextProvider: FC = ({ children }) => {
   const [shouldShowLoader, setShouldShowLoader] = useState(false);
@@ -58,10 +25,7 @@ const AudioContextProvider: FC = ({ children }) => {
 
     const loadAudioWorklets = async () => {
       await Promise.all([
-        audioContext.audioWorklet.addModule(noiseProcessorUrl),
-        audioContext.audioWorklet.addModule(oscillatorProcessorUrl),
-        audioContext.audioWorklet.addModule(gainProcessorUrl),
-        audioContext.audioWorklet.addModule(adsrProcessorUrl),
+        // audioContext.audioWorklet.addModule(someProcessorUrl),
       ]);
 
       setShouldShowLoader(false);

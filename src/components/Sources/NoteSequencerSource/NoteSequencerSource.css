@@ -1,9 +1,0 @@
-.note-sequencer-source {
-
-}
-
-.note-sequencer-source__notes {
-  display: flex;
-  gap: var(--u);
-  margin-left: calc(var(--u) * 10);
-}

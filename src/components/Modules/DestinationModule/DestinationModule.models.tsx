@@ -1,1 +1,0 @@
-export const DESTINATION_INPUT = { id: 'DESTINATION_INPUT' };

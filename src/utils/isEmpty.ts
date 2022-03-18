@@ -1,5 +1,5 @@
-const isEmpty = (value: Array<any>): boolean => {
+const isEmptyArray = (value: Array<any>): boolean => {
   return value.length === 0;
 };
 
-export { isEmpty };
+export { isEmptyArray };
