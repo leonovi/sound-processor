@@ -1,4 +1,4 @@
-export type NodeProps = {
+export type NodePropsT = {
   className?: string;
-  label: string;
+  onClick?: () => void;
 };

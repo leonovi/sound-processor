@@ -6,4 +6,7 @@ export type NodeT<T> = Omit<Node<T>, 'type'> & {
 
 export enum NodeTypes {
   BLANK = 'BLANK',
+
+  SUM = 'MATH_SUM',
+  NUMBER = 'MATH_NUMBER',
 }

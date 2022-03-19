@@ -1,21 +1,18 @@
 import React, { FC } from 'react';
-import { NodeProps } from 'components/Node/Node.models';
-import { isUndefined } from 'utils/isUndefined';
+import { NodePropsT } from 'components/Node/Node.models';
 import cn from 'classnames';
 import b_ from 'b_';
 import './Node.css';
 
 const b = b_.with('node');
 
-const Node: FC<NodeProps> = ({
+const Node: FC<NodePropsT> = ({
   children,
   className,
-  label,
+  onClick,
 }) => {
   return (
-    <div className={cn(b(), className)}>
-      <span className={b('label')}>{label}</span>
-
+    <div className={cn(b(), className)} onClick={onClick}>
       {children}
     </div>
   );

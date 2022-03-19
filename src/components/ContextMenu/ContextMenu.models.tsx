@@ -1,18 +1,15 @@
 import { NodeTypes } from 'components/Flow/Flow.models';
 
+type ContextMenuItemT = {
+  label: string;
+  nodeType: NodeTypes;
+};
+
 export type ContextMenuItemsT = Array<{
   label: string;
-  items: Array<{
-    label: string;
-    nodeType: NodeTypes;
-  }>;
+  items: Array<ContextMenuItemT>;
 }>;
 
-export const CONTEXT_MENU_ITEMS: ContextMenuItemsT = [
-  {
-    label: 'Utilities',
-    items: [
-      { label: 'Blank', nodeType: NodeTypes.BLANK },
-    ],
-  },
-];
+export type ContextMenuPropsT = {
+  addNode: (type: NodeTypes) => void;
+};

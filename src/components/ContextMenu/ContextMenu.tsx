@@ -1,22 +1,18 @@
 import React, { FC } from 'react';
-
+import { NodeTypes } from 'components/Flow/Flow.models';
 import { isEmptyArray } from 'utils/isEmpty';
-import { CONTEXT_MENU_ITEMS } from './ContextMenu.models';
-
 import b_ from 'b_';
 import './ContextMenu.css';
-import { NodeTypes } from 'components/Flow/Flow.models';
 
-type ContextMenuPropsT = {
-  addNode: (type: NodeTypes) => void;
-};
+import { ContextMenuPropsT } from './ContextMenu.models';
+import { ContextMenuItemsData } from './ContextMenu.data';
 
 const b = b_.with('context-menu');
 
 const ContextMenu: FC<ContextMenuPropsT> = ({ addNode }) => {
   return (
     <ul className={b()}>
-      {CONTEXT_MENU_ITEMS.map((item) => {
+      {ContextMenuItemsData.map((item) => {
         const { label, items } = item;
 
         // TODO make react components
