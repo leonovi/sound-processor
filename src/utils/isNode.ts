@@ -1,13 +1,17 @@
+import { NodeTypes } from 'components/Nodes/data';
 import {
   Connection,
   Edge,
   isNode as elementIsNode,
-  Node,
+  Node as FlowNode,
 } from 'react-flow-renderer';
-import { NodeT } from 'components/Flow/Flow.models';
+
+export type NodeT<T> = Omit<FlowNode<T>, 'type'> & {
+  type: NodeTypes;
+};
 
 const isNode = (
-  element: Node | Connection | Edge
+  element: FlowNode | Connection | Edge
 ): element is NodeT<any> => {
   return elementIsNode(element);
 };

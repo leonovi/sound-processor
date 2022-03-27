@@ -1,41 +1,34 @@
 import React, { ChangeEventHandler, FC, useEffect, useState } from 'react';
-import { NodeComponentProps } from 'react-flow-renderer';
-import { Node } from 'components/Node/Node';
-import { toNumber } from 'utils/toNumber';
-import { isNumber } from 'utils/isNumber';
-import { useUpdate } from 'hooks/useUpdate';
 import b_ from 'b_';
 import './Number.css';
-
+import { useUpdate } from 'hooks/useUpdate';
+import { useIncomers } from 'hooks/useIncomers';
+import { NodeT } from 'utils/isNode';
+import { first } from 'utils/first';
+import { Node } from 'components/Node/Node';
+import { propsData } from 'components/Nodes/data';
+import { NumberInput } from 'components/NumberInput/NumberInput';
 import { NumberDataT } from './Number.models';
-import { DEFAULT_NUMBER } from './Number.data';
 
 const b = b_.with('number-node');
 
-const Number: FC<NodeComponentProps<NumberDataT>> = ({ id, data }) => {
-  const updateNode = useUpdate();
+const Number: FC<NodeT<NumberDataT>> = ({ id, type }) => {
+  const [value, setValue] = useState(0);
 
-  const [value, setValue] = useState(DEFAULT_NUMBER);
+  const incomers = useIncomers(id);
+  const inputNode = first(incomers);
+  useEffect(
+    () => inputNode && inputNode.data.value && setValue(inputNode.data.value),
+    [inputNode]
+  );
 
-  useEffect(() => {
-    data.value = value;
-    updateNode(id);
-  }, [value]);
+  const update = useUpdate(id, value);
+  useEffect(update, [value]);
 
-  const onInputChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    const value = event.target.value;
-
-    if (isNumber(value)) {
-      setValue(toNumber(value));
-    }
-    if (value === '') {
-      setValue(DEFAULT_NUMBER);
-    }
-  };
-
+  const props = propsData.get(type);
   return (
-    <Node className={b()}>
-      <input value={value} onChange={onInputChange} />
+    <Node className={b()} {...props}>
+      <NumberInput value={value} onChange={(value) => setValue(value)} />
     </Node>
   );
 };

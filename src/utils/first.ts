@@ -1,3 +1,3 @@
-const firstOfArray = (array: Array<any> | Float32Array) => array[0];
+const first = <T>(array: Array<T>): T => array[0];
 
-export { firstOfArray }
+export { first }

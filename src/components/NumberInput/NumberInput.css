@@ -1,0 +1,17 @@
+.number-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: none;
+  border-radius: 6px;
+
+  font-weight: 400;
+  font-size: 18px;
+  text-align: center;
+}
+
+.number-input:focus {
+  font-weight: 600;
+  outline: none;
+}

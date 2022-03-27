@@ -1,0 +1,22 @@
+.bang-node__bang {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: calc(var(--u) * 6);
+  height: calc(var(--u) * 6);
+
+  border: none;
+  border-radius: 50%;
+
+  background-color: #E6E9EC;
+  cursor: pointer;
+}
+
+.bang-node__bang:hover {
+  background-color: var(--color-grey-100);
+}
+
+.bang-node__bang:active {
+  background-color: var(--color-grey-200);
+}

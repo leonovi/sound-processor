@@ -12,12 +12,24 @@ import { nanoid } from 'nanoid';
 import { useAudioContext } from 'context/AudioContext';
 import { usePopperMenuContext } from 'context/PopperMenuContext';
 import { ContextMenu } from 'components/ContextMenu/ContextMenu';
+import { NodeTypes } from 'components/Nodes/data';
 import { isNode } from 'utils/isNode';
 
-import {
-  NodeTypes,
-} from './Flow.models';
-import { BACKSPACE_KEYCODE, EDGE_TYPES, NODE_TYPES } from './Flow.data';
+import { Sum } from 'components/Nodes/Math/Sum/Sum';
+import { Number } from 'components/Nodes/Math/Number/Number';
+import { Bang } from 'components/Nodes/Utilities/Bang/Bang';
+import { Metro } from 'components/Nodes/Utilities/Metro/Metro';
+
+const BACKSPACE_KEYCODE = 8;
+
+const EDGE_TYPES = {}; // TODO create custom edge
+
+const NODE_TYPES = {
+  [NodeTypes.Sum]: Sum,
+  [NodeTypes.Number]: Number,
+  [NodeTypes.Bang]: Bang,
+  [NodeTypes.Metro]: Metro,
+};
 
 const findModules = (
   elements: Elements,
@@ -125,7 +137,6 @@ const Flow: FC = () => {
           position,
           data: {
             // module: buildModule(audioContext, type),
-            // parameters: buildParameters(type),
           },
         })
       );

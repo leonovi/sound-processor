@@ -1,4 +1,4 @@
-import { NodeTypes } from 'components/Flow/Flow.models';
+import { NodeTypes } from "components/Nodes/data";
 
 type ContextMenuItemT = {
   label: string;

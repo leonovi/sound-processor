@@ -36,7 +36,7 @@ const AudioContextProvider: FC = ({ children }) => {
   }, [audioContext]);
 
   if (shouldShowLoader) {
-    return null;
+    return null; // TODO make loader
   }
 
   return (

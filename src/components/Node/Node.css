@@ -1,42 +1,117 @@
 .node {
   position: relative;
 
-  display: flex;
-  justify-content: space-between;
-
   width: fit-content;
   height: fit-content;
-  padding: calc(var(--u) * 5) calc(var(--u) * 3);
 
-  border: none;
-  border-radius: calc(var(--u) * 3);
+  border: 1px solid var(--color-grey);
+  border-radius: calc(var(--u) * 2.5);
 
   background-color: var(--color-white);
   box-shadow: 3px 6px 10px 1px rgba(191, 191, 191, 0.25);
 }
 
-.node__inputs {
+.node__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: calc(var(--u) * 7.5);
+  padding: 0 calc(var(--u) * 3);
+  border-bottom: 1px solid var(--color-grey);
+}
+
+.node__header_hidden {
+  display: none;
+}
+
+.node__name {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 135%;
+  letter-spacing: 0.07em;
+  color: var(--color-black);
+}
+
+.node__body {
+  display: grid;
+  grid-template-columns: calc(var(--u) * 3) 1fr calc(var(--u) * 3);
+  padding: calc(var(--u) * 2) 0;
+
+  overflow: hidden;
+}
+
+.node__inputs,
+.node__outputs {
+  position: relative;
+
   display: flex;
   flex-direction: column;
-  gap: calc(var(--u) * 6);
+  justify-content: center;
+  gap: calc(var(--u) * 1.5);
+}
+
+.node__inputs {
+  left: calc(var(--u) * 2 / -2);
 }
 
 .node__outputs {
-  display: flex;
-  flex-direction: column;
-  gap: calc(var(--u) * 6);
+  right: calc(var(--u) * 2 / -2);
 }
 
-.node__label {
-  --label-font-size: 18px;
-  --label-offset: 12px;
+.node__input,
+.node__output {
+  width: calc(var(--u) * 3);
+  height: calc(var(--u) * 3);
 
+  background-color: var(--color-grey);
+}
+
+.node__childrens {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 calc(var(--u) * 3);
+}
+
+.node__hint {
   position: absolute;
-  top: calc((var(--label-font-size) + var(--label-offset)) * -1);
-  left: 50%;
-  transform: translate(-50%);
+  bottom: calc(var(--u) * -4 - 12px);
+  left: 0px;
 
-  font-weight: bold;
-  font-size: var(--label-font-size);
-  line-height: var(--label-font-size);
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  height: calc(var(--u) * 4);
+  padding: 10px 4px;
+
+  border: 1px solid var(--color-grey);
+  border-radius: calc(var(--u) * 1);
+
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+
+  background-color: var(--color-white);
+  box-shadow: 3px 6px 10px 1px rgba(191, 191, 191, 0.25);
+}
+
+/* Reset react-flow css */
+.react-flow__handle {
+  position: static;
+  border: none;
+}
+
+.react-flow__handle-left {
+  left: 0;
+  top: 0;
+  transform: none;
+}
+
+.react-flow__handle-right {
+  bottom: 0;
+  left: 0;
+  top: auto;
+  transform: none;
 }
