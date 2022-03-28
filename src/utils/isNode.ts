@@ -1,4 +1,4 @@
-import { NodeTypes } from 'components/Nodes/data';
+import { NodeTypes } from 'components/Nodes/propsData';
 import {
   Connection,
   Edge,

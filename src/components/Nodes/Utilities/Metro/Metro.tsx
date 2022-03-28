@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import b_ from 'b_';
 import './Metro.css';
 import { Node } from 'components/Node/Node';
-import { propsData } from 'components/Nodes/data';
+import { propsData } from 'components/Nodes/propsData';
 import { NumberInput } from 'components/NumberInput/NumberInput';
 import { NodeT } from 'utils/isNode';
 import { noop } from 'utils/noop';

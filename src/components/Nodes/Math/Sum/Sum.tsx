@@ -4,7 +4,7 @@ import './Sum.css';
 import { useUpdate } from 'hooks/useUpdate';
 import { useIncomers } from 'hooks/useIncomers';
 import { Node } from 'components/Node/Node';
-import { NodeTypes, propsData } from 'components/Nodes/data';
+import { NodeTypes, propsData } from 'components/Nodes/propsData';
 import { SumDataT } from './Sum.models';
 import { NodeT } from 'utils/isNode';
 import { useBang } from 'hooks/useBang';

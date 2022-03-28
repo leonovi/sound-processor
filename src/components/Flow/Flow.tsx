@@ -12,7 +12,7 @@ import { nanoid } from 'nanoid';
 import { useAudioContext } from 'context/AudioContext';
 import { usePopperMenuContext } from 'context/PopperMenuContext';
 import { ContextMenu } from 'components/ContextMenu/ContextMenu';
-import { NodeTypes } from 'components/Nodes/data';
+import { NodeTypes } from 'components/Nodes/propsData';
 import { isNode } from 'utils/isNode';
 
 import { Sum } from 'components/Nodes/Math/Sum/Sum';
