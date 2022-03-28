@@ -1,4 +1,4 @@
-import { NodeTypes } from 'components/Nodes/data';
+import { NodeTypes } from 'components/Nodes/propsData';
 import { ContextMenuItemsT } from './ContextMenu.models';
 
 export const ContextMenuItemsData: ContextMenuItemsT = [
