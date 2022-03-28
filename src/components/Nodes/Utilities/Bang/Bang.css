@@ -9,7 +9,7 @@
   border: none;
   border-radius: 50%;
 
-  background-color: #E6E9EC;
+  background-color: var(--color-grey-light);
   cursor: pointer;
 }
 

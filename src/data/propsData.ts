@@ -1,14 +1,4 @@
-enum NodeCategories {
-  Math = 'Math',
-  Utilities = 'Utilities',
-}
-
-export enum NodeTypes {
-  Sum = 'Sum',
-  Number = 'Number',
-  Bang = 'Bang',
-  Metro = 'Metro'
-}
+import { NodeCategories, NodeTypes } from "components/Nodes/models";
 
 const propsData = new Map([
   [
@@ -45,6 +35,15 @@ const propsData = new Map([
       category: NodeCategories.Utilities,
       inputs: [{ id: 'METRO_INPUT' }],
       outputs: [{ id: 'METRO_OUTPUT' }],
+    },
+  ],
+  [
+    NodeTypes.Switch,
+    {
+      name: NodeTypes.Switch,
+      category: NodeCategories.Utilities,
+      inputs: [{ id: 'SWITCH_INPUT_1' }, { id: 'SWITCH_INPUT_2' }, { id: 'SWITCH_INPUT_3' }, { id: 'SWITCH_INPUT_4' }],
+      outputs: [{ id: 'SWITCH_OUTPUT' }],
     },
   ],
 ]);

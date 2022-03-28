@@ -6,7 +6,7 @@ import { useIncomers } from 'hooks/useIncomers';
 import { NodeT } from 'utils/isNode';
 import { first } from 'utils/first';
 import { Node } from 'components/Node/Node';
-import { propsData } from 'components/Nodes/propsData';
+import { propsData } from 'data/propsData';
 import { NumberInput } from 'components/NumberInput/NumberInput';
 import { NumberDataT } from './Number.models';
 

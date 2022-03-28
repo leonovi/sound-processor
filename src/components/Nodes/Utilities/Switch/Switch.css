@@ -1,0 +1,32 @@
+.switcher-node__container {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u) * 2);
+}
+
+.switcher-node__switch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: calc(var(--u) * 4.5);
+  height: calc(var(--u) * 4.5);
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background-color: var(--color-grey-light);
+}
+
+.switcher-node__switch-inner {
+  width: calc(var(--u) * 2.5);
+  height: calc(var(--u) * 2.5);
+
+  border-radius: 50%;
+}
+
+.switcher-node__switch_selected .switcher-node__switch-inner {
+  background-color: var(--color-blue);
+}

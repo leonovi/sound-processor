@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react';
 import b_ from 'b_';
 import './Bang.css';
 import { Node } from 'components/Node/Node';
-import { propsData } from 'components/Nodes/propsData';
+import { propsData } from 'data/propsData';
 import { NodeT } from 'utils/isNode';
 import { useUpdate } from 'hooks/useUpdate';
 import { useIncomers } from 'hooks/useIncomers';

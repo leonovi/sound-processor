@@ -1,4 +1,4 @@
-import { NodeTypes } from "components/Nodes/propsData";
+import { NodeTypes } from 'components/Nodes/models';
 
 type ContextMenuItemT = {
   label: string;

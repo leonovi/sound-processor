@@ -12,13 +12,14 @@ import { nanoid } from 'nanoid';
 import { useAudioContext } from 'context/AudioContext';
 import { usePopperMenuContext } from 'context/PopperMenuContext';
 import { ContextMenu } from 'components/ContextMenu/ContextMenu';
-import { NodeTypes } from 'components/Nodes/propsData';
 import { isNode } from 'utils/isNode';
+import { NodeTypes } from 'components/Nodes/models';
 
 import { Sum } from 'components/Nodes/Math/Sum/Sum';
 import { Number } from 'components/Nodes/Math/Number/Number';
 import { Bang } from 'components/Nodes/Utilities/Bang/Bang';
 import { Metro } from 'components/Nodes/Utilities/Metro/Metro';
+import { Switch } from 'components/Nodes/Utilities/Switch/Switch';
 
 const BACKSPACE_KEYCODE = 8;
 
@@ -29,6 +30,7 @@ const NODE_TYPES = {
   [NodeTypes.Number]: Number,
   [NodeTypes.Bang]: Bang,
   [NodeTypes.Metro]: Metro,
+  [NodeTypes.Switch]: Switch,
 };
 
 const findModules = (

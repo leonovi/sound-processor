@@ -1,4 +1,4 @@
-import { NodeTypes } from 'components/Nodes/propsData';
+import { NodeTypes } from 'components/Nodes/models';
 import { useMemo } from 'react';
 import { NodeT } from 'utils/isNode';
 
