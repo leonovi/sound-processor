@@ -2,36 +2,54 @@ import React, { FC, useEffect, useState } from 'react';
 import b_ from 'b_';
 import './Bang.css';
 import { Node } from 'components/Node/Node';
-import { propsData } from 'data/propsData';
 import { NodeT } from 'utils/isNode';
 import { useUpdate } from 'hooks/useUpdate';
-import { useIncomers } from 'hooks/useIncomers';
-import { noop } from 'utils/noop';
+import { NodeTypes } from 'components/Nodes/models';
+import { useConnection } from 'hooks/useConnection';
+import { useProps } from 'hooks/useProps';
+
+const OFF_TIMEOUT_MS = 100;
 
 const b = b_.with('bang-node');
 
-const Bang: FC<NodeT<{}>> = ({ id, type }) => {
-  const [isActive, setIsActive] = useState(false);
-  const on = () => setIsActive(true);
-  const off = () => setIsActive(false);
+const Bang: FC<NodeT<boolean, NodeTypes.Bang>> = ({ id, type }) => {
+  const props = useProps(type);
+  const {
+    inputs: { bangInput },
+  } = props;
 
-  const incomers = useIncomers(id);
-  useEffect(
-    () => (incomers.length > 0 ? setIsActive(incomers[0].data.value) : noop),
-    [incomers]
-  );
+  const [shouldUpdate, setShouldUpdate] = useState(false);
 
-  const update = useUpdate(id, isActive);
+  const on = () => setShouldUpdate(true);
+  const off = () => setShouldUpdate(false);
 
-  useEffect(update, [isActive]);
+  useConnection(bangInput.id, (value) => {
+    const isBang = value === true;
+    if (isBang) {
+      setShouldUpdate(true);
+    }
+  });
+
+  const update = useUpdate(id, shouldUpdate);
+  useEffect(() => {
+    update();
+  }, [shouldUpdate]);
+
+  useEffect(() => {
+    if (shouldUpdate) {
+      setTimeout(() => {
+        off();
+      }, OFF_TIMEOUT_MS);
+    }
+  }, [shouldUpdate]);
 
   const onMouseDown = on;
   const onMouseUp = off;
 
   return (
-    <Node withoutHeader className={b()} {...propsData.get(type)}>
+    <Node compact className={b()} {...props}>
       <button
-        className={b('bang')}
+        className={b('bang', { pressed: shouldUpdate })}
         onMouseDown={onMouseDown}
         onMouseUp={onMouseUp}
       />

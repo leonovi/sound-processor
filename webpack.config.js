@@ -55,6 +55,7 @@ module.exports = {
       hooks: path.join(__dirname, '/src/hooks'),
       icons: path.join(__dirname, '/src/icons'),
       models: path.join(__dirname, '/src/models'),
+      'style-guide': path.join(__dirname, '/src/style-guide'),
       utils: path.join(__dirname, '/src/utils'),
       worklets: path.join(__dirname, '/src/worklets'),
     },

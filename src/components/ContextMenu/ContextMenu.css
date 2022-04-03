@@ -31,9 +31,9 @@
 
 .context-menu__sub-menu {
   display: none;
-  left: 100%;
   position: absolute;
   top: -6px;
+  left: 100%;
   z-index: 1;
 
   list-style: none;

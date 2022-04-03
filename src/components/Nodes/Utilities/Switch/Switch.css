@@ -30,3 +30,28 @@
 .switcher-node__switch_selected .switcher-node__switch-inner {
   background-color: var(--color-blue);
 }
+
+.switcher-node__add {
+  align-self: flex-start;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+
+  border: none;
+  border-radius: 50%;
+
+  background-color: var(--color-grey-light);
+
+  font-size: 18px;
+  color: var(--color-blue);
+}
+
+.switcher-node__add:hover {
+  outline: 1px solid var(--color-blue);
+}
+
+.switcher-node__add:active {
+  outline: 2px solid var(--color-blue);
+}

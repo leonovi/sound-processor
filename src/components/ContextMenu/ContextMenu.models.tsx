@@ -1,6 +1,6 @@
 import { NodeTypes } from 'components/Nodes/models';
 
-type ContextMenuItemT = {
+export type ContextMenuItemT = {
   label: string;
   nodeType: NodeTypes;
 };

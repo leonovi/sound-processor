@@ -5,32 +5,52 @@ import { isNumber } from 'utils/isNumber';
 import { toNumber } from 'utils/toNumber';
 import { length } from 'utils/length';
 import { isEmptyString } from 'utils/isEmptyString';
-import { NumberInputPropsT } from './NumberInput.models';
+import { matchRegexp } from 'utils/matchRegexp';
 
-const DEFAULT_NUMBER = 0;
+export type NumberInputPropsT = {
+  value: number;
+  onChange: (value: number) => void;
+}
+
+const DEFAULT_INPUT_VALUE = 0;
 
 const SAFETY_AREA = 2;
 const calcWidth = (length: number) => `${length + SAFETY_AREA}ch`;
+const DEFAULT_WIDTH = calcWidth(length(DEFAULT_INPUT_VALUE.toString()));
+
+const NUM_REGEXP = /^\d+$/;
 
 const b = b_.with('number-input');
 
 const NumberInput: FC<NumberInputPropsT> = ({ value, onChange }) => {
   const [internalValue, setInternalValue] = useState(value);
 
-  useEffect(() => setInternalValue(value), [value]);
+  const shouldSetInputValue = isNumber(value) || matchRegexp(value, NUM_REGEXP);
+  useEffect(
+    () => setInternalValue(shouldSetInputValue ? value : DEFAULT_INPUT_VALUE),
+    [value]
+  );
   useEffect(() => onChange(internalValue), [internalValue]);
 
   return (
     <input
       className={b()}
       style={{
-        width: calcWidth(length(value.toString())),
+        width: shouldSetInputValue
+          ? calcWidth(length(value.toString()))
+          : DEFAULT_WIDTH,
       }}
       value={internalValue}
       onChange={(event) => {
-        isEmptyString(event.target.value) && setInternalValue(DEFAULT_NUMBER);
-        isNumber(event.target.value) &&
-          setInternalValue(toNumber(event.target.value));
+        const { value } = event.target;
+
+        if (isEmptyString(value)) {
+          setInternalValue(DEFAULT_INPUT_VALUE);
+        }
+
+        if (shouldSetInputValue) {
+          setInternalValue(toNumber(value));
+        }
       }}
     />
   );

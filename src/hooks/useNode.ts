@@ -1,7 +1,9 @@
-import { useNodes } from "./useNodes"
+import { find } from 'utils/find';
+import { useNodes } from './useNodes';
 
 const useNode = (id: string) => {
-  return useNodes().find((node) => node.id === id);
-}
+  const nodes = useNodes();
+  return find(nodes, (node) => node.id === id);
+};
 
 export { useNode };

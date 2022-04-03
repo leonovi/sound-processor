@@ -8,18 +8,21 @@ import ReactFlow, {
   removeElements,
   Elements,
 } from 'react-flow-renderer';
-import { nanoid } from 'nanoid';
 import { useAudioContext } from 'context/AudioContext';
 import { usePopperMenuContext } from 'context/PopperMenuContext';
-import { ContextMenu } from 'components/ContextMenu/ContextMenu';
+import { generateId } from 'utils/generateId';
 import { isNode } from 'utils/isNode';
-import { NodeTypes } from 'components/Nodes/models';
+import { ContextMenu } from 'components/ContextMenu/ContextMenu';
+import { NodeTypes, TypeOfData } from 'components/Nodes/models';
 
 import { Sum } from 'components/Nodes/Math/Sum/Sum';
 import { Number } from 'components/Nodes/Math/Number/Number';
 import { Bang } from 'components/Nodes/Utilities/Bang/Bang';
 import { Metro } from 'components/Nodes/Utilities/Metro/Metro';
 import { Switch } from 'components/Nodes/Utilities/Switch/Switch';
+import { Defer } from 'components/Nodes/Utilities/Defer/Defer';
+
+const DATASET_TYPE_KEY = 'datatype';
 
 const BACKSPACE_KEYCODE = 8;
 
@@ -31,6 +34,7 @@ const NODE_TYPES = {
   [NodeTypes.Bang]: Bang,
   [NodeTypes.Metro]: Metro,
   [NodeTypes.Switch]: Switch,
+  [NodeTypes.Defer]: Defer,
 };
 
 const findModules = (
@@ -53,6 +57,11 @@ const findModules = (
   const targetModule = targetNode?.data?.module;
 
   return { sourceModule, targetModule };
+};
+
+const getHandleDataset = (handleId: string | undefined | null) => {
+  return document.querySelector<HTMLElement>(`[data-handleid=${handleId}]`)
+    ?.dataset;
 };
 
 const Flow: FC = () => {
@@ -101,22 +110,41 @@ const Flow: FC = () => {
     setElements((elements) => removeElements(elementsToRemove, elements));
   };
 
+  const validateConnection = (
+    sourceType: TypeOfData,
+    targetType: TypeOfData
+  ) => {
+    return sourceType === TypeOfData.Any ||
+      targetType === TypeOfData.Any ||
+      sourceType === targetType
+      ? true
+      : false;
+  };
+
   const onConnect = (connectionParams: Edge | Connection): void => {
-    const { source, target } = connectionParams;
+    const { source, target, sourceHandle, targetHandle } = connectionParams;
+
+    const sourceDataType = getHandleDataset(sourceHandle)?.[
+      DATASET_TYPE_KEY
+    ] as TypeOfData;
+    const targetDataType = getHandleDataset(targetHandle)?.[
+      DATASET_TYPE_KEY
+    ] as TypeOfData;
+
+    if (!validateConnection(sourceDataType, targetDataType)) {
+      return;
+    }
 
     connectModules(source, target);
     setElements((elements) => addEdge(connectionParams, elements));
   };
 
-  // const patchNode = (node: Node<any>): Node<any> => {
-  //     return {
-  //       ...node,
-  //       data: {
-  //         //
-  //       },
-  //     };
-  //   }
-  // };
+  // const patchNode = (node: Node<any>): Node<any> => ({
+  //   ...node,
+  //   data: {
+  //     //
+  //   },
+  // });
 
   // const patchEdge = (edge: Edge): Edge => ({
   //   ...edge,
@@ -125,7 +153,7 @@ const Flow: FC = () => {
 
   const addNode = useCallback(
     (type: NodeTypes): void => {
-      const id = `${type}-${nanoid()}`;
+      const id = generateId(type);
 
       const position = {
         x: popperMenuContext.getRect().left,

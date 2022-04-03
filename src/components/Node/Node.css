@@ -11,6 +11,10 @@
   box-shadow: 3px 6px 10px 1px rgba(191, 191, 191, 0.25);
 }
 
+.node_dragging {
+  outline: 2px solid var(--color-grey-light);
+}
+
 .node__header {
   display: flex;
   align-items: center;

@@ -1,20 +1,16 @@
+import { PropsDataT } from "components/Nodes/models";
+
 export enum HandleTypes {
   Source = 'source',
   Target = 'target',
 }
 
-export type IODataT = {
-  id: string;
-  hint?: string;
-};
-
 export type NodePropsT = {
-  name?: string;
-  withoutHeader?: true;
-  color?: string;
+  name?: PropsDataT['name'] | string;
+  compact?: true;
+  inputs?: PropsDataT['inputs'];
+  outputs?: PropsDataT['outputs'];
   className?: string;
-  inputs?: Array<IODataT>;
-  outputs?: Array<IODataT>;
   onClick?: () => void;
   onMouseDown?: () => void;
   onMouseUp?: () => void;

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import b_ from 'b_';
 import './Switch.css';
 import { propsData } from 'data/propsData';
@@ -6,54 +6,130 @@ import { Node } from 'components/Node/Node';
 import { NodeT } from 'utils/isNode';
 import { useIncomers } from 'hooks/useIncomers';
 import { useUpdate } from 'hooks/useUpdate';
+import { InputT, NodeTypes, TypeOfData } from 'components/Nodes/models';
+import { useNodes } from 'hooks/useNodes';
+import { getNode } from 'utils/getNode';
+import { generateId } from 'utils/generateId';
+import { isUndefined } from 'utils/isUndefined';
+import { useConnection } from 'hooks/useConnection';
+import { useEdges } from 'hooks/useEdges';
+import { getConnectedEdges } from 'react-flow-renderer';
+import { getEdge } from 'utils/getEdge';
+import { useProps } from 'hooks/useProps';
 
-const SWITCH_QUANTITY = 4;
+const DEFAULT_SWITCH_QTY = 4;
+const DEFAULT_SELECTED_ID = 0;
 
-const SELECTED_INDEX = 0;
+const createSwitcher = (id: number, selected: boolean) => ({ id, selected });
 
-const SWITCHERS = new Array(SWITCH_QUANTITY).fill(null).map((_, id) => ({
+const createAdditionalInputKey = (id: number) => {
+  return `switchAdditionalInput${id + 1}`;
+};
+
+const createAdditionalInput = (id: number) => ({
+  id: generateId('SWITCH_ADDITIONAL_INPUT'),
+  datatype: TypeOfData.Any,
+  hint: `Switch additional input #${id + 1} | any`,
+});
+
+const AddSwitchButton: FC<{ onClick: () => void }> = ({ onClick }) => (
+  <button className={b('add')} onClick={onClick} children="+" />
+);
+
+const Switcher: FC<{ id: number; selected: boolean; onClick: () => void }> = ({
   id,
-  selected: id === SELECTED_INDEX,
-}));
+  selected,
+  onClick,
+}) => (
+  <button key={id} className={b('switch', { selected })} onClick={onClick}>
+    <div className={b('switch-inner')} />
+  </button>
+);
 
 const b = b_.with('switcher-node');
 
-const Switch: FC<NodeT<any>> = ({ id, type }) => {
-  const [selectedId, setSelectedId] = useState(SELECTED_INDEX);
-  const [elements, setElements] = useState(SWITCHERS);
-  const [value, setValue] = useState<any>(null);
+const Switch: FC<NodeT<any, NodeTypes.Switch>> = ({ id, type }) => {
+  const props = useProps(type);
 
-  useEffect(() => {
-    setElements((elements) =>
-      elements.map(({ id }) => ({
-        id,
-        selected: id === selectedId,
-      }))
-    );
-  }, [selectedId]);
+  const nodes = useNodes();
+  const edges = useEdges();
+  const connectedEdges = getConnectedEdges(nodes, edges);
 
-  const update = useUpdate(id, value);
+  const [switchQty, setSwitchQty] = useState(DEFAULT_SWITCH_QTY);
+  const [selectedId, setSelectedId] = useState(DEFAULT_SELECTED_ID);
+  const [outputValue, setOutputValue] = useState();
 
-  const incomers = useIncomers(id);
-  useEffect(() => {
-    if (incomers[selectedId]) {
-      setValue(incomers[selectedId].data.value);
+  const switchersData = useMemo(() => {
+    return new Array(switchQty)
+      .fill(null)
+      .map((_, id) => createSwitcher(id, id === selectedId));
+  }, [switchQty, selectedId]);
+
+  const additionalInputs = useMemo(() => {
+    if (switchQty <= DEFAULT_SWITCH_QTY) {
+      return;
     }
-  }, [incomers, selectedId]);
 
-  useEffect(update, [value]);
+    return {
+      ...Object.fromEntries(
+        new Array(switchQty - DEFAULT_SWITCH_QTY)
+          .fill(null)
+          .map((_, id) => [
+            createAdditionalInputKey(id),
+            createAdditionalInput(id),
+          ])
+      ),
+    };
+  }, [switchQty]);
 
-  const props = propsData.get(type);
+  const inputs = isUndefined(additionalInputs)
+    ? props.inputs
+    : {
+        ...props.inputs,
+        ...additionalInputs,
+      };
+
+  const getValue = ({ id }: InputT) => {
+    const connectedEdge = getEdge(connectedEdges, id);
+    const connectedNode = getNode(nodes, connectedEdge?.source);
+
+    return isUndefined(connectedNode) ? null : connectedNode.data.value;
+  };
+
+  const switcherValues = useMemo(() => {
+    return Object.values({
+      ...props.inputs,
+      ...additionalInputs,
+    }).map(getValue);
+  }, [connectedEdges, inputs]);
+
+  useEffect(() => {
+    setOutputValue(switcherValues[selectedId]);
+  }, [switcherValues]);
+
+  const update = useUpdate(id, outputValue);
+  useEffect(() => {
+    update();
+  }, [outputValue]);
+
   return (
-    <Node {...props}>
+    <Node {...props} name={`${props.name} ${switchQty}`} inputs={inputs}>
+      <AddSwitchButton
+        onClick={() => setSwitchQty((switchQty) => switchQty + 1)}
+      />
+      {/*
+        <RemoveSwitchButton
+          onClick={() => setSwitchQty((switchQty) => switchQty - 1)}
+        /> // Trouble with delete react-flow connection
+      */}
       <div className={b('container')}>
-        {elements.map(({ id, selected }) => (
-          <button
-            className={b('switch', { selected })}
+        {switchersData.map(({ id, selected }) => (
+          <Switcher
+            key={id}
+            id={id}
+            selected={selected}
             onClick={() => setSelectedId(id)}
-          >
-            <div className={b('switch-inner')} />
-          </button>
+          />
         ))}
       </div>
     </Node>

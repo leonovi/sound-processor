@@ -11,7 +11,7 @@ const useIncomers = (id: string) => {
     throw new Error('');
   }
 
-  return getIncomers(element, elements) as Array<NodeT<any>>;
+  return getIncomers(element, elements) as Array<NodeT<any, any>>;
 };
 
 export { useIncomers };

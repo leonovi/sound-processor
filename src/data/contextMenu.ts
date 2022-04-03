@@ -8,6 +8,7 @@ export const contextMenuData: ContextMenuItemsT = [
       { label: 'Bang', nodeType: NodeTypes.Bang },
       { label: 'Metro', nodeType: NodeTypes.Metro },
       { label: 'Switch', nodeType: NodeTypes.Switch },
+      { label: 'Defer', nodeType: NodeTypes.Defer },
     ],
   },
   {
