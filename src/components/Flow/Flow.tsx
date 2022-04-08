@@ -8,12 +8,18 @@ import ReactFlow, {
   removeElements,
   Elements,
 } from 'react-flow-renderer';
-import { useAudioContext } from 'context/AudioContext';
 import { usePopperMenuContext } from 'context/PopperMenuContext';
+import {
+  createNotification,
+  NotificationsTypes,
+  useNotificationsContext,
+} from 'context/NotificationsContext';
 import { generateId } from 'utils/generateId';
 import { isNode } from 'utils/isNode';
+import { checkConnection } from 'utils/checkConnection';
 import { ContextMenu } from 'components/ContextMenu/ContextMenu';
-import { NodeTypes, TypeOfData } from 'components/Nodes/models';
+import { NodeCategories, NodeTypes } from 'components/Nodes/models';
+import { AUDIO_HANDLE_IDENTITY, getConfig } from 'data/configs';
 
 import { Sum } from 'components/Nodes/Math/Sum/Sum';
 import { Number } from 'components/Nodes/Math/Number/Number';
@@ -21,8 +27,10 @@ import { Bang } from 'components/Nodes/Utilities/Bang/Bang';
 import { Metro } from 'components/Nodes/Utilities/Metro/Metro';
 import { Switch } from 'components/Nodes/Utilities/Switch/Switch';
 import { Defer } from 'components/Nodes/Utilities/Defer/Defer';
+import { Oscillator } from 'components/Nodes/Audio/Oscillator/Oscillator';
+import { Destination } from 'components/Nodes/Audio/Destination/Destination';
 
-const DATASET_TYPE_KEY = 'datatype';
+const EMPTY_STRING = '';
 
 const BACKSPACE_KEYCODE = 8;
 
@@ -35,6 +43,8 @@ const NODE_TYPES = {
   [NodeTypes.Metro]: Metro,
   [NodeTypes.Switch]: Switch,
   [NodeTypes.Defer]: Defer,
+  [NodeTypes.Oscillator]: Oscillator,
+  [NodeTypes.Destination]: Destination,
 };
 
 const findModules = (
@@ -53,20 +63,18 @@ const findModules = (
     .filter(isNode)
     .find((element) => element.id === target);
 
-  const sourceModule = sourceNode?.data?.module;
-  const targetModule = targetNode?.data?.module;
+  const sourceModule = sourceNode?.data?.config?.module;
+  const targetModule = targetNode?.data?.config?.module;
 
   return { sourceModule, targetModule };
 };
 
-const getHandleDataset = (handleId: string | undefined | null) => {
-  return document.querySelector<HTMLElement>(`[data-handleid=${handleId}]`)
-    ?.dataset;
-};
+const createDragHandleSelector = (type: NodeTypes) =>
+  `.${type.toLowerCase()}-node > *:first-child`;
 
 const Flow: FC = () => {
-  const audioContext = useAudioContext();
   const popperMenuContext = usePopperMenuContext();
+  const { add: addNotification } = useNotificationsContext();
 
   const [elements, setElements] = useState<Elements>([]);
 
@@ -110,30 +118,37 @@ const Flow: FC = () => {
     setElements((elements) => removeElements(elementsToRemove, elements));
   };
 
-  const validateConnection = (
-    sourceType: TypeOfData,
-    targetType: TypeOfData
-  ) => {
-    return sourceType === TypeOfData.Any ||
-      targetType === TypeOfData.Any ||
-      sourceType === targetType
-      ? true
-      : false;
-  };
-
   const onConnect = (connectionParams: Edge | Connection): void => {
     const { source, target, sourceHandle, targetHandle } = connectionParams;
 
-    const sourceDataType = getHandleDataset(sourceHandle)?.[
-      DATASET_TYPE_KEY
-    ] as TypeOfData;
-    const targetDataType = getHandleDataset(targetHandle)?.[
-      DATASET_TYPE_KEY
-    ] as TypeOfData;
+    const { isValid, sourceDataType, targetDataType } = checkConnection(
+      sourceHandle ?? EMPTY_STRING,
+      targetHandle ?? EMPTY_STRING
+    );
 
-    if (!validateConnection(sourceDataType, targetDataType)) {
+    if (!isValid) {
+      addNotification(
+        createNotification(
+          NotificationsTypes.InvalidConnection,
+          `Type ${sourceDataType} does not match type ${targetDataType}`
+        )
+      );
       return;
     }
+
+    // if (
+    //   source?.startsWith(NodeCategories.Audio) &&
+    //   target?.startsWith(NodeCategories.Audio)
+    // ) {
+    //   console.log('AUDIO NODES CONNECTION');
+    // }
+
+    // if (
+    //   sourceHandle?.match(AUDIO_HANDLE_IDENTITY) &&
+    //   targetHandle?.match(AUDIO_HANDLE_IDENTITY)
+    // ) {
+    //   console.log('AUDIO HANDLE CONNECTION');
+    // }
 
     connectModules(source, target);
     setElements((elements) => addEdge(connectionParams, elements));
@@ -152,8 +167,8 @@ const Flow: FC = () => {
   // }); future patch for custom edge
 
   const addNode = useCallback(
-    (type: NodeTypes): void => {
-      const id = generateId(type);
+    (type: NodeTypes, category: NodeCategories): void => {
+      const id = generateId(category, type);
 
       const position = {
         x: popperMenuContext.getRect().left,
@@ -166,8 +181,9 @@ const Flow: FC = () => {
           type,
           position,
           data: {
-            // module: buildModule(audioContext, type),
+            config: getConfig(type),
           },
+          dragHandle: createDragHandleSelector(type),
         })
       );
 

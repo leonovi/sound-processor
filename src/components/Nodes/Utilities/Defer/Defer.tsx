@@ -1,21 +1,11 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
 import b_ from 'b_';
 import './Defer.css';
-import { Node } from 'components/Node/Node';
-import { NodeT } from 'utils/isNode';
-import { propsData } from 'data/propsData';
-import { useUpdate } from 'hooks/useUpdate';
 import { Colors } from 'style-guide/colors';
-import { isUndefined } from 'utils/isUndefined';
-import { useEdges } from 'hooks/useEdges';
-import { useNodes } from 'hooks/useNodes';
-import { find } from 'utils/find';
-import { getConnectedEdges } from 'react-flow-renderer';
-import { getNode } from 'utils/getNode';
-import { NodeTypes } from 'components/Nodes/models';
-import { getEdge } from 'utils/getEdge';
+import { useUpdate } from 'hooks/useUpdate';
 import { useConnection } from 'hooks/useConnection';
-import { useProps } from 'hooks/useProps';
+import { Node } from 'components/Node/Node';
+import { DeferNodeT } from './Defer.models';
 
 const b = b_.with('defer-node');
 
@@ -30,10 +20,12 @@ const getGradient = (p: number) => {
   }%)`;
 };
 
-const Defer: FC<NodeT<boolean, NodeTypes.Defer>> = ({ id, type }) => {
-  const props = useProps(type);
+const Defer: FC<DeferNodeT> = (props) => {
   const {
-    inputs: { deferInputBang, deferInputStepsQty },
+    id,
+    data: {
+      config: { name, category, inputs, outputs },
+    },
   } = props;
 
   const [shouldUpdate, setShouldUpdate] = useState(false);
@@ -47,7 +39,7 @@ const Defer: FC<NodeT<boolean, NodeTypes.Defer>> = ({ id, type }) => {
     setShouldUpdate(false);
   };
 
-  useConnection(deferInputBang.id, (value) => {
+  useConnection(inputs.deferInputBang.id, (value) => {
     if (stepNumber === stepLength) {
       setShouldUpdate(true);
     }
@@ -58,7 +50,7 @@ const Defer: FC<NodeT<boolean, NodeTypes.Defer>> = ({ id, type }) => {
     }
   });
 
-  useConnection(deferInputStepsQty.id, setStepLength);
+  useConnection(inputs.deferInputStepsQty.id, setStepLength);
 
   const update = useUpdate(id, shouldUpdate);
   useEffect(() => {
@@ -74,7 +66,13 @@ const Defer: FC<NodeT<boolean, NodeTypes.Defer>> = ({ id, type }) => {
   }, [shouldUpdate]);
 
   return (
-    <Node className={b()} {...props}>
+    <Node
+      className={b()}
+      name={name}
+      category={category}
+      inputs={inputs}
+      outputs={outputs}
+    >
       <div
         className={b('steps-line')}
         style={{

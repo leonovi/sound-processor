@@ -1,4 +1,4 @@
-import { NodeTypes } from 'components/Nodes/models';
+import { NodeCategories, NodeTypes } from 'components/Nodes/models';
 
 export type ContextMenuItemT = {
   label: string;
@@ -6,10 +6,10 @@ export type ContextMenuItemT = {
 };
 
 export type ContextMenuItemsT = Array<{
-  label: string;
+  category: NodeCategories;
   items: Array<ContextMenuItemT>;
 }>;
 
 export type ContextMenuPropsT = {
-  addNode: (type: NodeTypes) => void;
+  addNode: (type: NodeTypes, category: NodeCategories) => void;
 };

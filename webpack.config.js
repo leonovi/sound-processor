@@ -1,7 +1,6 @@
 const path = require('node:path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WorkerUrlPlugin = require('worker-url/plugin');
 
 module.exports = {
   mode: 'development',
@@ -45,7 +44,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html',
     }),
-    new WorkerUrlPlugin(),
   ],
   resolve: {
     alias: {

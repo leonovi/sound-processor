@@ -1,21 +1,18 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
+import { getConnectedEdges } from 'react-flow-renderer';
 import b_ from 'b_';
 import './Switch.css';
-import { propsData } from 'data/propsData';
 import { Node } from 'components/Node/Node';
-import { NodeT } from 'utils/isNode';
-import { useIncomers } from 'hooks/useIncomers';
+import { TypeOfData } from 'components/Nodes/models';
 import { useUpdate } from 'hooks/useUpdate';
-import { InputT, NodeTypes, TypeOfData } from 'components/Nodes/models';
 import { useNodes } from 'hooks/useNodes';
+import { useEdges } from 'hooks/useEdges';
 import { getNode } from 'utils/getNode';
 import { generateId } from 'utils/generateId';
 import { isUndefined } from 'utils/isUndefined';
-import { useConnection } from 'hooks/useConnection';
-import { useEdges } from 'hooks/useEdges';
-import { getConnectedEdges } from 'react-flow-renderer';
 import { getEdge } from 'utils/getEdge';
-import { useProps } from 'hooks/useProps';
+import { SwitchNodeT } from './Switch.models';
+import { InputT } from 'components/Node/Node.models';
 
 const DEFAULT_SWITCH_QTY = 4;
 const DEFAULT_SELECTED_ID = 0;
@@ -48,8 +45,13 @@ const Switcher: FC<{ id: number; selected: boolean; onClick: () => void }> = ({
 
 const b = b_.with('switcher-node');
 
-const Switch: FC<NodeT<any, NodeTypes.Switch>> = ({ id, type }) => {
-  const props = useProps(type);
+const Switch: FC<SwitchNodeT> = (props) => {
+  const {
+    id,
+    data: {
+      config: { name, category, inputs, outputs },
+    },
+  } = props;
 
   const nodes = useNodes();
   const edges = useEdges();
@@ -82,10 +84,10 @@ const Switch: FC<NodeT<any, NodeTypes.Switch>> = ({ id, type }) => {
     };
   }, [switchQty]);
 
-  const inputs = isUndefined(additionalInputs)
-    ? props.inputs
+  const extendedInputs = isUndefined(additionalInputs)
+    ? inputs
     : {
-        ...props.inputs,
+        ...inputs,
         ...additionalInputs,
       };
 
@@ -98,10 +100,10 @@ const Switch: FC<NodeT<any, NodeTypes.Switch>> = ({ id, type }) => {
 
   const switcherValues = useMemo(() => {
     return Object.values({
-      ...props.inputs,
+      ...inputs,
       ...additionalInputs,
     }).map(getValue);
-  }, [connectedEdges, inputs]);
+  }, [connectedEdges, extendedInputs]);
 
   useEffect(() => {
     setOutputValue(switcherValues[selectedId]);
@@ -113,7 +115,12 @@ const Switch: FC<NodeT<any, NodeTypes.Switch>> = ({ id, type }) => {
   }, [outputValue]);
 
   return (
-    <Node {...props} name={`${props.name} ${switchQty}`} inputs={inputs}>
+    <Node
+      name={`${name} ${switchQty}`}
+      category={category}
+      inputs={extendedInputs}
+      outputs={outputs}
+    >
       <AddSwitchButton
         onClick={() => setSwitchQty((switchQty) => switchQty + 1)}
       />

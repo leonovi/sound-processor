@@ -2,12 +2,12 @@ import { FlowNodeT } from 'components/Flow/Flow.models';
 import { NodeTypes } from 'components/Nodes/models';
 import { configs } from 'data/configs';
 
-type DeferNodeOptionsT = {
-  type: NodeTypes.Defer;
+type MetroNodeOptionsT = {
+  type: NodeTypes.Metro;
   data: {
-    config: typeof configs[NodeTypes.Defer];
+    config: typeof configs[NodeTypes.Metro];
     value: boolean;
   };
 };
 
-export type DeferNodeT = FlowNodeT<DeferNodeOptionsT>;
+export type MetroNodeT = FlowNodeT<MetroNodeOptionsT>;

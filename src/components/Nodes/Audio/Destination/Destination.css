@@ -1,0 +1,14 @@
+.destination-node {
+  width: calc(var(--u) * 34);
+}
+
+.destination-node__button {
+  justify-self: end;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+}

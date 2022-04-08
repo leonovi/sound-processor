@@ -1,8 +1,8 @@
+import { FlowNodeT } from 'components/Flow/Flow.models';
 import { NodeTypes } from 'components/Nodes/models';
-import { NodeT } from './isNode';
 
 const getNode = (
-  nodes: Array<NodeT<any, NodeTypes>>,
+  nodes: Array<FlowNodeT<{ type: NodeTypes; data: any }>>,
   nodeId: string | undefined
 ) => {
   let result = undefined;

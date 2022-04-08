@@ -1,21 +1,21 @@
 import React, { FC, useEffect, useState } from 'react';
 import b_ from 'b_';
 import './Bang.css';
-import { Node } from 'components/Node/Node';
-import { NodeT } from 'utils/isNode';
 import { useUpdate } from 'hooks/useUpdate';
-import { NodeTypes } from 'components/Nodes/models';
 import { useConnection } from 'hooks/useConnection';
-import { useProps } from 'hooks/useProps';
+import { Node } from 'components/Node/Node';
+import { BangNodeT } from './Bang.models';
 
 const OFF_TIMEOUT_MS = 100;
 
 const b = b_.with('bang-node');
 
-const Bang: FC<NodeT<boolean, NodeTypes.Bang>> = ({ id, type }) => {
-  const props = useProps(type);
+const Bang: FC<BangNodeT> = (props) => {
   const {
-    inputs: { bangInput },
+    id,
+    data: {
+      config: { name, category, inputs, outputs },
+    },
   } = props;
 
   const [shouldUpdate, setShouldUpdate] = useState(false);
@@ -23,7 +23,7 @@ const Bang: FC<NodeT<boolean, NodeTypes.Bang>> = ({ id, type }) => {
   const on = () => setShouldUpdate(true);
   const off = () => setShouldUpdate(false);
 
-  useConnection(bangInput.id, (value) => {
+  useConnection(inputs.bangInput.id, (value) => {
     const isBang = value === true;
     if (isBang) {
       setShouldUpdate(true);
@@ -47,7 +47,14 @@ const Bang: FC<NodeT<boolean, NodeTypes.Bang>> = ({ id, type }) => {
   const onMouseUp = off;
 
   return (
-    <Node compact className={b()} {...props}>
+    <Node
+      compact
+      className={b()}
+      name={name}
+      category={category}
+      inputs={inputs}
+      outputs={outputs}
+    >
       <button
         className={b('bang', { pressed: shouldUpdate })}
         onMouseDown={onMouseDown}

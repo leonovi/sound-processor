@@ -1,8 +1,7 @@
-import { NodeTypes } from 'components/Nodes/models';
 import { useStoreState } from 'react-flow-renderer';
-import { NodeT } from 'utils/isNode';
+import { FlowNodeT } from 'components/Flow/Flow.models';
 
 const useNodes = () =>
-  useStoreState((state) => state.nodes) as Array<NodeT<any, NodeTypes>>;
+  useStoreState((state) => state.nodes) as Array<FlowNodeT>;
 
 export { useNodes };

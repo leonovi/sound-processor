@@ -1,9 +1,9 @@
-import React, { FC, useState } from 'react';
+import React, { FC, ReactNode, useState } from 'react';
 
 import { UserGestureHandler } from 'components/UserGestureHandler/UserGestureHandler';
-import { AudioContext } from 'components/AudioContext/AudioContext';
 import { VolumeWarning } from 'components/VolumeWarning/VolumeWarning';
 import { PopperMenuContext } from 'components/PopperMenuContext/PopperMenuContext';
+import { NotificationsContext } from 'components/NotificationsContext/NotificationsContext';
 import { Flow } from 'components/Flow/Flow';
 
 const App: FC = () => {
@@ -18,11 +18,11 @@ const App: FC = () => {
   }
 
   return (
-    <AudioContext>
-      <PopperMenuContext>
+    <PopperMenuContext>
+      <NotificationsContext>
         <Flow />
-      </PopperMenuContext>
-    </AudioContext>
+      </NotificationsContext>
+    </PopperMenuContext>
   );
 };
 

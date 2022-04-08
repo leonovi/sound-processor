@@ -1,6 +1,7 @@
 export enum NodeCategories {
   Math = 'Math',
   Utilities = 'Utilities',
+  Audio = 'Audio',
 }
 
 export enum NodeTypes {
@@ -10,26 +11,13 @@ export enum NodeTypes {
   Metro = 'Metro',
   Switch = 'Switch',
   Defer = 'Defer',
+  Oscillator = 'Oscillator',
+  Destination = 'Destination',
 }
 
 export enum TypeOfData {
   Any = 'any',
   Boolean = 'boolean',
   Number = 'number',
-}
-
-type GateT = {
-  id: string;
-  datatype: TypeOfData;
-  hint: string;
-  name?: string;
-}
-export type InputT = GateT;
-export type OutputT = GateT;
-
-export type PropsDataT = {
-  name: NodeTypes;
-  category: NodeCategories;
-  inputs: Record<string, InputT>;
-  outputs: Record<string, OutputT>;
+  Audio = 'audio',
 }

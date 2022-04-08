@@ -1,51 +1,52 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import cn from 'classnames';
 import b_ from 'b_';
 import './Node.css';
-import { bind } from 'utils/bind';
+
 import { isUndefined } from 'utils/isUndefined';
-import { HandleTypes, NodePropsT } from 'components/Node/Node.models';
-import { InputT, OutputT } from 'components/Nodes/models';
 
-type SetStateT<T> = React.Dispatch<React.SetStateAction<T>>;
+import {
+  HandleTypes,
+  InputT,
+  NodePropsT,
+  OutputT,
+} from 'components/Node/Node.models';
 
-const renderInput = (
-  setHint: SetStateT<string>,
-  { id, datatype, hint }: InputT
-) => (
+const Input: FC<Pick<InputT, 'id' | 'dataType'> & {}> = ({ id, dataType }) => {
+  return (
+    <Handle
+      data-datatype={dataType}
+      className={b('input')}
+      key={id}
+      id={id}
+      type={HandleTypes.Target}
+      position={Position.Left}
+    />
+  );
+};
+
+const Output: FC<Pick<OutputT, 'id' | 'dataType'> & {}> = ({
+  id,
+  dataType,
+}) => (
   <Handle
-    data-datatype={datatype}
-    className={b('input')}
-    key={id}
-    id={id}
-    type={HandleTypes.Target}
-    position={Position.Left}
-    onClick={bind(setHint, hint || '?')}
-  />
-);
-
-const renderOutput = (
-  setHint: SetStateT<string>,
-  { id, datatype, hint }: OutputT
-) => (
-  <Handle
-    data-datatype={datatype}
+    data-datatype={dataType}
     className={b('output')}
     key={id}
     id={id}
     type={HandleTypes.Source}
     position={Position.Right}
-    onClick={bind(setHint, hint || '?')}
   />
 );
 
 const b = b_.with('node');
 
 const Node: FC<NodePropsT> = ({
-  name,
   compact,
   className,
+  name,
+  category,
   inputs,
   outputs,
   onClick: click,
@@ -53,17 +54,10 @@ const Node: FC<NodePropsT> = ({
   onMouseUp: mouseup,
   children,
 }) => {
-  const [inspectMode, setInspectMode] = useState(false);
-  const [hint, setHint] = useState('?');
-
   const [dragging, setDragging] = useState(false);
 
   const onClick = () => {
     click?.();
-  };
-
-  const onDoubleClick = () => { // Maybe button -> <InspectModeButton>
-    // setInspectMode((helpMode) => !helpMode);
   };
 
   const onMouseDown = () => {
@@ -80,29 +74,29 @@ const Node: FC<NodePropsT> = ({
     <div
       className={cn(b({ dragging }), className)}
       onClick={onClick}
-      onDoubleClick={onDoubleClick}
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
     >
-      <header className={b('header', { hidden: compact })}>
-        <span className={b('name')}>{name}</span>
-      </header>
+      {!compact && (
+        <header className={b('header')}>
+          <span className={b('name')}>{name}</span>
+        </header>
+      )}
       <div className={b('body')}>
         <div className={b('inputs')}>
           {!isUndefined(inputs) &&
-            Object.values(inputs).map(bind(renderInput, setHint))}
+            Object.values(inputs).map(({ id, dataType, hint }) => (
+              <Input key={id} id={id} dataType={dataType} />
+            ))}
         </div>
         <div className={b('childrens')}>{children}</div>
         <div className={b('outputs')}>
           {!isUndefined(outputs) &&
-            Object.values(outputs).map(bind(renderOutput, setHint))}
+            Object.values(outputs).map(({ id, dataType, hint }) => (
+              <Output key={id} id={id} dataType={dataType} />
+            ))}
         </div>
       </div>
-      {inspectMode && (
-        <div className={b('hint')}>
-          <span>{hint}</span>
-        </div>
-      )}
     </div>
   );
 };
