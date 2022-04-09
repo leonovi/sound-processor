@@ -1,11 +1,11 @@
 import { FlowNodeT } from 'components/Flow/Flow.models';
 import { NodeTypes } from 'components/Nodes/models';
-import { configs } from 'data/configs';
+import { NodeConfigT } from 'data/configs';
 
 type DestinationNodeOptionsT = {
   type: NodeTypes.Destination;
   data: {
-    config: typeof configs[NodeTypes.Destination];
+    config: NodeConfigT<NodeTypes.Destination>;
   };
 };
 

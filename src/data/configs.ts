@@ -2,6 +2,8 @@ import { TypeOfData, NodeCategories, NodeTypes } from 'components/Nodes/models';
 import { getDestination, Oscillator } from 'tone';
 import { generateId } from 'utils/generateId';
 
+export type NodeConfigT<T extends NodeTypes> = typeof configs[T];
+
 const AUDIO_HANDLE_IDENTITY = 'AUDIO';
 
 const configs = {
@@ -193,4 +195,4 @@ const configs = {
 
 const getConfig = (type: NodeTypes) => configs[type];
 
-export { AUDIO_HANDLE_IDENTITY, configs, getConfig };
+export { AUDIO_HANDLE_IDENTITY, getConfig };
