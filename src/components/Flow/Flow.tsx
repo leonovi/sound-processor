@@ -22,6 +22,7 @@ import { NodeCategories, NodeTypes } from 'components/Nodes/models';
 import { AUDIO_HANDLE_IDENTITY, getConfig } from 'data/configs';
 
 import { Sum } from 'components/Nodes/Math/Sum/Sum';
+import { Subtract } from 'components/Nodes/Math/Subtract/Subtract';
 import { Number } from 'components/Nodes/Math/Number/Number';
 import { Bang } from 'components/Nodes/Utilities/Bang/Bang';
 import { Metro } from 'components/Nodes/Utilities/Metro/Metro';
@@ -38,6 +39,7 @@ const EDGE_TYPES = {}; // TODO create custom edge
 
 const NODE_TYPES = {
   [NodeTypes.Sum]: Sum,
+  [NodeTypes.Subtract]: Subtract,
   [NodeTypes.Number]: Number,
   [NodeTypes.Bang]: Bang,
   [NodeTypes.Metro]: Metro,

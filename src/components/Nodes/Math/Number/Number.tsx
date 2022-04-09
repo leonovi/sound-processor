@@ -26,10 +26,7 @@ const Number: FC<NumberNodeT> = ({ id, data }) => {
   }, [value]);
 
   return (
-    <Node
-      className={b()}
-      {...data.config}
-    >
+    <Node className={b()} {...data.config}>
       <NumberInput value={value} onChange={(value) => setValue(value)} />
     </Node>
   );

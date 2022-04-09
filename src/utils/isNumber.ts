@@ -1,5 +1,5 @@
 const isNumber = (value: any): value is number => {
-  return typeof value === 'number' || value.match();
+  return typeof value === 'number';
 }
 
 export { isNumber };

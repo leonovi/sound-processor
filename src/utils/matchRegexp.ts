@@ -1,5 +1,3 @@
-const matchRegexp = (value: string, regexp: RegExp) => {
-  value.match(regexp)
-}
+const matchRegexp = (value: string | undefined, regexp: RegExp) => value?.match(regexp);
 
 export { matchRegexp };

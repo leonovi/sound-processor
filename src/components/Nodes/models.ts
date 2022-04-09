@@ -6,6 +6,7 @@ export enum NodeCategories {
 
 export enum NodeTypes {
   Sum = 'Sum',
+  Subtract = 'Subtract',
   Number = 'Number',
   Bang = 'Bang',
   Metro = 'Metro',

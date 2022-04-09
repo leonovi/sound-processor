@@ -14,8 +14,9 @@ export const contextMenuData: ContextMenuItemsT = [
   {
     category: NodeCategories.Math,
     items: [
-      { label: 'Sum', nodeType: NodeTypes.Sum },
       { label: 'Number', nodeType: NodeTypes.Number },
+      { label: 'Sum', nodeType: NodeTypes.Sum },
+      { label: 'Subtract', nodeType: NodeTypes.Subtract },
     ],
   },
   {

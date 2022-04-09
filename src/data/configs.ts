@@ -37,6 +37,36 @@ const configs = {
       },
     };
   },
+  get [NodeTypes.Subtract]() {
+    return {
+      name: NodeTypes.Subtract,
+      category: NodeCategories.Math,
+      inputs: {
+        subtractInputBang: {
+          id: generateId('SUBTRACT_INPUT_BANG'),
+          dataType: TypeOfData.Boolean,
+          hint: 'Sum input (Bang) | boolean',
+        },
+        subtractInput1: {
+          id: generateId('SUBTRACT_INPUT_1'),
+          dataType: TypeOfData.Number,
+          hint: 'Subtract input #1 | number',
+        },
+        subtractInput2: {
+          id: generateId('SUBTRACT_INPUT_2'),
+          dataType: TypeOfData.Number,
+          hint: 'Subtract input #2 | number',
+        },
+      },
+      outputs: {
+        subtractOutput: {
+          id: generateId('SUBTRACT_OUTPUT_1'),
+          dataType: TypeOfData.Number,
+          hint: 'Subtract output | number',
+        },
+      },
+    };
+  },
   get [NodeTypes.Number]() {
     return {
       name: NodeTypes.Number,

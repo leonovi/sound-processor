@@ -23,7 +23,7 @@ const NUM_REGEXP = /^\d+$/;
 const b = b_.with('number-input');
 
 const NumberInput: FC<NumberInputPropsT> = ({ value, onChange }) => {
-  const [internalValue, setInternalValue] = useState(value);
+  const [internalValue, setInternalValue] = useState(value ?? DEFAULT_INPUT_VALUE);
 
   const shouldSetInputValue = isNumber(value) || matchRegexp(value, NUM_REGEXP);
   useEffect(
