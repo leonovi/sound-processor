@@ -1,29 +1,52 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
+import cn from 'classnames';
 import b_ from 'b_';
 import './Oscillator.css';
-
 import { Node } from 'components/Node/Node';
-import { OscillatorNodeT } from './Oscillator.models';
+import { createNodeClass } from 'utils/createNodeClass';
+import {
+  OscillatorNodeT,
+  SawtoothNodeT,
+  SineNodeT,
+  SquareNodeT,
+  TriangleNodeT,
+} from './Oscillator.models';
+import { NodeTypes } from 'components/Nodes/models';
 
 const b = b_.with('oscillator-node');
 
-const Oscillator: FC<OscillatorNodeT> = ({ id, data }) => {
+const Oscillator: FC<OscillatorNodeT> = ({ id, data, className }) => {
   const { module } = data.config;
 
-  return (
-    <Node className={b()} {...data.config}>
-      <input
-        type="range"
-        min={10}
-        max={800}
-        onChange={(event) => {
-          module.frequency.rampTo(event.target.value, 0.2);
-        }}
-      />
-      <button onClick={() => module.start()}>Start</button>
-      <button onClick={() => module.stop()}>Stop</button>
-    </Node>
-  );
+  const startModule = () => {
+    module.start();
+  };
+  const stopModule = () => {
+    module.stop();
+  };
+
+  useEffect(() => {
+    startModule();
+    return () => stopModule();
+  }, []);
+
+  return <Node className={cn(b(), className)} {...data.config}></Node>;
 };
 
-export { Oscillator };
+const Sine: FC<SineNodeT> = (props) => (
+  <Oscillator className={createNodeClass(NodeTypes.Sine)} {...props} />
+);
+
+const Triangle: FC<TriangleNodeT> = (props) => (
+  <Oscillator className={createNodeClass(NodeTypes.Triangle)} {...props} />
+);
+
+const Sawtooth: FC<SawtoothNodeT> = (props) => (
+  <Oscillator className={createNodeClass(NodeTypes.Sawtooth)} {...props} />
+);
+
+const Square: FC<SquareNodeT> = (props) => (
+  <Oscillator className={createNodeClass(NodeTypes.Square)} {...props} />
+);
+
+export { Sine, Triangle, Sawtooth, Square };

@@ -1,11 +1,11 @@
 import { FlowNodeT } from 'components/Flow/Flow.models';
 import { NodeTypes } from 'components/Nodes/models';
-import { NodeConfigT } from 'data/configs';
+import { configs } from 'data/configs';
 
 type DeferNodeOptionsT = {
   type: NodeTypes.Defer;
   data: {
-    config: NodeConfigT<NodeTypes.Defer>;
+    config: typeof configs[NodeTypes.Defer];
     value: boolean;
   };
 };

@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState } from 'react';
+import React, { FC, useState } from 'react';
 
 import { UserGestureHandler } from 'components/UserGestureHandler/UserGestureHandler';
 import { VolumeWarning } from 'components/VolumeWarning/VolumeWarning';

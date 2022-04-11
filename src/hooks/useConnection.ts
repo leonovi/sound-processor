@@ -1,14 +1,16 @@
 import { useEffect } from 'react';
 import { getConnectedEdges } from 'react-flow-renderer';
+import { useElements } from 'hooks/useElements';
 import { getEdge } from 'utils/getEdge';
 import { getNode } from 'utils/getNode';
 import { isUndefined } from 'utils/isUndefined';
-import { useEdges } from './useEdges';
-import { useNodes } from './useNodes';
 
-const useConnection = (inputId: string, callback: (value: any) => void) => {
-  const nodes = useNodes();
-  const edges = useEdges();
+export const useConnection = (
+  inputId: string,
+  callback: (value: any) => void
+) => {
+  const { nodes, edges } = useElements();
+
   const connectedEdges = getConnectedEdges(nodes, edges);
 
   const connectedEdge = getEdge(connectedEdges, inputId);
@@ -23,5 +25,3 @@ const useConnection = (inputId: string, callback: (value: any) => void) => {
     callback(data.value);
   }, [connectedNode]);
 };
-
-export { useConnection };

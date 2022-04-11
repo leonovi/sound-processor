@@ -1,11 +1,11 @@
 import { FlowNodeT } from 'components/Flow/Flow.models';
 import { NodeTypes } from 'components/Nodes/models';
-import { NodeConfigT } from 'data/configs';
+import { configs } from 'data/configs';
 
 type NumberNodeOptionsT = {
   type: NodeTypes.Number;
   data: {
-    config: NodeConfigT<NodeTypes.Number>;
+    config: typeof configs[NodeTypes.Number];
     value: number;
   };
 };

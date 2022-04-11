@@ -7,12 +7,17 @@ export enum NodeCategories {
 export enum NodeTypes {
   Sum = 'Sum',
   Subtract = 'Subtract',
+  Divide = 'Divide',
+  Multiply = 'Multiply',
   Number = 'Number',
   Bang = 'Bang',
   Metro = 'Metro',
   Switch = 'Switch',
   Defer = 'Defer',
-  Oscillator = 'Oscillator',
+  Sine = 'Sine',
+  Triangle = 'Triangle',
+  Sawtooth = 'Sawtooth',
+  Square = 'Square',
   Destination = 'Destination',
 }
 

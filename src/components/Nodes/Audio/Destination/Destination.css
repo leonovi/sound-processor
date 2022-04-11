@@ -1,7 +1,3 @@
-.destination-node {
-  width: calc(var(--u) * 34);
-}
-
 .destination-node__button {
   justify-self: end;
 
@@ -9,6 +5,16 @@
   align-items: center;
   justify-content: center;
 
+  padding: 0;
+
   border: none;
   background: transparent;
+}
+
+.destination-node__speaker {
+  fill: var(--color-blue);
+}
+
+.destination-node__speaker_mute {
+  fill: var(--color-grey);
 }

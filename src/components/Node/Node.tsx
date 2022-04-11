@@ -1,44 +1,11 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Handle, Position } from 'react-flow-renderer';
+import React, { FC, useState } from 'react';
 import cn from 'classnames';
 import b_ from 'b_';
 import './Node.css';
-
 import { isUndefined } from 'utils/isUndefined';
-
-import {
-  HandleTypes,
-  InputT,
-  NodePropsT,
-  OutputT,
-} from 'components/Node/Node.models';
-
-const Input: FC<Pick<InputT, 'id' | 'dataType'> & {}> = ({ id, dataType }) => {
-  return (
-    <Handle
-      data-datatype={dataType}
-      className={b('input')}
-      key={id}
-      id={id}
-      type={HandleTypes.Target}
-      position={Position.Left}
-    />
-  );
-};
-
-const Output: FC<Pick<OutputT, 'id' | 'dataType'> & {}> = ({
-  id,
-  dataType,
-}) => (
-  <Handle
-    data-datatype={dataType}
-    className={b('output')}
-    key={id}
-    id={id}
-    type={HandleTypes.Source}
-    position={Position.Right}
-  />
-);
+import { NodePropsT } from 'components/Node/Node.models';
+import { Input } from './components/Input/Input';
+import { Output } from './components/Output/Output';
 
 const b = b_.with('node');
 

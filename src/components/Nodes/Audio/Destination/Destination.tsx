@@ -20,9 +20,9 @@ const Destination: FC<DestinationNodeT> = ({ id, data }) => {
   const onClick = () => setMute((isMute) => !isMute);
 
   return (
-    <Node className={b()} {...data.config}>
+    <Node compact className={b()} {...data.config}>
       <button className={b('button')} onClick={onClick}>
-        <Speaker />
+        <Speaker className={b('speaker', { mute })} />
       </button>
     </Node>
   );

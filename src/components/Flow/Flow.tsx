@@ -17,18 +17,23 @@ import {
 import { generateId } from 'utils/generateId';
 import { isNode } from 'utils/isNode';
 import { checkConnection } from 'utils/checkConnection';
+import { createNodeClass } from 'utils/createNodeClass';
 import { ContextMenu } from 'components/ContextMenu/ContextMenu';
 import { NodeCategories, NodeTypes } from 'components/Nodes/models';
-import { AUDIO_HANDLE_IDENTITY, getConfig } from 'data/configs';
+import { configs } from 'data/configs';
 
-import { Sum } from 'components/Nodes/Math/Sum/Sum';
-import { Subtract } from 'components/Nodes/Math/Subtract/Subtract';
+import { Divide, Multiply, Subtract, Sum } from 'components/Nodes/Math/MathOperation/MathOperation';
 import { Number } from 'components/Nodes/Math/Number/Number';
 import { Bang } from 'components/Nodes/Utilities/Bang/Bang';
 import { Metro } from 'components/Nodes/Utilities/Metro/Metro';
 import { Switch } from 'components/Nodes/Utilities/Switch/Switch';
 import { Defer } from 'components/Nodes/Utilities/Defer/Defer';
-import { Oscillator } from 'components/Nodes/Audio/Oscillator/Oscillator';
+import {
+  Sawtooth,
+  Sine,
+  Square,
+  Triangle,
+} from 'components/Nodes/Audio/Oscillator/Oscillator';
 import { Destination } from 'components/Nodes/Audio/Destination/Destination';
 
 const EMPTY_STRING = '';
@@ -40,12 +45,17 @@ const EDGE_TYPES = {}; // TODO create custom edge
 const NODE_TYPES = {
   [NodeTypes.Sum]: Sum,
   [NodeTypes.Subtract]: Subtract,
+  [NodeTypes.Divide]: Divide,
+  [NodeTypes.Multiply]: Multiply,
   [NodeTypes.Number]: Number,
   [NodeTypes.Bang]: Bang,
   [NodeTypes.Metro]: Metro,
   [NodeTypes.Switch]: Switch,
   [NodeTypes.Defer]: Defer,
-  [NodeTypes.Oscillator]: Oscillator,
+  [NodeTypes.Sine]: Sine,
+  [NodeTypes.Triangle]: Triangle,
+  [NodeTypes.Sawtooth]: Sawtooth,
+  [NodeTypes.Square]: Square,
   [NodeTypes.Destination]: Destination,
 };
 
@@ -72,7 +82,7 @@ const findModules = (
 };
 
 const createDragHandleSelector = (type: NodeTypes) =>
-  `.${type.toLowerCase()}-node > *:first-child`;
+  `.${createNodeClass(type)} > *:first-child`;
 
 const Flow: FC = () => {
   const popperMenuContext = usePopperMenuContext();
@@ -183,7 +193,7 @@ const Flow: FC = () => {
           type,
           position,
           data: {
-            config: getConfig(type),
+            config: configs[type],
           },
           dragHandle: createDragHandleSelector(type),
         })

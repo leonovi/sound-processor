@@ -17,12 +17,17 @@ export const contextMenuData: ContextMenuItemsT = [
       { label: 'Number', nodeType: NodeTypes.Number },
       { label: 'Sum', nodeType: NodeTypes.Sum },
       { label: 'Subtract', nodeType: NodeTypes.Subtract },
+      { label: 'Divide', nodeType: NodeTypes.Divide },
+      { label: 'Multiply', nodeType: NodeTypes.Multiply },
     ],
   },
   {
     category: NodeCategories.Audio,
     items: [
-      { label: 'Oscillator', nodeType: NodeTypes.Oscillator },
+      { label: 'Sine', nodeType: NodeTypes.Sine },
+      { label: 'Triangle', nodeType: NodeTypes.Triangle },
+      { label: 'Sawtooth', nodeType: NodeTypes.Sawtooth },
+      { label: 'Square', nodeType: NodeTypes.Square },
       { label: 'Destination', nodeType: NodeTypes.Destination },
     ],
   },

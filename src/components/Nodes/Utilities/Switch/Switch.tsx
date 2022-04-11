@@ -13,6 +13,7 @@ import { isUndefined } from 'utils/isUndefined';
 import { getEdge } from 'utils/getEdge';
 import { SwitchNodeT } from './Switch.models';
 import { InputT } from 'components/Node/Node.models';
+import { useInputsValues } from 'hooks/useInputsValues';
 
 const DEFAULT_SWITCH_QTY = 4;
 const DEFAULT_SELECTED_ID = 0;
@@ -53,10 +54,6 @@ const Switch: FC<SwitchNodeT> = (props) => {
     },
   } = props;
 
-  const nodes = useNodes();
-  const edges = useEdges();
-  const connectedEdges = getConnectedEdges(nodes, edges);
-
   const [switchQty, setSwitchQty] = useState(DEFAULT_SWITCH_QTY);
   const [selectedId, setSelectedId] = useState(DEFAULT_SELECTED_ID);
   const [outputValue, setOutputValue] = useState();
@@ -91,19 +88,7 @@ const Switch: FC<SwitchNodeT> = (props) => {
         ...additionalInputs,
       };
 
-  const getValue = ({ id }: InputT) => {
-    const connectedEdge = getEdge(connectedEdges, id);
-    const connectedNode = getNode(nodes, connectedEdge?.source);
-
-    return isUndefined(connectedNode) ? null : connectedNode.data.value;
-  };
-
-  const switcherValues = useMemo(() => {
-    return Object.values({
-      ...inputs,
-      ...additionalInputs,
-    }).map(getValue);
-  }, [connectedEdges, extendedInputs]);
+  const switcherValues = useInputsValues(extendedInputs);
 
   useEffect(() => {
     setOutputValue(switcherValues[selectedId]);

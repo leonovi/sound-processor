@@ -1,4 +1,5 @@
 import { useUpdateNodeInternals } from 'react-flow-renderer';
+import { isUndefined } from 'utils/isUndefined';
 import { useNode } from './useNode';
 
 const useUpdate = (id: string, value?: any) => {
@@ -6,7 +7,7 @@ const useUpdate = (id: string, value?: any) => {
   const updateNode = useUpdateNodeInternals();
   return () => {
     if (node) {
-      if (value !== undefined) {
+      if (!isUndefined(value)) {
         node.data.value = value;
       }
       updateNode(node.id);

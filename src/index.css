@@ -1,6 +1,6 @@
-@import './style-guide/colors.css';
-@import './style-guide/shadows.css';
-@import './style-guide/units.css';
+@import './style-guide/css/colors.css';
+@import './style-guide/css/shadows.css';
+@import './style-guide/css/units.css';
 
 *, *::before, *::after {
   box-sizing: border-box;

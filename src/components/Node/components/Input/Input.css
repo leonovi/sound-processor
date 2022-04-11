@@ -1,0 +1,6 @@
+.node-input {
+  width: calc(var(--u) * 3);
+  height: calc(var(--u) * 3);
+
+  background-color: var(--color-grey);
+}

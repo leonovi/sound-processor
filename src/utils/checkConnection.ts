@@ -4,15 +4,15 @@ const DATASET_TYPE_KEY = 'datatype';
 
 const createHandleSelector = (id: string) => `[data-handleid=${id}]`;
 
-const getHandleDataset = (handleId: string) =>
+const selectDataset = (handleId: string) =>
   document.querySelector<HTMLElement>(createHandleSelector(handleId))?.dataset;
 
-const checkConnection = (sourceHandle: string, targetHandle: string) => {
-  const sourceDataType = getHandleDataset(sourceHandle)?.[
+export const checkConnection = (sourceHandle: string, targetHandle: string) => {
+  const sourceDataType = selectDataset(sourceHandle)?.[
     DATASET_TYPE_KEY
   ] as TypeOfData;
 
-  const targetDataType = getHandleDataset(targetHandle)?.[
+  const targetDataType = selectDataset(targetHandle)?.[
     DATASET_TYPE_KEY
   ] as TypeOfData;
 
@@ -27,5 +27,3 @@ const checkConnection = (sourceHandle: string, targetHandle: string) => {
     targetDataType,
   };
 };
-
-export { checkConnection };
