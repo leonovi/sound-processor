@@ -1,19 +1,7 @@
 import { Edge } from 'react-flow-renderer';
+import { find } from './find';
 
-const getEdge = (
-  edges: Array<Edge<any>>,
-  inputId: string | undefined
-) => {
-  let result = undefined;
-
-  for (const edge of edges) {
-    if (edge.targetHandle === inputId) {
-      result = edge;
-      break;
-    }
-  }
-
-  return result;
-};
+const getEdge = (edges: Array<Edge<any>>, inputId: string | undefined) =>
+  find(edges, ({ targetHandle }) => targetHandle === inputId);
 
 export { getEdge };

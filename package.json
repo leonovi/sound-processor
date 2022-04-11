@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "tsc": "tsc --noEmit",
     "start": "webpack serve",
     "build": "webpack"
   },

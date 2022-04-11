@@ -1,3 +1,5 @@
+import { Node as FlowNode } from 'react-flow-renderer';
+
 export enum NodeCategories {
   Math = 'Math',
   Utilities = 'Utilities',
@@ -5,15 +7,18 @@ export enum NodeCategories {
 }
 
 export enum NodeTypes {
+  // Math
   Sum = 'Sum',
   Subtract = 'Subtract',
-  Divide = 'Divide',
   Multiply = 'Multiply',
+  Divide = 'Divide',
   Number = 'Number',
+  // Utilities
   Bang = 'Bang',
   Metro = 'Metro',
   Switch = 'Switch',
   Defer = 'Defer',
+  // Audio
   Sine = 'Sine',
   Triangle = 'Triangle',
   Sawtooth = 'Sawtooth',
@@ -27,3 +32,16 @@ export enum TypeOfData {
   Number = 'number',
   Audio = 'audio',
 }
+
+type NodeParametersT = {
+  type: NodeTypes;
+  data: any;
+};
+
+export type FlowNodeT<T extends NodeParametersT = NodeParametersT> = Overwrite<
+  FlowNode,
+  {
+    type: T['type'];
+    data: T['data'];
+  }
+>;

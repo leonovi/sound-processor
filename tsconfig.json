@@ -12,6 +12,7 @@
     "sourceMap": true,
     "target": "esnext",
     "baseUrl": "src",
+    "skipLibCheck": true,
   },
   "include": ["**/*"],
   "exclude": [
@@ -19,5 +20,5 @@
   ],
   "files": [
     "./src/@types/index.d.ts"
-  ]
+  ],
 }

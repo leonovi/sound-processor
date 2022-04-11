@@ -3,7 +3,6 @@ import ReactFlow, {
   addEdge,
   Connection,
   Edge,
-  isEdge,
   OnLoadFunc,
   removeElements,
   Elements,
@@ -14,15 +13,22 @@ import {
   NotificationsTypes,
   useNotificationsContext,
 } from 'context/NotificationsContext';
+import { EMPTY_STRING } from 'utils/constants';
 import { generateId } from 'utils/generateId';
 import { isNode } from 'utils/isNode';
+import { isEdge } from 'utils/isEdge';
+import { filter } from 'utils/filter';
 import { checkConnection } from 'utils/checkConnection';
-import { createNodeClass } from 'utils/createNodeClass';
 import { ContextMenu } from 'components/ContextMenu/ContextMenu';
 import { NodeCategories, NodeTypes } from 'components/Nodes/models';
 import { configs } from 'data/configs';
 
-import { Divide, Multiply, Subtract, Sum } from 'components/Nodes/Math/MathOperation/MathOperation';
+import {
+  Divide,
+  Multiply,
+  Subtract,
+  Sum,
+} from 'components/Nodes/Math/MathOperation/MathOperation';
 import { Number } from 'components/Nodes/Math/Number/Number';
 import { Bang } from 'components/Nodes/Utilities/Bang/Bang';
 import { Metro } from 'components/Nodes/Utilities/Metro/Metro';
@@ -36,22 +42,23 @@ import {
 } from 'components/Nodes/Audio/Oscillator/Oscillator';
 import { Destination } from 'components/Nodes/Audio/Destination/Destination';
 
-const EMPTY_STRING = '';
-
 const BACKSPACE_KEYCODE = 8;
 
 const EDGE_TYPES = {}; // TODO create custom edge
 
 const NODE_TYPES = {
+  // Math
   [NodeTypes.Sum]: Sum,
   [NodeTypes.Subtract]: Subtract,
-  [NodeTypes.Divide]: Divide,
   [NodeTypes.Multiply]: Multiply,
+  [NodeTypes.Divide]: Divide,
   [NodeTypes.Number]: Number,
+  // Utilities
   [NodeTypes.Bang]: Bang,
   [NodeTypes.Metro]: Metro,
   [NodeTypes.Switch]: Switch,
   [NodeTypes.Defer]: Defer,
+  // Audio
   [NodeTypes.Sine]: Sine,
   [NodeTypes.Triangle]: Triangle,
   [NodeTypes.Sawtooth]: Sawtooth,
@@ -80,9 +87,6 @@ const findModules = (
 
   return { sourceModule, targetModule };
 };
-
-const createDragHandleSelector = (type: NodeTypes) =>
-  `.${createNodeClass(type)} > *:first-child`;
 
 const Flow: FC = () => {
   const popperMenuContext = usePopperMenuContext();
@@ -195,7 +199,6 @@ const Flow: FC = () => {
           data: {
             config: configs[type],
           },
-          dragHandle: createDragHandleSelector(type),
         })
       );
 

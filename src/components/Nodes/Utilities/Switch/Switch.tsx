@@ -20,13 +20,12 @@ const DEFAULT_SELECTED_ID = 0;
 
 const createSwitcher = (id: number, selected: boolean) => ({ id, selected });
 
-const createAdditionalInputKey = (id: number) => {
-  return `switchAdditionalInput${id + 1}`;
-};
+const createAdditionalInputKey = (id: number) =>
+  `switchAdditionalInput${id + 1}`;
 
-const createAdditionalInput = (id: number) => ({
+const createAdditionalInput = (id: number): InputT => ({
   id: generateId('SWITCH_ADDITIONAL_INPUT'),
-  datatype: TypeOfData.Any,
+  dataType: TypeOfData.Any,
   hint: `Switch additional input #${id + 1} | any`,
 });
 

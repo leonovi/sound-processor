@@ -5,14 +5,15 @@ export enum HandleTypes {
   Target = 'target',
 }
 
-type GateT = {
+type InOutT = {
   id: string;
   dataType: TypeOfData;
   hint: string;
   name?: string;
 }
-export type InputT = GateT;
-export type OutputT = GateT;
+
+export type InputT = InOutT;
+export type OutputT = InOutT;
 
 export type NodePropsT = {
   compact?: true;

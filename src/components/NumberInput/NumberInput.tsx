@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react';
 import b_ from 'b_';
 import './NumberInput.css';
 import { isNumber } from 'utils/isNumber';
-import { toNumber } from 'utils/toNumber';
 import { length } from 'utils/length';
 import { isEmptyString } from 'utils/isEmptyString';
 import { matchRegexp } from 'utils/matchRegexp';
@@ -49,7 +48,7 @@ const NumberInput: FC<NumberInputPropsT> = ({ value, onChange }) => {
         }
 
         if (shouldSetInputValue) {
-          setInternalValue(toNumber(value));
+          setInternalValue(Number(value));
         }
       }}
     />

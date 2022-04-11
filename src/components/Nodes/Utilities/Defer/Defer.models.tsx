@@ -1,5 +1,4 @@
-import { FlowNodeT } from 'components/Flow/Flow.models';
-import { NodeTypes } from 'components/Nodes/models';
+import { FlowNodeT, NodeTypes } from 'components/Nodes/models';
 import { configs } from 'data/configs';
 
 type DeferNodeOptionsT = {
