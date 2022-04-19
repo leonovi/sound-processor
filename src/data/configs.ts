@@ -1,11 +1,95 @@
-import { getDestination, Oscillator } from 'tone';
+import {
+  Analyser,
+  AnalyserType,
+  getDestination,
+  Noise,
+  NoiseType,
+  Oscillator,
+  BiquadFilter,
+} from 'tone';
 import { generateId } from 'utils/generateId';
 import { TypeOfData, NodeCategories, NodeTypes } from 'components/Nodes/models';
-import { OscTypes } from 'components/Nodes/Audio/Oscillator/Oscillator.models';
+
+export const AUDIO_HANDLE_IDENTITY = 'AUDIO';
+
+enum OscTypes {
+  Sine = 'sine',
+  Triangle = 'triangle',
+  Sawtooth = 'sawtooth',
+  Square = 'square',
+}
 
 const DEFAULT_FREQ = 333;
 
-export const AUDIO_HANDLE_IDENTITY = 'AUDIO';
+const OSC_OPTIONS = {
+  [NodeTypes.Sine]: [DEFAULT_FREQ, OscTypes.Sine],
+  [NodeTypes.Triangle]: [DEFAULT_FREQ, OscTypes.Triangle],
+  [NodeTypes.Sawtooth]: [DEFAULT_FREQ, OscTypes.Sawtooth],
+  [NodeTypes.Square]: [DEFAULT_FREQ, OscTypes.Square],
+};
+
+const generateOscConfig = (
+  type:
+    | NodeTypes.Sine
+    | NodeTypes.Triangle
+    | NodeTypes.Sawtooth
+    | NodeTypes.Square
+) => ({
+  name: type,
+  category: NodeCategories.Audio,
+  module: new Oscillator(...OSC_OPTIONS[type]),
+  inputs: {
+    oscillatorFrequencyInput: {
+      id: generateId(`${type.toUpperCase()}_OSCILLATOR_FREQUENCY_INPUT`),
+      name: 'Freq',
+      dataType: TypeOfData.Number,
+      hint: 'Oscillator frequency input | number',
+    },
+    oscillatorDetuneInput: {
+      id: generateId(`${type.toUpperCase()}_OSCILLATOR_DETUNE_INPUT`),
+      name: 'Detune',
+      dataType: TypeOfData.Number,
+      hint: 'Oscillator detune input | number',
+    },
+    oscillatorPartialsInput: {
+      id: generateId(`${type.toUpperCase()}_OSCILLATOR_PARTIALS_INPUT`),
+      name: 'Partials',
+      dataType: TypeOfData.Number,
+      hint: 'Oscillator detune input | number',
+    },
+    oscillatorPhaseInput: {
+      id: generateId(`${type.toUpperCase()}_OSCILLATOR_PHASE_INPUT`),
+      name: 'Phase',
+      dataType: TypeOfData.Number,
+      hint: 'Oscillator phase input | number',
+    },
+    oscillatorVolumeInput: {
+      id: generateId(`${type.toUpperCase()}_OSCILLATOR_VOLUME_INPUT`),
+      dataType: TypeOfData.Number,
+      name: 'Vol',
+      hint: 'Oscillator volume input | number',
+    },
+  },
+  outputs: {
+    oscillatorAudioOutput: {
+      id: generateId(
+        `${type.toUpperCase()}_OSCILLATOR_${AUDIO_HANDLE_IDENTITY}_OUTPUT`
+      ),
+      dataType: TypeOfData.Audio,
+      hint: 'Oscillator audio output | audio',
+    },
+  },
+});
+
+const ANALYZER_OPTIONS: [AnalyserType, number] = ['fft', 1024];
+
+export enum NoiseTypes {
+  White = 'white',
+  Brown = 'brown',
+  Pink = 'pink',
+};
+
+const DEFAULT_NOISE = NoiseTypes.White;
 
 export const configs = {
   get [NodeTypes.Sum]() {
@@ -264,165 +348,90 @@ export const configs = {
     };
   },
   get [NodeTypes.Sine]() {
-    return {
-      name: NodeTypes.Sine,
-      category: NodeCategories.Audio,
-      module: new Oscillator(DEFAULT_FREQ, OscTypes.Sine),
-      inputs: {
-        oscillatorFrequencyInput: {
-          id: generateId(`SINE_OSCILLATOR_FREQUENCY_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator frequency input | number',
-        },
-        oscillatorDetuneInput: {
-          id: generateId(`SINE_OSCILLATOR_DETUNE_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator detune input | number',
-        },
-        oscillatorPartialsInput: {
-          id: generateId(`SINE_OSCILLATOR_PARTIALS_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator detune input | number',
-        },
-        oscillatorPhaseInput: {
-          id: generateId(`SINE_OSCILLATOR_PHASE_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator phase input | number',
-        },
-        oscillatorVolumeInput: {
-          id: generateId(`SINE_OSCILLATOR_VOLUME_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator volume input | number',
-        },
-      },
-      outputs: {
-        oscillatorAudioOutput: {
-          id: generateId(`SINE_OSCILLATOR_${AUDIO_HANDLE_IDENTITY}_OUTPUT`),
-          dataType: TypeOfData.Audio,
-          hint: 'Oscillator audio output | audio',
-        },
-      },
-    };
+    return generateOscConfig(NodeTypes.Sine);
   },
   get [NodeTypes.Triangle]() {
-    return {
-      name: NodeTypes.Triangle,
-      category: NodeCategories.Audio,
-      module: new Oscillator(DEFAULT_FREQ, OscTypes.Triangle),
-      inputs: {
-        oscillatorFrequencyInput: {
-          id: generateId(`TRIANGLE_OSCILLATOR_FREQUENCY_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator frequency input | number',
-        },
-        oscillatorDetuneInput: {
-          id: generateId(`TRIANGLE_OSCILLATOR_DETUNE_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator detune input | number',
-        },
-        oscillatorPartialsInput: {
-          id: generateId(`TRIANGLE_OSCILLATOR_PARTIALS_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator detune input | number',
-        },
-        oscillatorPhaseInput: {
-          id: generateId(`TRIANGLE_OSCILLATOR_PHASE_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator phase input | number',
-        },
-        oscillatorVolumeInput: {
-          id: generateId(`TRIANGLE_OSCILLATOR_VOLUME_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator volume input | number',
-        },
-      },
-      outputs: {
-        oscillatorAudioOutput: {
-          id: generateId(`TRIANGLE_OSCILLATOR_${AUDIO_HANDLE_IDENTITY}_OUTPUT`),
-          dataType: TypeOfData.Audio,
-          hint: 'Oscillator audio output | audio',
-        },
-      },
-    };
+    return generateOscConfig(NodeTypes.Triangle);
   },
   get [NodeTypes.Sawtooth]() {
+    return generateOscConfig(NodeTypes.Sawtooth);
+  },
+  get [NodeTypes.Square]() {
+    return generateOscConfig(NodeTypes.Square);
+  },
+  get [NodeTypes.Analyser]() {
     return {
-      name: NodeTypes.Sawtooth,
+      name: NodeTypes.Analyser,
       category: NodeCategories.Audio,
-      module: new Oscillator(DEFAULT_FREQ, OscTypes.Sawtooth),
+      module: new Analyser(...ANALYZER_OPTIONS),
       inputs: {
-        oscillatorFrequencyInput: {
-          id: generateId(`SAWTOOTH_OSCILLATOR_FREQUENCY_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator frequency input | number',
-        },
-        oscillatorDetuneInput: {
-          id: generateId(`SAWTOOTH_OSCILLATOR_DETUNE_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator detune input | number',
-        },
-        oscillatorPartialsInput: {
-          id: generateId(`SAWTOOTH_OSCILLATOR_PARTIALS_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator detune input | number',
-        },
-        oscillatorPhaseInput: {
-          id: generateId(`SAWTOOTH_OSCILLATOR_PHASE_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator phase input | number',
-        },
-        oscillatorVolumeInput: {
-          id: generateId(`SAWTOOTH_OSCILLATOR_VOLUME_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator volume input | number',
+        analyzerInput: {
+          id: generateId(`ANALYSER_INPUT`),
+          dataType: TypeOfData.Audio,
+          hint: 'Analyser input | audio',
         },
       },
       outputs: {
-        oscillatorAudioOutput: {
-          id: generateId(`OSCILLATOR_${AUDIO_HANDLE_IDENTITY}_OUTPUT`),
+        analyzerOutput: {
+          id: generateId(`ANALYSER_OUTPUT`),
           dataType: TypeOfData.Audio,
-          hint: 'Oscillator audio output | audio',
+          hint: 'Analyser output | audio',
         },
       },
     };
   },
-  get [NodeTypes.Square]() {
+  get [NodeTypes.Noise]() {
     return {
-      name: NodeTypes.Square,
+      name: NodeTypes.Noise,
       category: NodeCategories.Audio,
-      module: new Oscillator(DEFAULT_FREQ, OscTypes.Square),
+      module: new Noise(DEFAULT_NOISE),
       inputs: {
-        oscillatorFrequencyInput: {
-          id: generateId(`SQUARE_OSCILLATOR_FREQUENCY_INPUT`),
+        noiseRateInput: {
+          id: generateId(`NOISE_RATE_INPUT`),
+          name: 'Rate',
           dataType: TypeOfData.Number,
-          hint: 'Oscillator frequency input | number',
-        },
-        oscillatorDetuneInput: {
-          id: generateId(`SQUARE_OSCILLATOR_DETUNE_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator detune input | number',
-        },
-        oscillatorPartialsInput: {
-          id: generateId(`SQUARE_OSCILLATOR_PARTIALS_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator detune input | number',
-        },
-        oscillatorPhaseInput: {
-          id: generateId(`SQUARE_OSCILLATOR_PHASE_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator phase input | number',
-        },
-        oscillatorVolumeInput: {
-          id: generateId(`SQUARE_OSCILLATOR_VOLUME_INPUT`),
-          dataType: TypeOfData.Number,
-          hint: 'Oscillator volume input | number',
+          hint: 'Noise rate input | number',
         },
       },
       outputs: {
-        oscillatorAudioOutput: {
-          id: generateId(`SQUARE_OSCILLATOR_${AUDIO_HANDLE_IDENTITY}_OUTPUT`),
+        analyzerOutput: {
+          id: generateId(`NOISE_OUTPUT`),
           dataType: TypeOfData.Audio,
-          hint: 'Oscillator audio output | audio',
+          hint: 'Noise output | audio',
+        },
+      },
+    }
+  },
+  get [NodeTypes.BiquadFilter]() {
+    return {
+      name: NodeTypes.BiquadFilter,
+      category: NodeCategories.Audio,
+      module: new BiquadFilter(),
+      inputs: {
+        biquadFilterInput: {
+          id: generateId(`BIQUAD_FILTER_INPUT`),
+          name: 'In',
+          dataType: TypeOfData.Audio,
+          hint: 'Filter input | audio',
+        },
+        biquadFilterFrequencyInput: {
+          id: generateId(`BIQUAD_FILTER_FREQ_INPUT`),
+          name: 'Freq',
+          dataType: TypeOfData.Number,
+          hint: 'Filter input frequency | number',
+        },
+        biquadFilterQInput: {
+          id: generateId(`BIQUAD_FILTER_Q_INPUT`),
+          name: 'Q',
+          dataType: TypeOfData.Number,
+          hint: 'Filter input Q | number',
+        },
+      },
+      outputs: {
+        biquadFilterOutput: {
+          id: generateId(`BIQUAD_FILTER_OUTPUT`),
+          dataType: TypeOfData.Audio,
+          hint: 'Filter output | audio',
         },
       },
     };

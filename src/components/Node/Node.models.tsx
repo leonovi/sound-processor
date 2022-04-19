@@ -1,4 +1,5 @@
 import { NodeCategories, TypeOfData } from "components/Nodes/models";
+import { ReactNode } from "react";
 
 export enum HandleTypes {
   Source = 'source',
@@ -18,7 +19,7 @@ export type OutputT = InOutT;
 export type NodePropsT = {
   compact?: true;
   className?: string;
-  name: string;
+  name: ReactNode;
   category: NodeCategories;
   inputs?: Record<string, InputT>;
   outputs?: Record<string, OutputT>;

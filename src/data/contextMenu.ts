@@ -29,6 +29,9 @@ export const contextMenuData: ContextMenuItemsT = [
       { label: 'Sawtooth', nodeType: NodeTypes.Sawtooth },
       { label: 'Square', nodeType: NodeTypes.Square },
       { label: 'Destination', nodeType: NodeTypes.Destination },
+      { label: 'Analyser', nodeType: NodeTypes.Analyser },
+      { label: 'Noise', nodeType: NodeTypes.Noise },
+      { label: 'BiquadFilter', nodeType: NodeTypes.BiquadFilter },
     ],
   },
 ];

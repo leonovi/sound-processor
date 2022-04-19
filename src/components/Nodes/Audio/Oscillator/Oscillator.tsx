@@ -4,6 +4,7 @@ import b_ from 'b_';
 import './Oscillator.css';
 import { Node } from 'components/Node/Node';
 import { createNodeClass } from 'utils/createNodeClass';
+import { useConnection } from 'hooks/useConnection';
 import {
   OscillatorNodeT,
   SawtoothNodeT,
@@ -13,24 +14,69 @@ import {
 } from './Oscillator.models';
 import { NodeTypes } from 'components/Nodes/models';
 
+import SineIcon from 'icons/sine-wave.svg';
+import TriangleIcon from 'icons/triangle-wave.svg';
+import SawtoothIcon from 'icons/sawtooth-wave.svg';
+import SquareIcon from 'icons/square-wave.svg';
+
+const RAMP_TIME = 0.2;
+
+const OscIcons = {
+  [NodeTypes.Sine]: SineIcon,
+  [NodeTypes.Triangle]: TriangleIcon,
+  [NodeTypes.Sawtooth]: SawtoothIcon,
+  [NodeTypes.Square]: SquareIcon,
+};
+
 const b = b_.with('oscillator-node');
 
-const Oscillator: FC<OscillatorNodeT> = ({ id, data, className }) => {
-  const { module } = data.config;
+const Oscillator: FC<OscillatorNodeT> = ({ id, type, data, className }) => {
+  const {
+    inputs: {
+      oscillatorFrequencyInput,
+      oscillatorDetuneInput,
+      oscillatorPartialsInput,
+      oscillatorPhaseInput,
+      oscillatorVolumeInput,
+    },
+    module,
+  } = data.config;
 
-  const startModule = () => {
+  const executeOsc = () => {
     module.start();
+    return () => {
+      module.stop();
+    };
   };
-  const stopModule = () => {
-    module.stop();
-  };
+  useEffect(executeOsc, []);
 
-  useEffect(() => {
-    startModule();
-    return () => stopModule();
-  }, []);
+  useConnection(oscillatorFrequencyInput.id, (value) =>
+    module.frequency.rampTo(value, RAMP_TIME)
+  );
 
-  return <Node className={cn(b(), className)} {...data.config}></Node>;
+  useConnection(oscillatorDetuneInput.id, (value) =>
+    module.detune.rampTo(value, RAMP_TIME)
+  );
+
+  useConnection(
+    oscillatorPartialsInput.id,
+    (value) => (module.partialCount = value)
+  );
+
+  useConnection(oscillatorPhaseInput.id, (value) => (module.phase = value));
+
+  useConnection(oscillatorVolumeInput.id, (value) =>
+    module.volume.rampTo(value, RAMP_TIME)
+  );
+
+  const OscIcon = OscIcons[type];
+  return (
+    <Node
+      className={cn(b(), className)}
+      {...data.config}
+      name={<OscIcon className={b('icon')} />}
+    />
+  );
 };
 
 const Sine: FC<SineNodeT> = (props) => (

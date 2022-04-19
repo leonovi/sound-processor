@@ -1,0 +1,4 @@
+.oscillator-node__icon {
+  color: var(--color-blue);
+  transform: scale(0.8);
+}

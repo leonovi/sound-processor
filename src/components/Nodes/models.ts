@@ -24,6 +24,9 @@ export enum NodeTypes {
   Sawtooth = 'Sawtooth',
   Square = 'Square',
   Destination = 'Destination',
+  Analyser = 'Analyser',
+  Noise = 'Noise',
+  BiquadFilter = 'BiquadFilter',
 }
 
 export enum TypeOfData {

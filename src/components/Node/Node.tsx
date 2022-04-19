@@ -52,8 +52,8 @@ const Node: FC<NodePropsT> = ({
       <div className={b('body')}>
         <div className={b('inputs')}>
           {!isUndefined(inputs) &&
-            Object.values(inputs).map(({ id, dataType, hint }) => (
-              <Input key={id} id={id} dataType={dataType} />
+            Object.values(inputs).map(({ id, dataType, hint, name }) => (
+              <Input key={id} id={id} dataType={dataType} name={name} />
             ))}
         </div>
         <div className={b('childrens')}>{children}</div>

@@ -7,16 +7,19 @@ import { InputPropsT } from './Input.models';
 
 const b = b_.with('node-input');
 
-const Input: FC<InputPropsT> = ({ id, dataType }) => {
+const Input: FC<InputPropsT> = ({ id, dataType, name }) => {
   return (
-    <Handle
-      className={b()}
-      key={id}
-      id={id}
-      type={HandleTypes.Target}
-      position={Position.Left}
-      data-datatype={dataType}
-    />
+    <div className={b()}>
+      <Handle
+        className={b('handle')}
+        key={id}
+        id={id}
+        type={HandleTypes.Target}
+        position={Position.Left}
+        data-datatype={dataType}
+      />
+      <span className={b('handle-name')}>{name}</span>
+    </div>
   );
 };
 

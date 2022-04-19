@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { FC, ReactNode, useCallback, useState } from 'react';
 import ReactFlow, {
   addEdge,
   Connection,
@@ -17,7 +17,6 @@ import { EMPTY_STRING } from 'utils/constants';
 import { generateId } from 'utils/generateId';
 import { isNode } from 'utils/isNode';
 import { isEdge } from 'utils/isEdge';
-import { filter } from 'utils/filter';
 import { checkConnection } from 'utils/checkConnection';
 import { ContextMenu } from 'components/ContextMenu/ContextMenu';
 import { NodeCategories, NodeTypes } from 'components/Nodes/models';
@@ -41,12 +40,15 @@ import {
   Triangle,
 } from 'components/Nodes/Audio/Oscillator/Oscillator';
 import { Destination } from 'components/Nodes/Audio/Destination/Destination';
+import { Analyser } from 'components/Nodes/Audio/Analyser/Analyser';
+import { Noise } from 'components/Nodes/Audio/Noise/Noise';
+import { BiquadFilter } from 'components/Nodes/Audio/BiquadFilter/BiquadFilter';
 
 const BACKSPACE_KEYCODE = 8;
 
 const EDGE_TYPES = {}; // TODO create custom edge
 
-const NODE_TYPES = {
+const NODE_TYPES: Record<NodeTypes, ReactNode> = {
   // Math
   [NodeTypes.Sum]: Sum,
   [NodeTypes.Subtract]: Subtract,
@@ -64,6 +66,9 @@ const NODE_TYPES = {
   [NodeTypes.Sawtooth]: Sawtooth,
   [NodeTypes.Square]: Square,
   [NodeTypes.Destination]: Destination,
+  [NodeTypes.Analyser]: Analyser,
+  [NodeTypes.Noise]: Noise,
+  [NodeTypes.BiquadFilter]: BiquadFilter,
 };
 
 const findModules = (

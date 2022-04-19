@@ -30,6 +30,10 @@
 }
 
 .node__name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
   font-weight: 600;
   font-size: 14px;
   line-height: 135%;
@@ -39,7 +43,8 @@
 
 .node__body {
   display: grid;
-  grid-template-columns: calc(var(--u) * 3) 1fr calc(var(--u) * 3);
+  /* grid-template-columns: calc(var(--u) * 3) 1fr calc(var(--u) * 3); */
+  grid-template-columns: max-content 1fr max-content;
   padding: calc(var(--u) * 2) 0;
 
   overflow: hidden;

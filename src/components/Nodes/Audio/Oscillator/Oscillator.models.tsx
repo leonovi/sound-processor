@@ -1,13 +1,6 @@
 import { FlowNodeT, NodeTypes } from 'components/Nodes/models';
 import { configs } from 'data/configs';
 
-export enum OscTypes {
-  Sine = 'sine',
-  Triangle = 'triangle',
-  Sawtooth = 'sawtooth',
-  Square = 'square',
-}
-
 type SineNodeOptionsT = {
   type: NodeTypes.Sine;
   data: {
