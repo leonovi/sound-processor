@@ -3,7 +3,6 @@ import {
   AnalyserType,
   getDestination,
   Noise,
-  NoiseType,
   Oscillator,
   BiquadFilter,
 } from 'tone';
@@ -39,31 +38,31 @@ const generateOscConfig = (
   category: NodeCategories.Audio,
   module: new Oscillator(...OSC_OPTIONS[type]),
   inputs: {
-    oscillatorFrequencyInput: {
+    frequency: {
       id: generateId(`${type.toUpperCase()}_OSCILLATOR_FREQUENCY_INPUT`),
       name: 'Freq',
       dataType: TypeOfData.Number,
       hint: 'Oscillator frequency input | number',
     },
-    oscillatorDetuneInput: {
+    detune: {
       id: generateId(`${type.toUpperCase()}_OSCILLATOR_DETUNE_INPUT`),
       name: 'Detune',
       dataType: TypeOfData.Number,
       hint: 'Oscillator detune input | number',
     },
-    oscillatorPartialsInput: {
+    partials: {
       id: generateId(`${type.toUpperCase()}_OSCILLATOR_PARTIALS_INPUT`),
       name: 'Partials',
       dataType: TypeOfData.Number,
       hint: 'Oscillator detune input | number',
     },
-    oscillatorPhaseInput: {
+    phase: {
       id: generateId(`${type.toUpperCase()}_OSCILLATOR_PHASE_INPUT`),
       name: 'Phase',
       dataType: TypeOfData.Number,
       hint: 'Oscillator phase input | number',
     },
-    oscillatorVolumeInput: {
+    volume: {
       id: generateId(`${type.toUpperCase()}_OSCILLATOR_VOLUME_INPUT`),
       dataType: TypeOfData.Number,
       name: 'Vol',
@@ -81,7 +80,7 @@ const generateOscConfig = (
   },
 });
 
-const ANALYZER_OPTIONS: [AnalyserType, number] = ['fft', 1024];
+const ANALYZER_OPTIONS: [AnalyserType, number] = ['waveform', 256];
 
 export enum NoiseTypes {
   White = 'white',

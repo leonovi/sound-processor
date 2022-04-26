@@ -40,12 +40,17 @@ const MathOperation: FC<MathOperationNodeT & MathOperationNodePropsT> = ({
   operation,
   className,
 }) => {
+  /*
+
+  const firstInputNode = useSelector(selectFirstInputNode)
+  const secondInputNode = useSelector(selectSecondInputNode)
+
+  */
+
   const {
     inputs: { operationInputBang, operationInput1, operationInput2 },
   } = data.config;
   const inputsValues = useInputsValues({ operationInput1, operationInput2 });
-
-  console.log(inputsValues);
 
   const [value, setValue] = useState(DEFAULT_VALUE);
   useEffect(() => setValue(operation(...inputsValues)), [inputsValues]);

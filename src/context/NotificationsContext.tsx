@@ -3,6 +3,7 @@ import { generateId } from 'utils/generateId';
 
 export enum NotificationsTypes {
   InvalidConnection = 'InvalidConnection',
+  RangeError = 'RangeError',
 }
 
 export type NotificationT = {
@@ -28,4 +29,4 @@ export const createNotification = (
 
 export const NotificationsContext = createContext<NotificationsContextT>(null!);
 
-export const useNotificationsContext = () => useContext(NotificationsContext);
+export const useNotifications = () => useContext(NotificationsContext);

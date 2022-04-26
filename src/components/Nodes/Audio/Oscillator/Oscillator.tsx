@@ -2,8 +2,14 @@ import React, { FC, useEffect } from 'react';
 import cn from 'classnames';
 import b_ from 'b_';
 import './Oscillator.css';
+import {
+  createNotification,
+  NotificationsTypes,
+  useNotifications,
+} from 'context/NotificationsContext';
 import { Node } from 'components/Node/Node';
 import { createNodeClass } from 'utils/createNodeClass';
+import { EMPTY_STRING } from 'utils/constants';
 import { useConnection } from 'hooks/useConnection';
 import {
   OscillatorNodeT,
@@ -22,23 +28,40 @@ import SquareIcon from 'icons/square-wave.svg';
 const RAMP_TIME = 0.2;
 
 const OscIcons = {
-  [NodeTypes.Sine]: SineIcon,
-  [NodeTypes.Triangle]: TriangleIcon,
-  [NodeTypes.Sawtooth]: SawtoothIcon,
-  [NodeTypes.Square]: SquareIcon,
+  [NodeTypes.Sine]: <SineIcon />,
+  [NodeTypes.Triangle]: <TriangleIcon />,
+  [NodeTypes.Sawtooth]: <SawtoothIcon />,
+  [NodeTypes.Square]: <SquareIcon />,
+};
+
+const getOscIcon = (
+  type:
+    | NodeTypes.Sine
+    | NodeTypes.Triangle
+    | NodeTypes.Sawtooth
+    | NodeTypes.Square
+) => OscIcons[type];
+
+const ERROR_TYPE_SEPARATOR = ':';
+
+const getErrorMessage = (error: Error) => {
+  return String(error)
+    .split(ERROR_TYPE_SEPARATOR)
+    .slice(1)
+    .join(EMPTY_STRING);
 };
 
 const b = b_.with('oscillator-node');
 
-const Oscillator: FC<OscillatorNodeT> = ({ id, type, data, className }) => {
+const Oscillator: FC<OscillatorNodeT> = ({
+  type,
+  data,
+  className,
+}) => {
+  const notifications = useNotifications();
+
   const {
-    inputs: {
-      oscillatorFrequencyInput,
-      oscillatorDetuneInput,
-      oscillatorPartialsInput,
-      oscillatorPhaseInput,
-      oscillatorVolumeInput,
-    },
+    inputs: { frequency, detune, partials, phase, volume },
     module,
   } = data.config;
 
@@ -48,51 +71,94 @@ const Oscillator: FC<OscillatorNodeT> = ({ id, type, data, className }) => {
       module.stop();
     };
   };
+
+  const trySet = (
+    value: number,
+    setFunc: (value: number) => void
+  ) => {
+    try {
+      setFunc(value);
+    } catch (error) {
+      if (error instanceof RangeError) {
+        notifications.add(
+          createNotification(
+            NotificationsTypes.RangeError,
+            getErrorMessage(error)
+          )
+        );
+      }
+    }
+  };
+
+  const setFrequency = (value: number) => {
+    module.frequency.rampTo(value, RAMP_TIME);
+  };
+  const setDetune = (value: number) => {
+    module.detune.rampTo(value, RAMP_TIME);
+  };
+  const setPartials = (value: number) => {
+    module.partialCount = value;
+  };
+  const setPhase = (value: number) => {
+    module.phase = value;
+  };
+  const setVolume = (value: number) => {
+    module.volume.rampTo(value, RAMP_TIME);
+  };
+
   useEffect(executeOsc, []);
 
-  useConnection(oscillatorFrequencyInput.id, (value) =>
-    module.frequency.rampTo(value, RAMP_TIME)
+  useConnection(frequency.id, (value) =>
+    trySet(value, setFrequency)
+  );
+  useConnection(detune.id, (value) =>
+    trySet(value, setDetune)
+  );
+  useConnection(partials.id, (value) =>
+    trySet(value, setPartials)
+  );
+  useConnection(phase.id, (value) =>
+    trySet(value, setPhase)
+  );
+  useConnection(volume.id, (value) =>
+    trySet(value, setVolume)
   );
 
-  useConnection(oscillatorDetuneInput.id, (value) =>
-    module.detune.rampTo(value, RAMP_TIME)
-  );
-
-  useConnection(
-    oscillatorPartialsInput.id,
-    (value) => (module.partialCount = value)
-  );
-
-  useConnection(oscillatorPhaseInput.id, (value) => (module.phase = value));
-
-  useConnection(oscillatorVolumeInput.id, (value) =>
-    module.volume.rampTo(value, RAMP_TIME)
-  );
-
-  const OscIcon = OscIcons[type];
   return (
     <Node
       className={cn(b(), className)}
       {...data.config}
-      name={<OscIcon className={b('icon')} />}
+      name={getOscIcon(type)}
     />
   );
 };
 
 const Sine: FC<SineNodeT> = (props) => (
-  <Oscillator className={createNodeClass(NodeTypes.Sine)} {...props} />
+  <Oscillator
+    className={createNodeClass(NodeTypes.Sine)}
+    {...props}
+  />
 );
 
 const Triangle: FC<TriangleNodeT> = (props) => (
-  <Oscillator className={createNodeClass(NodeTypes.Triangle)} {...props} />
+  <Oscillator
+    className={createNodeClass(NodeTypes.Triangle)}
+    {...props}
+  />
 );
 
 const Sawtooth: FC<SawtoothNodeT> = (props) => (
-  <Oscillator className={createNodeClass(NodeTypes.Sawtooth)} {...props} />
+  <Oscillator
+    className={createNodeClass(NodeTypes.Sawtooth)}
+    {...props}
+  />
 );
 
 const Square: FC<SquareNodeT> = (props) => (
-  <Oscillator className={createNodeClass(NodeTypes.Square)} {...props} />
+  <Oscillator
+    className={createNodeClass(NodeTypes.Square)}
+    {...props}
+  />
 );
 
 export { Sine, Triangle, Sawtooth, Square };

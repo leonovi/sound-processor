@@ -1,4 +1,9 @@
-import React, { FC, ReactNode, useCallback, useState } from 'react';
+import React, {
+  FC,
+  ReactNode,
+  useCallback,
+  useState,
+} from 'react';
 import ReactFlow, {
   addEdge,
   Connection,
@@ -11,7 +16,7 @@ import { usePopperMenuContext } from 'context/PopperMenuContext';
 import {
   createNotification,
   NotificationsTypes,
-  useNotificationsContext,
+  useNotifications,
 } from 'context/NotificationsContext';
 import { EMPTY_STRING } from 'utils/constants';
 import { generateId } from 'utils/generateId';
@@ -19,7 +24,10 @@ import { isNode } from 'utils/isNode';
 import { isEdge } from 'utils/isEdge';
 import { checkConnection } from 'utils/checkConnection';
 import { ContextMenu } from 'components/ContextMenu/ContextMenu';
-import { NodeCategories, NodeTypes } from 'components/Nodes/models';
+import {
+  NodeCategories,
+  NodeTypes,
+} from 'components/Nodes/models';
 import { configs } from 'data/configs';
 
 import {
@@ -95,7 +103,7 @@ const findModules = (
 
 const Flow: FC = () => {
   const popperMenuContext = usePopperMenuContext();
-  const { add: addNotification } = useNotificationsContext();
+  const notifications = useNotifications();
 
   const [elements, setElements] = useState<Elements>([]);
 
@@ -129,26 +137,34 @@ const Flow: FC = () => {
     }
   };
 
-  const onElementsRemove = (elementsToRemove: Elements): void => {
+  const onElementsRemove = (
+    elementsToRemove: Elements
+  ): void => {
     const edgesToRemove = elementsToRemove.filter(isEdge);
 
     edgesToRemove.forEach(({ source, target }) =>
       disconnectModules(source, target)
     );
 
-    setElements((elements) => removeElements(elementsToRemove, elements));
+    setElements((elements) =>
+      removeElements(elementsToRemove, elements)
+    );
   };
 
-  const onConnect = (connectionParams: Edge | Connection): void => {
-    const { source, target, sourceHandle, targetHandle } = connectionParams;
+  const onConnect = (
+    connectionParams: Edge | Connection
+  ): void => {
+    const { source, target, sourceHandle, targetHandle } =
+      connectionParams;
 
-    const { isValid, sourceDataType, targetDataType } = checkConnection(
-      sourceHandle ?? EMPTY_STRING,
-      targetHandle ?? EMPTY_STRING
-    );
+    const { isValid, sourceDataType, targetDataType } =
+      checkConnection(
+        sourceHandle ?? EMPTY_STRING,
+        targetHandle ?? EMPTY_STRING
+      );
 
     if (!isValid) {
-      addNotification(
+      notifications.add(
         createNotification(
           NotificationsTypes.InvalidConnection,
           `Type ${sourceDataType} does not match type ${targetDataType}`
@@ -172,7 +188,9 @@ const Flow: FC = () => {
     // }
 
     connectModules(source, target);
-    setElements((elements) => addEdge(connectionParams, elements));
+    setElements((elements) =>
+      addEdge(connectionParams, elements)
+    );
   };
 
   // const patchNode = (node: Node<any>): Node<any> => ({
@@ -230,7 +248,9 @@ const Flow: FC = () => {
       height: 0,
     });
 
-    popperMenuContext.show(<ContextMenu addNode={addNode} />);
+    popperMenuContext.show(
+      <ContextMenu addNode={addNode} />
+    );
   };
 
   const onLoad: OnLoadFunc = (params) => {
@@ -242,7 +262,10 @@ const Flow: FC = () => {
     const patchedNodes = nodes; // nodes.map(patchNode);
     const patchedEdges = edges; // edges.map(patchEdge);
 
-    const patchedElements = [patchedNodes, patchedEdges].flat();
+    const patchedElements = [
+      patchedNodes,
+      patchedEdges,
+    ].flat();
 
     setElements(patchedElements);
   };

@@ -26,7 +26,6 @@ const NumberInput: FC<NumberInputPropsT> = ({ value, onChange }) => {
   return (
     <input
       type="number"
-      step={0.1}
       className={b()}
       style={{
         width: calcWidth(length(value.toString())),
