@@ -4,23 +4,21 @@ import b_ from 'b_';
 import './Node.css';
 import { isUndefined } from 'utils/isUndefined';
 import { NodePropsT } from 'components/Node/Node.models';
-import { Input } from './components/Input/Input';
-import { Output } from './components/Output/Output';
+import { Handle } from './components/Handle/Handle';
+import { HandleModes } from './components/Handle/Handle.models';
 
 const b = b_.with('node');
 
 const Node: FC<NodePropsT> = ({
   compact,
   className,
-  name,
-  category,
-  inputs,
-  outputs,
+  config,
   onClick: click,
   onMouseDown: mousedown,
   onMouseUp: mouseup,
   children,
 }) => {
+  const { name, inputs, outputs } = config;
   const [dragging, setDragging] = useState(false);
 
   const onClick = () => {
@@ -52,16 +50,34 @@ const Node: FC<NodePropsT> = ({
       <div className={b('body')}>
         <div className={b('inputs')}>
           {!isUndefined(inputs) &&
-            Object.values(inputs).map(({ id, dataType, hint, name }) => (
-              <Input key={id} id={id} dataType={dataType} name={name} />
-            ))}
+            Object.values(inputs).map(
+              ({ id, dataType, hint, name }) => (
+                <Handle
+                  key={id}
+                  id={id}
+                  dataType={dataType}
+                  name={name}
+                  mode={HandleModes.Input}
+                  hint={hint}
+                />
+              )
+            )}
         </div>
         <div className={b('childrens')}>{children}</div>
         <div className={b('outputs')}>
           {!isUndefined(outputs) &&
-            Object.values(outputs).map(({ id, dataType, hint }) => (
-              <Output key={id} id={id} dataType={dataType} />
-            ))}
+            Object.values(outputs).map(
+              ({ id, dataType, hint, name }) => (
+                <Handle
+                  key={id}
+                  id={id}
+                  dataType={dataType}
+                  name={name}
+                  mode={HandleModes.Output}
+                  hint={hint}
+                />
+              )
+            )}
         </div>
       </div>
     </div>

@@ -15,13 +15,22 @@ interface AudioParamDescriptor {
   name: string;
 }
 interface AudioParamMap {
-  forEach(callbackfn: (value: AudioParam, key: string, parent: AudioParamMap) => void, thisArg?: any): void;
+  forEach(
+    callbackfn: (
+      value: AudioParam,
+      key: string,
+      parent: AudioParamMap
+    ) => void,
+    thisArg?: any
+  ): void;
   get(key: any): any | undefined;
 }
 
 declare var AudioWorkletProcessor: {
   prototype: AudioWorkletProcessor;
-  new (options?: AudioWorkletNodeOptions): AudioWorkletProcessor;
+  new (
+    options?: AudioWorkletNodeOptions
+  ): AudioWorkletProcessor;
 };
 
 declare function registerProcessor(
@@ -35,5 +44,5 @@ declare function registerProcessor(
 
 declare var AudioParamMap: {
   prototype: AudioParamMap;
-  new(): AudioParamMap;
+  new (): AudioParamMap;
 };

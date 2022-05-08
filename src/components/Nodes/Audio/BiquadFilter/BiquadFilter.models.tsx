@@ -1,11 +1,16 @@
-import { FlowNodeT, NodeTypes } from 'components/Nodes/models';
-import { configs } from 'data/configs';
+import {
+  FlowNodeT,
+  NodeDataT,
+} from 'components/Flow/Flow.models';
+import { NodeTypes } from 'components/Nodes/models';
+import { nodesConfigs } from 'configs/nodes';
 
 type BiquadFilterNodeOptionsT = {
   type: NodeTypes.BiquadFilter;
-  data: {
-    config: typeof configs[NodeTypes.BiquadFilter];
+  data: NodeDataT & {
+    config: typeof nodesConfigs[NodeTypes.BiquadFilter];
   };
 };
 
-export type BiquadFilterNodeT = FlowNodeT<BiquadFilterNodeOptionsT>;
+export type BiquadFilterNodeT =
+  FlowNodeT<BiquadFilterNodeOptionsT>;

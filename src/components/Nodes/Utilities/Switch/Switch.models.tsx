@@ -1,10 +1,16 @@
-import { FlowNodeT, NodeTypes } from 'components/Nodes/models';
-import { configs } from 'data/configs';
+import {
+  FlowNodeT,
+  NodeDataT,
+} from 'components/Flow/Flow.models';
+import { NodeTypes } from 'components/Nodes/models';
+import { nodesConfigs } from 'configs/nodes';
+
+export type SelectedIdT = number | null;
 
 type SwitchNodeOptionsT = {
   type: NodeTypes.Switch;
-  data: {
-    config: typeof configs[NodeTypes.Switch];
+  data: NodeDataT & {
+    config: typeof nodesConfigs[NodeTypes.Switch];
     value: any;
   };
 };

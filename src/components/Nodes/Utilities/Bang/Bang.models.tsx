@@ -1,11 +1,15 @@
-import { FlowNodeT, NodeTypes } from 'components/Nodes/models';
-import { configs } from 'data/configs';
+import {
+  FlowNodeT,
+  NodeDataT,
+} from 'components/Flow/Flow.models';
+import { NodeTypes } from 'components/Nodes/models';
+import { nodesConfigs } from 'configs/nodes';
 
 type BangNodeOptionsT = {
   type: NodeTypes.Bang;
-  data: {
-    config: typeof configs[NodeTypes.Bang];
-    value: boolean; // Maybe special type BangValueT
+  data: NodeDataT & {
+    config: typeof nodesConfigs[NodeTypes.Bang];
+    value: boolean;
   };
 };
 

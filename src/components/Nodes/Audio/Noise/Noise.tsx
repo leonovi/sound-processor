@@ -1,39 +1,46 @@
 import React, { FC, useEffect, useState } from 'react';
+import { isNumber } from 'tone';
 import cn from 'classnames';
 import b_ from 'b_';
 import './Noise.css';
 import { Node } from 'components/Node/Node';
-import { useConnection } from 'hooks/useConnection';
+import { NoiseNodeT, NoiseTypes } from './Noise.models';
+
+import { useConnections } from 'store/useConnections';
 import { Select } from 'components/Select/Select';
-import { NoiseNodeT } from './Noise.models';
-import { NoiseTypes } from 'data/configs';
+import { flattenProps } from 'utils/flattenProps';
 
 const b = b_.with('noise-node');
 
-const Noise: FC<NoiseNodeT> = ({ type, data, className }) => {
+const Noise: FC<NoiseNodeT> = ({ className, ...props }) => {
   const {
-    inputs: { noiseRateInput },
-    module,
-  } = data.config;
+    config,
+    methods,
+    audioNode,
+    inputs: { rate },
+  } = flattenProps<NoiseNodeT>(props);
 
-  const executeNoise = () => {
-    module.start();
-    return () => {
-      module.stop();
-    };
-  };
-  useEffect(executeNoise, []);
+  useEffect(methods.executeAudioNode(audioNode), []);
 
-  const [noiseType, setNoiseType] = useState<NoiseTypes>(NoiseTypes.White);
+  const { getSourceValue } = useConnections();
+
+  const [noiseType, setNoiseType] = useState<NoiseTypes>(
+    NoiseTypes.White
+  );
   useEffect(() => {
-    module.type = noiseType;
+    audioNode.type = noiseType;
   }, [noiseType]);
 
-  useConnection(noiseRateInput.id, (value) => (module.playbackRate = value));
+  const incRate = getSourceValue(rate.id);
+  useEffect(() => {
+    audioNode.playbackRate = isNumber(incRate)
+      ? incRate
+      : audioNode.playbackRate;
+  }, [incRate]);
 
   return (
-    <Node className={cn(b(), className)} {...data.config}>
-      <Select
+    <Node className={cn(b(), className)} config={config}>
+      <Select<NoiseTypes>
         className={b('select')}
         options={Object.values(NoiseTypes)}
         selected={noiseType}

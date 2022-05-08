@@ -1,8 +1,10 @@
 import {
+  Connection,
   Edge,
-  FlowElement,
+  Node,
   isEdge as elementIsEdge,
 } from 'react-flow-renderer';
 
-export const isEdge = (element: FlowElement): element is Edge<any> =>
-  elementIsEdge(element);
+export const isEdge = (
+  element: Node | Connection | Edge
+): element is Edge<any> => elementIsEdge(element);

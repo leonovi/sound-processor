@@ -14,11 +14,18 @@
     "baseUrl": "src",
     "skipLibCheck": true,
   },
-  "include": ["**/*"],
+  "include": [
+    "**/*"
+  ],
   "exclude": [
     "node_modules"
   ],
   "files": [
     "./src/@types/index.d.ts"
   ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }

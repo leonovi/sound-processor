@@ -1,10 +1,11 @@
 import React, { FC, useEffect, useState } from 'react';
 import b_ from 'b_';
 import './Bang.css';
-import { useUpdate } from 'hooks/useUpdate';
-import { useConnection } from 'hooks/useConnection';
 import { Node } from 'components/Node/Node';
 import { BangNodeT } from './Bang.models';
+import { flattenProps } from 'utils/flattenProps';
+import { useConnections } from 'store/useConnections';
+import { useUpdateNodeInternals } from 'react-flow-renderer';
 
 const OFF_TIMEOUT_MS = 100;
 
@@ -13,26 +14,25 @@ const b = b_.with('bang-node');
 const Bang: FC<BangNodeT> = (props) => {
   const {
     id,
-    data: {
-      config: { name, category, inputs, outputs },
-    },
-  } = props;
+    data,
+    methods,
+    config,
+    inputs: { input: bang },
+  } = flattenProps<BangNodeT>(props);
+
+  const { getSourceValue } = useConnections();
 
   const [shouldUpdate, setShouldUpdate] = useState(false);
-
   const on = () => setShouldUpdate(true);
   const off = () => setShouldUpdate(false);
+  const onMouseDown = on;
+  const onMouseUp = off;
 
-  useConnection(inputs.bangInput.id, (value) => {
-    const isBang = value === true;
-    if (isBang) {
-      setShouldUpdate(true);
-    }
-  });
-
-  const update = useUpdate(id, shouldUpdate);
+  const update = useUpdateNodeInternals();
   useEffect(() => {
-    update();
+    data.value = shouldUpdate;
+    methods.updateConnection?.();
+    update(id);
   }, [shouldUpdate]);
 
   useEffect(() => {
@@ -43,18 +43,13 @@ const Bang: FC<BangNodeT> = (props) => {
     }
   }, [shouldUpdate]);
 
-  const onMouseDown = on;
-  const onMouseUp = off;
+  const incBang = getSourceValue(bang.id);
+  useEffect(() => {
+    setShouldUpdate(Boolean(incBang));
+  }, [incBang]);
 
   return (
-    <Node
-      compact
-      className={b()}
-      name={name}
-      category={category}
-      inputs={inputs}
-      outputs={outputs}
-    >
+    <Node compact className={b()} config={config}>
       <button
         className={b('bang', { pressed: shouldUpdate })}
         onMouseDown={onMouseDown}

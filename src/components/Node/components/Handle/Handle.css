@@ -1,0 +1,25 @@
+.node-handle {
+  display: flex;
+  align-items: center;
+}
+
+.node-handle__handle {
+  width: calc(var(--u) * 3);
+  height: calc(var(--u) * 3);
+
+  background-color: var(--color-grey);
+}
+
+.node-handle__name {
+  font-size: 12px;
+}
+
+.node-handle__name_input {
+  order: 1;
+  margin-left: var(--u);
+}
+
+.node-handle__name_output {
+  order: -1;
+  margin-right: var(--u);
+}

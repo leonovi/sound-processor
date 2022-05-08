@@ -1,28 +1,20 @@
-import { NodeCategories, TypeOfData } from "components/Nodes/models";
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
+import { ToneAudioNode } from 'tone';
+import { NodeCategories } from 'components/Nodes/models';
+import { HandleT } from './components/Handle/Handle.models';
 
-export enum HandleTypes {
-  Source = 'source',
-  Target = 'target',
-}
-
-type InOutT = {
-  id: string;
-  dataType: TypeOfData;
-  hint: string;
-  name?: string;
-}
-
-export type InputT = InOutT;
-export type OutputT = InOutT;
+export type ConfigT = {
+  name: ReactNode;
+  category: NodeCategories;
+  audioNode?: ToneAudioNode;
+  inputs?: Record<string, HandleT>;
+  outputs?: Record<string, HandleT>;
+};
 
 export type NodePropsT = {
   compact?: true;
   className?: string;
-  name: ReactNode;
-  category: NodeCategories;
-  inputs?: Record<string, InputT>;
-  outputs?: Record<string, OutputT>;
+  config: ConfigT;
   onClick?: () => void;
   onMouseDown?: () => void;
   onMouseUp?: () => void;

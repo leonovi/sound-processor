@@ -1,18 +1,32 @@
-import { useUpdateNodeInternals } from 'react-flow-renderer';
+import {
+  useNodes,
+  useUpdateNodeInternals,
+} from 'react-flow-renderer';
+import { FlowNodeT } from 'components/Flow/Flow.models';
+import { getNode } from 'utils/getNode';
 import { isUndefined } from 'utils/isUndefined';
-import { useNode } from './useNode';
 
-const useUpdate = (id: string, value?: any) => {
-  const node = useNode(id);
+type UseUpdateHookT = (
+  id: string,
+  value?: any
+) => () => void;
+
+const useInternalUpdate: UseUpdateHookT = (id, value) => {
+  const nodes = useNodes() as Array<FlowNodeT>;
+  const node = getNode(nodes, id);
+
   const updateNode = useUpdateNodeInternals();
-  return () => {
-    if (node) {
+
+  const updateFunc = () => {
+    if (!isUndefined(node)) {
       if (!isUndefined(value)) {
         node.data.value = value;
       }
       updateNode(node.id);
     }
   };
+
+  return updateFunc;
 };
 
-export { useUpdate };
+export { useInternalUpdate };

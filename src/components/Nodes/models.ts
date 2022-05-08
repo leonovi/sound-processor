@@ -1,5 +1,3 @@
-import { Node as FlowNode } from 'react-flow-renderer';
-
 export enum NodeCategories {
   Math = 'Math',
   Utilities = 'Utilities',
@@ -35,16 +33,3 @@ export enum TypeOfData {
   Number = 'number',
   Audio = 'audio',
 }
-
-type NodeParametersT = {
-  type: NodeTypes;
-  data: any;
-};
-
-export type FlowNodeT<T extends NodeParametersT = NodeParametersT> = Overwrite<
-  FlowNode,
-  {
-    type: T['type'];
-    data: T['data'];
-  }
->;

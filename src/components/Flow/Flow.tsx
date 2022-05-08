@@ -1,41 +1,52 @@
-import React, {
-  FC,
-  ReactNode,
-  useCallback,
-  useState,
-} from 'react';
+import React, { FC, useCallback, useState } from 'react';
+import { ToneAudioNode } from 'tone';
 import ReactFlow, {
   addEdge,
-  Connection,
-  Edge,
-  OnLoadFunc,
-  removeElements,
-  Elements,
+  OnConnect as OnConnectT,
+  OnEdgesChange as OnEdgesChangeT,
+  OnEdgesDelete as OnEdgesDeleteT,
+  OnInit as OnInitT,
+  OnNodesChange as OnNodesChangeT,
+  OnNodesDelete as OnNodesDeleteT,
+  useReactFlow,
 } from 'react-flow-renderer';
-import { usePopperMenuContext } from 'context/PopperMenuContext';
+import { FlowEdgeT, FlowNodeT } from './Flow.models';
+import {
+  applyEdges,
+  applyNodes,
+  isAudioHandles,
+  isAudioNodes,
+} from './Flow.utils';
+
+import { usePopperMenu } from 'context/PopperMenu';
+
+import { useConnections } from 'store/useConnections';
 import {
   createNotification,
-  NotificationsTypes,
+  NotificationTypes,
   useNotifications,
-} from 'context/NotificationsContext';
-import { EMPTY_STRING } from 'utils/constants';
+} from 'store/useNotifications';
+
+import { EMPTY_ARRAY } from 'utils/constants';
 import { generateId } from 'utils/generateId';
-import { isNode } from 'utils/isNode';
-import { isEdge } from 'utils/isEdge';
 import { checkConnection } from 'utils/checkConnection';
+import { tryCatch } from 'utils/tryCatch';
+import { extractAudioNodes } from 'utils/extractAudioNodes';
+
 import { ContextMenu } from 'components/ContextMenu/ContextMenu';
 import {
   NodeCategories,
   NodeTypes,
 } from 'components/Nodes/models';
-import { configs } from 'data/configs';
+
+import { nodesConfigs } from 'configs/nodes';
 
 import {
   Divide,
   Multiply,
   Subtract,
   Sum,
-} from 'components/Nodes/Math/MathOperation/MathOperation';
+} from 'components/Nodes/Math/Operation/Operation';
 import { Number } from 'components/Nodes/Math/Number/Number';
 import { Bang } from 'components/Nodes/Utilities/Bang/Bang';
 import { Metro } from 'components/Nodes/Utilities/Metro/Metro';
@@ -52,23 +63,18 @@ import { Analyser } from 'components/Nodes/Audio/Analyser/Analyser';
 import { Noise } from 'components/Nodes/Audio/Noise/Noise';
 import { BiquadFilter } from 'components/Nodes/Audio/BiquadFilter/BiquadFilter';
 
-const BACKSPACE_KEYCODE = 8;
-
-const EDGE_TYPES = {}; // TODO create custom edge
-
-const NODE_TYPES: Record<NodeTypes, ReactNode> = {
-  // Math
+const NODE_TYPES: Record<NodeTypes, FC<FlowNodeT<any>>> = {
   [NodeTypes.Sum]: Sum,
   [NodeTypes.Subtract]: Subtract,
   [NodeTypes.Multiply]: Multiply,
   [NodeTypes.Divide]: Divide,
   [NodeTypes.Number]: Number,
-  // Utilities
+
   [NodeTypes.Bang]: Bang,
   [NodeTypes.Metro]: Metro,
   [NodeTypes.Switch]: Switch,
   [NodeTypes.Defer]: Defer,
-  // Audio
+
   [NodeTypes.Sine]: Sine,
   [NodeTypes.Triangle]: Triangle,
   [NodeTypes.Sawtooth]: Sawtooth,
@@ -79,159 +85,212 @@ const NODE_TYPES: Record<NodeTypes, ReactNode> = {
   [NodeTypes.BiquadFilter]: BiquadFilter,
 };
 
-const findModules = (
-  elements: Elements,
-  source: string | null,
-  target: string | null
-): {
-  sourceModule: AudioNode | null | undefined;
-  targetModule: AudioNode | null | undefined;
-} => {
-  const sourceNode = elements
-    .filter(isNode)
-    .find((element) => element.id === source);
+const EDGE_TYPES = {}; // TODO create custom edge
 
-  const targetNode = elements
-    .filter(isNode)
-    .find((element) => element.id === target);
+const connectAudioNodes = (
+  sourceNode: FlowNodeT,
+  targetNode: FlowNodeT
+): void => {
+  const [sourceAudioNode, targetAudioNode] =
+    extractAudioNodes(sourceNode, targetNode);
 
-  const sourceModule = sourceNode?.data?.config?.module;
-  const targetModule = targetNode?.data?.config?.module;
+  if (sourceAudioNode && targetAudioNode) {
+    sourceAudioNode.connect(targetAudioNode);
+  }
+};
 
-  return { sourceModule, targetModule };
+const disconnectAudioNodes = (
+  sourceNode: FlowNodeT,
+  targetNode: FlowNodeT
+): void => {
+  const [sourceAudioNode, targetAudioNode] =
+    extractAudioNodes(sourceNode, targetNode);
+
+  if (sourceAudioNode && targetAudioNode) {
+    sourceAudioNode.disconnect(targetAudioNode);
+  }
 };
 
 const Flow: FC = () => {
-  const popperMenuContext = usePopperMenuContext();
+  const popperMenu = usePopperMenu();
   const notifications = useNotifications();
 
-  const [elements, setElements] = useState<Elements>([]);
+  const { getNode } = useReactFlow();
+  const { setConnection, removeConnection } =
+    useConnections();
 
-  const connectModules = (
-    source: string | null,
-    target: string | null
-  ): void => {
-    const { sourceModule, targetModule } = findModules(
-      elements,
-      source,
-      target
-    );
+  const [nodes, setNodes] =
+    useState<Array<FlowNodeT>>(EMPTY_ARRAY);
 
-    if (sourceModule && targetModule) {
-      sourceModule.connect(targetModule);
-    }
+  const [edges, setEdges] =
+    useState<Array<FlowEdgeT>>(EMPTY_ARRAY);
+
+  const onNodesChange: OnNodesChangeT = (changes) => {
+    setNodes((nodes) => applyNodes(changes, nodes));
   };
 
-  const disconnectModules = (
-    source: string | null,
-    target: string | null
-  ): void => {
-    const { sourceModule, targetModule } = findModules(
-      elements,
-      source,
-      target
-    );
-
-    if (sourceModule && targetModule) {
-      sourceModule.disconnect(targetModule);
-    }
+  const onEdgesChange: OnEdgesChangeT = (changes) => {
+    setEdges((edges) => applyEdges(changes, edges));
   };
 
-  const onElementsRemove = (
-    elementsToRemove: Elements
-  ): void => {
-    const edgesToRemove = elementsToRemove.filter(isEdge);
-
-    edgesToRemove.forEach(({ source, target }) =>
-      disconnectModules(source, target)
-    );
-
-    setElements((elements) =>
-      removeElements(elementsToRemove, elements)
-    );
+  const onNodesDelete: OnNodesDeleteT = (nodesToRemove) => {
+    //
   };
 
-  const onConnect = (
-    connectionParams: Edge | Connection
-  ): void => {
+  const onEdgesDelete: OnEdgesDeleteT = (edgesToRemove) => {
+    edgesToRemove.forEach((edge) => {
+      const { source, target, sourceHandle, targetHandle } =
+        edge;
+
+      const sourceNode = getNode(source) as
+        | FlowNodeT
+        | undefined;
+      const targetNode = getNode(target) as
+        | FlowNodeT
+        | undefined;
+
+      if (
+        !sourceNode ||
+        !targetNode ||
+        !sourceHandle ||
+        !targetHandle
+      ) {
+        return;
+      }
+
+      if (
+        isAudioNodes(source, target) &&
+        isAudioHandles(sourceHandle, targetHandle)
+      ) {
+        disconnectAudioNodes(sourceNode, targetNode);
+      }
+
+      removeConnection(targetHandle);
+    });
+  };
+
+  const onConnect: OnConnectT = (connectionParams) => {
     const { source, target, sourceHandle, targetHandle } =
       connectionParams;
 
+    if (
+      !source ||
+      !target ||
+      !sourceHandle ||
+      !targetHandle
+    ) {
+      return;
+    }
+
     const { isValid, sourceDataType, targetDataType } =
-      checkConnection(
-        sourceHandle ?? EMPTY_STRING,
-        targetHandle ?? EMPTY_STRING
-      );
+      checkConnection(sourceHandle, targetHandle);
 
     if (!isValid) {
       notifications.add(
         createNotification(
-          NotificationsTypes.InvalidConnection,
+          NotificationTypes.InvalidConnection,
           `Type ${sourceDataType} does not match type ${targetDataType}`
         )
       );
       return;
     }
 
-    // if (
-    //   source?.startsWith(NodeCategories.Audio) &&
-    //   target?.startsWith(NodeCategories.Audio)
-    // ) {
-    //   console.log('AUDIO NODES CONNECTION');
-    // }
+    const sourceNode = getNode(source) as
+      | FlowNodeT
+      | undefined;
+    const targetNode = getNode(target) as
+      | FlowNodeT
+      | undefined;
 
-    // if (
-    //   sourceHandle?.match(AUDIO_HANDLE_IDENTITY) &&
-    //   targetHandle?.match(AUDIO_HANDLE_IDENTITY)
-    // ) {
-    //   console.log('AUDIO HANDLE CONNECTION');
-    // }
+    if (!sourceNode || !targetNode) {
+      return;
+    }
 
-    connectModules(source, target);
-    setElements((elements) =>
-      addEdge(connectionParams, elements)
-    );
+    if (
+      isAudioNodes(source, target) &&
+      isAudioHandles(sourceHandle, targetHandle)
+    ) {
+      connectAudioNodes(sourceNode, targetNode);
+    }
+
+    setConnection(targetHandle, {
+      sourceHandle,
+      sourceNode,
+      targetHandle,
+      targetNode,
+    });
+
+    [sourceNode, targetNode].forEach((node) => {
+      node.data.methods.updateConnection = () =>
+        setConnection(targetHandle, {
+          sourceHandle,
+          sourceNode,
+          targetHandle,
+          targetNode,
+        });
+    });
+
+    setEdges((edges) => addEdge(connectionParams, edges));
   };
-
-  // const patchNode = (node: Node<any>): Node<any> => ({
-  //   ...node,
-  //   data: {
-  //     //
-  //   },
-  // });
-
-  // const patchEdge = (edge: Edge): Edge => ({
-  //   ...edge,
-  //   type: 'Edge',
-  // }); future patch for custom edge
 
   const addNode = useCallback(
     (type: NodeTypes, category: NodeCategories): void => {
       const id = generateId(category, type);
 
       const position = {
-        x: popperMenuContext.getRect().left,
-        y: popperMenuContext.getRect().top,
+        x: popperMenu.getRect().left,
+        y: popperMenu.getRect().top,
       };
 
-      setElements((elements: Elements) =>
-        elements.concat({
+      setNodes((nodes) =>
+        nodes.concat({
           id,
           type,
           position,
           data: {
-            config: configs[type],
+            value: null,
+            config: nodesConfigs[type],
+            methods: {
+              say: (phrase) => {
+                console.log(`${id} say "${phrase}"`);
+              },
+              setParam: (param, setter) => {
+                tryCatch(
+                  () => setter(param),
+                  (error) =>
+                    notifications.errorHandler(error)
+                );
+              },
+              executeAudioNode:
+                (audioNode: ToneAudioNode) => () => {
+                  if (
+                    !(
+                      'start' in audioNode &&
+                      'stop' in audioNode
+                    )
+                  ) {
+                    return;
+                  }
+
+                  //@ts-ignore
+                  audioNode.start();
+                  return () => {
+                    //@ts-ignore
+                    audioNode.stop();
+                  };
+                },
+            },
           },
         })
       );
 
-      popperMenuContext.hide();
+      popperMenu.hide();
     },
-    [popperMenuContext, setElements]
+    [popperMenu, setNodes]
   );
 
   const onPaneClick = (): void => {
-    popperMenuContext.hide();
+    popperMenu.hide();
   };
 
   const onPaneContextMenu = (
@@ -239,7 +298,7 @@ const Flow: FC = () => {
   ): void => {
     event.preventDefault();
 
-    popperMenuContext.setRect({
+    popperMenu.setRect({
       top: event.clientY,
       left: event.clientX,
       right: 0,
@@ -248,40 +307,37 @@ const Flow: FC = () => {
       height: 0,
     });
 
-    popperMenuContext.show(
-      <ContextMenu addNode={addNode} />
-    );
+    popperMenu.show(<ContextMenu onChooseItem={addNode} />);
   };
 
-  const onLoad: OnLoadFunc = (params) => {
-    const elements = params.getElements();
+  const onInit: OnInitT = (params) => {
+    const nodes = params.getNodes();
+    const edges = params.getEdges();
 
-    const nodes = elements.filter(isNode);
-    const edges = elements.filter(isEdge);
+    const patchedNodes = nodes; // TO nodes.map(patchNode); patch nodes when app is load...
+    const patchedEdges = edges; // DO edges.map(patchEdge); patch edges when app is load...
 
-    const patchedNodes = nodes; // nodes.map(patchNode);
-    const patchedEdges = edges; // edges.map(patchEdge);
-
-    const patchedElements = [
-      patchedNodes,
-      patchedEdges,
-    ].flat();
-
-    setElements(patchedElements);
+    setNodes(patchedNodes as Array<FlowNodeT>);
+    setEdges(patchedEdges as Array<FlowEdgeT>);
   };
 
   return (
     <ReactFlow
-      elements={elements}
-      onElementsRemove={onElementsRemove}
+      nodes={nodes}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      onNodesDelete={onNodesDelete}
+      onEdgesDelete={onEdgesDelete}
       onConnect={onConnect}
-      onLoad={onLoad}
+      onInit={onInit}
       onPaneClick={onPaneClick}
       onPaneContextMenu={onPaneContextMenu}
       nodeTypes={NODE_TYPES}
       edgeTypes={EDGE_TYPES}
-      deleteKeyCode={BACKSPACE_KEYCODE}
       style={{ zIndex: 0 }}
+      // Before the line connect, when dragging
+      // connectionLineStyle={{ strokeWidth: 2 }}
     />
   );
 };

@@ -1,30 +1,46 @@
 import React, { FC, useEffect, useState } from 'react';
+import { useUpdateNodeInternals } from 'react-flow-renderer';
 import b_ from 'b_';
 import './Number.css';
 import { Node } from 'components/Node/Node';
-import { useUpdate } from 'hooks/useUpdate';
-import { useConnection } from 'hooks/useConnection';
-import { NumberInput } from 'components/NumberInput/NumberInput';
 import { NumberNodeT } from './Number.models';
 
-const DEFAULT_VALUE = 0;
+import { NumberInput } from 'components/NumberInput/NumberInput';
+import { ZERO } from 'utils/constants';
+import { flattenProps } from 'utils/flattenProps';
+import { useConnections } from 'store/useConnections';
+import { isNumber } from 'tone';
 
 const b = b_.with('number-node');
 
-const Number: FC<NumberNodeT> = ({ id, data }) => {
-  const { inputs } = data.config;
+const Number: FC<NumberNodeT> = (props) => {
+  const {
+    id,
+    data,
+    methods,
+    config,
+    inputs: { input },
+  } = flattenProps<NumberNodeT>(props);
 
-  const [value, setValue] = useState(DEFAULT_VALUE);
-  useConnection(inputs.numberInput.id, setValue);
+  const { getSourceValue } = useConnections();
 
-  const update = useUpdate(id, value);
+  const [value, setValue] = useState(ZERO);
+  const update = useUpdateNodeInternals();
+
   useEffect(() => {
-    update();
+    data.value = value || ZERO;
+    methods.updateConnection?.();
+    update(id);
   }, [value]);
 
+  const incValue = getSourceValue(input.id);
+  useEffect(() => {
+    setValue(isNumber(incValue) ? incValue : value);
+  }, [incValue]);
+
   return (
-    <Node compact className={b()} {...data.config}>
-      <NumberInput value={value} onChange={(value) => setValue(value)} />
+    <Node compact className={b()} config={config}>
+      <NumberInput value={value} onChange={setValue} />
     </Node>
   );
 };

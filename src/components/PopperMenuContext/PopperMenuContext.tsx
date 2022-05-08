@@ -5,7 +5,7 @@ import { VirtualElement } from '@popperjs/core';
 import {
   PopperMenuContext,
   PopperMenuContextT,
-} from 'context/PopperMenuContext';
+} from 'context/PopperMenu';
 
 import { isNull } from 'utils/isNull';
 

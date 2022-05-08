@@ -1,51 +1,71 @@
 import React, { FC, useEffect, useState } from 'react';
+import { isNumber } from 'tone';
 import b_ from 'b_';
 import './BiquadFilter.css';
 import { Node } from 'components/Node/Node';
 import { BiquadFilterNodeT } from './BiquadFilter.models';
-import { first } from 'utils/first';
-import { useConnection } from 'hooks/useConnection';
-import { Select } from 'components/Select/Select';
 
-const filterTypes: Array<BiquadFilterType> = [
-  'allpass',
-  'bandpass',
-  'highpass',
-  'highshelf',
-  'lowpass',
-  'lowshelf',
-  'notch',
-  'peaking',
-];
+import { useConnections } from 'store/useConnections';
+import { Select } from 'components/Select/Select';
+import { flattenProps } from 'utils/flattenProps';
+import { RAMP_TIME } from 'utils/constants';
 
 const b = b_.with('biquad-filter-node');
 
-const BiquadFilter: FC<BiquadFilterNodeT> = ({ data }) => {
+const BiquadFilter: FC<BiquadFilterNodeT> = (props) => {
   const {
-    inputs: { biquadFilterFrequencyInput, biquadFilterQInput },
-    module,
-  } = data.config;
+    methods,
+    config,
+    audioNode,
+    inputs: { frequency, Q },
+  } = flattenProps<BiquadFilterNodeT>(props);
 
-  const [selectedType, setSelectedType] = useState(first(filterTypes));
+  const { getSourceValue } = useConnections();
+
+  const [type, setType] =
+    useState<BiquadFilterType>('lowpass');
   useEffect(() => {
-    module.type = selectedType;
-  }, [selectedType]);
+    audioNode.type = type;
+  }, [type]);
 
-  useConnection(biquadFilterFrequencyInput.id, (value) => {
-    module.frequency.rampTo(value, 0.2 /* RAMP_TIME */);
-  });
+  const incFreq = getSourceValue(frequency.id);
+  useEffect(() => {
+    methods.setParam(audioNode.frequency, (param) =>
+      param.rampTo(
+        //@ts-ignore
+        isNumber(incFreq) ? incFreq : param.defaultValue,
+        RAMP_TIME
+      )
+    );
+  }, [incFreq]);
 
-  useConnection(biquadFilterQInput.id, (value) => {
-    module.Q.rampTo(value, 0.2 /* RAMP_TIME */);
-  });
+  const incQ = getSourceValue(Q.id);
+  useEffect(() => {
+    methods.setParam(audioNode.Q, (param) =>
+      param.rampTo(
+        //@ts-ignore
+        isNumber(incQ) ? incQ : param.defaultValue,
+        RAMP_TIME
+      )
+    );
+  }, [incFreq]);
 
   return (
-    <Node className={b()} {...data.config}>
+    <Node className={b()} config={config}>
       <Select<BiquadFilterType>
         className={b('select')}
-        options={filterTypes}
-        selected={selectedType}
-        onChange={(type) => setSelectedType(type)}
+        options={[
+          'allpass',
+          'bandpass',
+          'highpass',
+          'highshelf',
+          'lowpass',
+          'lowshelf',
+          'notch',
+          'peaking',
+        ]}
+        selected={type}
+        onChange={(type) => setType(type)}
       />
     </Node>
   );

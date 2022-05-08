@@ -1,44 +1,51 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
-import { getConnectedEdges } from 'react-flow-renderer';
+import React, {
+  FC,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import b_ from 'b_';
 import './Switch.css';
 import { Node } from 'components/Node/Node';
-import { TypeOfData } from 'components/Nodes/models';
-import { useUpdate } from 'hooks/useUpdate';
-import { useNodes } from 'hooks/useNodes';
-import { useEdges } from 'hooks/useEdges';
-import { getNode } from 'utils/getNode';
-import { generateId } from 'utils/generateId';
+import { useInternalUpdate } from 'hooks/useUpdate';
 import { isUndefined } from 'utils/isUndefined';
-import { getEdge } from 'utils/getEdge';
-import { SwitchNodeT } from './Switch.models';
-import { InputT } from 'components/Node/Node.models';
+import { SelectedIdT, SwitchNodeT } from './Switch.models';
 import { useInputsValues } from 'hooks/useInputsValues';
+import { NodeValueT } from 'components/Flow/Flow.models';
+import {
+  createAdditionalInput,
+  createAdditionalInputKey,
+  createSwitchers,
+} from './Switch.utils';
+import { flattenProps } from 'utils/flattenProps';
+import { useConnections } from 'store/useConnections';
+import { isNumber } from 'tone';
+import { useUpdateNodeInternals } from 'react-flow-renderer';
+import { isNull } from 'utils/isNull';
 
 const DEFAULT_SWITCH_QTY = 4;
-const DEFAULT_SELECTED_ID = 0;
 
-const createSwitcher = (id: number, selected: boolean) => ({ id, selected });
-
-const createAdditionalInputKey = (id: number) =>
-  `switchAdditionalInput${id + 1}`;
-
-const createAdditionalInput = (id: number): InputT => ({
-  id: generateId('SWITCH_ADDITIONAL_INPUT'),
-  dataType: TypeOfData.Any,
-  hint: `Switch additional input #${id + 1} | any`,
-});
-
-const AddSwitchButton: FC<{ onClick: () => void }> = ({ onClick }) => (
-  <button className={b('add')} onClick={onClick} children="+" />
-);
-
-const Switcher: FC<{ id: number; selected: boolean; onClick: () => void }> = ({
-  id,
-  selected,
+const AddSwitchButton: FC<{ onClick: () => void }> = ({
   onClick,
 }) => (
-  <button key={id} className={b('switch', { selected })} onClick={onClick}>
+  <button
+    className={b('add')}
+    onClick={onClick}
+    children="+"
+  />
+);
+
+const Switcher: FC<{
+  id: number;
+  selected: boolean;
+  disabled: boolean;
+  onClick: () => void;
+}> = ({ id, selected, disabled, onClick }) => (
+  <button
+    key={id}
+    className={b('switch', { selected, disabled })}
+    onClick={onClick}
+  >
     <div className={b('switch-inner')} />
   </button>
 );
@@ -46,39 +53,38 @@ const Switcher: FC<{ id: number; selected: boolean; onClick: () => void }> = ({
 const b = b_.with('switcher-node');
 
 const Switch: FC<SwitchNodeT> = (props) => {
-  const {
-    id,
-    data: {
-      config: { name, category, inputs, outputs },
-    },
-  } = props;
+  const { id, data, methods, config, name, inputs } =
+    flattenProps<SwitchNodeT>(props);
 
-  const [switchQty, setSwitchQty] = useState(DEFAULT_SWITCH_QTY);
-  const [selectedId, setSelectedId] = useState(DEFAULT_SELECTED_ID);
-  const [outputValue, setOutputValue] = useState();
+  const { getSourceValue } = useConnections();
 
-  const switchersData = useMemo(() => {
-    return new Array(switchQty)
-      .fill(null)
-      .map((_, id) => createSwitcher(id, id === selectedId));
-  }, [switchQty, selectedId]);
+  const [selectedId, setSelectedId] =
+    useState<SelectedIdT>(null);
+
+  const [outputValue, setOutputValue] =
+    useState<NodeValueT>(null);
+
+  const [qty, setQty] = useState(DEFAULT_SWITCH_QTY);
+
+  const switchersData = useMemo(
+    () => createSwitchers(qty, selectedId),
+    [qty, selectedId]
+  );
 
   const additionalInputs = useMemo(() => {
-    if (switchQty <= DEFAULT_SWITCH_QTY) {
+    if (qty <= DEFAULT_SWITCH_QTY) {
       return;
     }
 
-    return {
-      ...Object.fromEntries(
-        new Array(switchQty - DEFAULT_SWITCH_QTY)
-          .fill(null)
-          .map((_, id) => [
-            createAdditionalInputKey(id),
-            createAdditionalInput(id),
-          ])
-      ),
-    };
-  }, [switchQty]);
+    return Object.fromEntries(
+      new Array(qty - DEFAULT_SWITCH_QTY)
+        .fill(null)
+        .map((_, id) => [
+          createAdditionalInputKey(id),
+          createAdditionalInput(id),
+        ])
+    );
+  }, [qty]);
 
   const extendedInputs = isUndefined(additionalInputs)
     ? inputs
@@ -87,26 +93,43 @@ const Switch: FC<SwitchNodeT> = (props) => {
         ...additionalInputs,
       };
 
-  const switcherValues = useInputsValues(extendedInputs);
+  const values = Object.values(extendedInputs).map(
+    (input) => getSourceValue(input.id)
+  );
+  // .filter(isNumber);
 
   useEffect(() => {
-    setOutputValue(switcherValues[selectedId]);
-  }, [switcherValues]);
+    const shouldSetValue =
+      !isNull(selectedId) &&
+      !isNull(values[selectedId]) &&
+      !isUndefined(values[selectedId]);
 
-  const update = useUpdate(id, outputValue);
+    const value = shouldSetValue
+      ? values[selectedId]
+      : null;
+
+    setOutputValue(value);
+  }, [values]);
+
+  const update = useUpdateNodeInternals();
   useEffect(() => {
-    update();
+    data.value = outputValue;
+    methods.updateConnection?.();
+    update(id);
   }, [outputValue]);
+
+  console.log(values);
 
   return (
     <Node
-      name={`${name} ${switchQty}`}
-      category={category}
-      inputs={extendedInputs}
-      outputs={outputs}
+      config={{
+        ...config,
+        name: `${name} ${qty}`,
+        inputs: extendedInputs,
+      }}
     >
       <AddSwitchButton
-        onClick={() => setSwitchQty((switchQty) => switchQty + 1)}
+        onClick={() => setQty((qty) => qty + 1)}
       />
       {/*
         <RemoveSwitchButton
@@ -119,7 +142,10 @@ const Switch: FC<SwitchNodeT> = (props) => {
             key={id}
             id={id}
             selected={selected}
-            onClick={() => setSelectedId(id)}
+            disabled={isNull(values[id])}
+            onClick={() =>
+              !isNull(values[id]) && setSelectedId(id)
+            }
           />
         ))}
       </div>

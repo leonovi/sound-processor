@@ -1,10 +1,20 @@
-import { FlowNodeT, NodeTypes } from 'components/Nodes/models';
-import { configs } from 'data/configs';
+import {
+  FlowNodeT,
+  NodeDataT,
+} from 'components/Flow/Flow.models';
+import { NodeTypes } from 'components/Nodes/models';
+import { nodesConfigs } from 'configs/nodes';
+
+export enum NoiseTypes {
+  White = 'white',
+  Brown = 'brown',
+  Pink = 'pink',
+}
 
 type NoiseNodeOptionsT = {
   type: NodeTypes.Noise;
-  data: {
-    config: typeof configs[NodeTypes.Noise];
+  data: NodeDataT & {
+    config: typeof nodesConfigs[NodeTypes.Noise];
   };
 };
 

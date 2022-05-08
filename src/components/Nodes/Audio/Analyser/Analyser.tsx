@@ -1,48 +1,30 @@
 import React, { FC, useEffect, useRef } from 'react';
 import { Node } from 'components/Node/Node';
+import { flattenProps } from 'utils/flattenProps';
+
 import { AnalyserNodeT } from './Analyser.models';
-import { Colors } from 'style-guide/colors';
+import { drawFrequencyData } from './Analyser.utils';
 
-const DRAW_INTERVAL = 333;
-const CONTEXT_2D = '2d';
+const CANVAS_2D_CONTEXT = '2d';
+const CANVAS_WIDTH = 200;
+const CANVAS_HEIGHT = 64;
+const DRAW_INTERVAL = 100;
 
-function drawFrequencyData(
-  context: CanvasRenderingContext2D,
-  data: Float32Array
-) {
-  const width = context.canvas.width;
-  const height = context.canvas.height;
-  context.clearRect(0, 0, width, height);
-  context.beginPath();
-  for (let i = 0; i < data.length; i++) {
-    const x = i;
-    const y = (0.5 + (data[i] * 0.8) / 2) * height;
-
-    if (i === 0) {
-      context.moveTo(x, y);
-    } else {
-      context.lineTo(x, y);
-    }
-  }
-  context.strokeStyle = Colors.Blue;
-  context.lineWidth = 1;
-  context.stroke();
-}
-
-const Analyser: FC<AnalyserNodeT> = ({ id, data }) => {
-  const { module } = data.config;
+const Analyser: FC<AnalyserNodeT> = (props) => {
+  const { config, audioNode } =
+    flattenProps<AnalyserNodeT>(props);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const draw = () => {
     const canvas = canvasRef.current;
-    const context = canvas?.getContext(CONTEXT_2D);
+    const context = canvas?.getContext(CANVAS_2D_CONTEXT);
     if (!canvas || !context) {
       return;
     }
 
     drawFrequencyData(
       context,
-      module.getValue() as Float32Array
+      audioNode.getValue() as Float32Array
     );
   };
 
@@ -52,8 +34,12 @@ const Analyser: FC<AnalyserNodeT> = ({ id, data }) => {
   }, []);
 
   return (
-    <Node {...data.config}>
-      <canvas ref={canvasRef} width={200} height={64} />
+    <Node config={config}>
+      <canvas
+        ref={canvasRef}
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
+      />
     </Node>
   );
 };

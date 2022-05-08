@@ -1,32 +1,41 @@
 import React, { FC, useEffect, useState } from 'react';
+import { useUpdateNodeInternals } from 'react-flow-renderer';
+import { isNumber } from 'tone';
 import b_ from 'b_';
 import './Metro.css';
 import { Node } from 'components/Node/Node';
-import { NumberInput } from 'components/NumberInput/NumberInput';
-import { useUpdate } from 'hooks/useUpdate';
-import { useConnection } from 'hooks/useConnection';
-import { defer } from 'utils/defer';
 import { MetroNodeT } from './Metro.models';
 
-const DEFAULT_MS = 1000;
+import { NumberInput } from 'components/NumberInput/NumberInput';
+import { useConnections } from 'store/useConnections';
+import { defer } from 'utils/defer';
+import { flattenProps } from 'utils/flattenProps';
+
+const DEFAULT_INTERVAL = 1000;
 
 const b = b_.with('metro-node');
 
 const Metro: FC<MetroNodeT> = (props) => {
   const {
     id,
-    data: {
-      config: { name, category, inputs, outputs },
-    },
-  } = props;
+    data,
+    methods,
+    config,
+    inputs: { ms: msInput },
+  } = flattenProps<MetroNodeT>(props);
 
-  const [ms, setMs] = useState(DEFAULT_MS);
+  const { getSourceValue } = useConnections();
+
+  const [ms, setMs] = useState(DEFAULT_INTERVAL);
 
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const on = () => setShouldUpdate(true);
   const off = () => setShouldUpdate(false);
 
-  useConnection(inputs.metroInputMs.id, setMs);
+  const incMs = getSourceValue(msInput.id);
+  useEffect(() => {
+    setMs(isNumber(incMs) ? incMs : DEFAULT_INTERVAL);
+  }, [incMs]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -36,20 +45,19 @@ const Metro: FC<MetroNodeT> = (props) => {
     return () => clearInterval(intervalId);
   }, [ms]);
 
-  const update = useUpdate(id, shouldUpdate);
+  const update = useUpdateNodeInternals();
   useEffect(() => {
-    update();
+    data.value = shouldUpdate;
+    methods.updateConnection?.();
+    update(id);
   }, [shouldUpdate]);
 
   return (
-    <Node
-      className={b()}
-      name={name}
-      category={category}
-      inputs={inputs}
-      outputs={outputs}
-    >
-      <NumberInput value={ms} onChange={(ms) => setMs(ms)} />
+    <Node className={b()} config={config}>
+      <NumberInput
+        value={ms}
+        onChange={(ms) => setMs(ms)}
+      />
     </Node>
   );
 };

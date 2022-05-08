@@ -1,31 +1,42 @@
-import { FlowNodeT, NodeTypes } from 'components/Nodes/models';
-import { configs } from 'data/configs';
+import {
+  FlowNodeT,
+  NodeDataT,
+} from 'components/Flow/Flow.models';
+import { NodeTypes } from 'components/Nodes/models';
+import { nodesConfigs } from 'configs/nodes';
+
+export enum OscTypes {
+  Sine = 'sine',
+  Triangle = 'triangle',
+  Sawtooth = 'sawtooth',
+  Square = 'square',
+}
 
 type SineNodeOptionsT = {
   type: NodeTypes.Sine;
-  data: {
-    config: typeof configs[NodeTypes.Sine];
+  data: NodeDataT & {
+    config: typeof nodesConfigs[NodeTypes.Sine];
   };
 };
 
 type TriangleNodeOptionsT = {
   type: NodeTypes.Triangle;
-  data: {
-    config: typeof configs[NodeTypes.Triangle];
+  data: NodeDataT & {
+    config: typeof nodesConfigs[NodeTypes.Triangle];
   };
 };
 
 type SawtoothNodeOptionsT = {
   type: NodeTypes.Sawtooth;
-  data: {
-    config: typeof configs[NodeTypes.Sawtooth];
+  data: NodeDataT & {
+    config: typeof nodesConfigs[NodeTypes.Sawtooth];
   };
 };
 
 type SquareNodeOptionsT = {
   type: NodeTypes.Square;
-  data: {
-    config: typeof configs[NodeTypes.Square];
+  data: NodeDataT & {
+    config: typeof nodesConfigs[NodeTypes.Square];
   };
 };
 

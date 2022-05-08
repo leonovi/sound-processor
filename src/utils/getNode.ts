@@ -1,8 +1,8 @@
-import { FlowNodeT, NodeTypes } from 'components/Nodes/models';
+import { FlowNodeT } from 'components/Flow/Flow.models';
 import { find } from './find';
 
 const getNode = (
-  nodes: Array<FlowNodeT<{ type: NodeTypes; data: any }>>,
+  nodes: Array<FlowNodeT>,
   nodeId: string | undefined
 ) => find(nodes, ({ id }) => id === nodeId);
 

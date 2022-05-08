@@ -1,17 +1,18 @@
 .context-menu {
-  list-style: none;
   margin: 0;
   padding: calc(var(--u) * 1.5);
+  list-style: none;
+
   border-radius: calc(var(--u) * 3);
   background: var(--color-white);
   box-shadow: var(--node-box-shadow);
 }
 
 .context-menu_sub {
-  display: none;
   position: absolute;
   top: -6px;
   left: 100%;
+  display: none;
   z-index: 1;
 }
 
@@ -39,8 +40,8 @@
 }
 
 .context-menu__item:hover {
-  background: var(--color-blue);
   color: var(--color-white);
+  background-color: var(--color-blue);
 }
 
 .context-menu__arrow {

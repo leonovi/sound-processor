@@ -1,20 +1,22 @@
 import { useEffect } from 'react';
-import { getConnectedEdges } from 'react-flow-renderer';
-import { useElements } from 'hooks/useElements';
+import { useEdges, useNodes, useReactFlow, useStoreApi } from 'react-flow-renderer';
 import { getEdge } from 'utils/getEdge';
 import { getNode } from 'utils/getNode';
 import { isUndefined } from 'utils/isUndefined';
+import { FlowNodeT } from 'components/Flow/Flow.models';
 
 export const useConnection = (
   inputId: string,
   callback: (value: any) => void
 ) => {
-  const { nodes, edges } = useElements();
+  const nodes = useNodes() as Array<FlowNodeT>;
+  const edges = useEdges();
 
-  const connectedEdges = getConnectedEdges(nodes, edges);
-
-  const connectedEdge = getEdge(connectedEdges, inputId);
-  const connectedNode = getNode(nodes, connectedEdge?.source);
+  const connectedEdge = getEdge(edges, inputId);
+  const connectedNode = getNode(
+    nodes,
+    connectedEdge?.source
+  );
 
   useEffect(() => {
     if (isUndefined(connectedNode)) {
@@ -23,5 +25,29 @@ export const useConnection = (
 
     const { data } = connectedNode;
     callback(data.value);
-  }, [connectedNode]);
+  }, [connectedNode?.id]);
+};
+
+export const useConnection2 = (
+  inputId: string,
+  callback: (value: any) => void
+) => {
+  const { getState } = useStoreApi()
+  const nodes = useNodes();
+
+
+  // const connectedEdge = getEdge(, inputId);
+  // const connectedNode = getNode(
+  //   ,
+  //   connectedEdge?.source
+  // );
+
+  // useEffect(() => {
+  //   if (isUndefined(connectedNode)) {
+  //     return;
+  //   }
+
+  //   const { data } = connectedNode;
+  //   callback(data.value);
+  // }, [connectedNode?.data.value]);
 };

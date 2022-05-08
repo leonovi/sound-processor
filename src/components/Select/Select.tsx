@@ -22,10 +22,17 @@ const Select = <T extends string>({
   return (
     <select
       className={cn(b(), className)}
-      onChange={(event) => onChange(event.target.value as T)}
+      value={selected}
+      onChange={(event) => {
+        onChange(event.target.value as T);
+      }}
     >
       {options.map((option) => (
-        <option className={b('option')} value={option} selected={option === selected}>
+        <option
+          key={option}
+          className={b('option')}
+          value={option}
+        >
           {capitalize(option)}
         </option>
       ))}

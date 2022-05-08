@@ -31,6 +31,11 @@
   background-color: var(--color-blue);
 }
 
+.switcher-node__switch_disabled {
+  transform: scale(0.8);
+  transform-origin: center;
+}
+
 .switcher-node__add {
   align-self: flex-start;
 
