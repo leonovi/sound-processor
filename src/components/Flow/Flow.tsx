@@ -20,12 +20,12 @@ import {
 
 import { usePopperMenu } from 'context/PopperMenu';
 
-import { useConnections } from 'store/useConnections';
+import { useConnections } from 'store/connections';
 import {
   createNotification,
-  NotificationTypes,
   useNotifications,
-} from 'store/useNotifications';
+} from 'store/notifications';
+import { NotificationTypes } from 'store/notifications/models';
 
 import { EMPTY_ARRAY } from 'utils/constants';
 import { generateId } from 'utils/generateId';

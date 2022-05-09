@@ -7,7 +7,7 @@ import { Node } from 'components/Node/Node';
 import { MetroNodeT } from './Metro.models';
 
 import { NumberInput } from 'components/NumberInput/NumberInput';
-import { useConnections } from 'store/useConnections';
+import { useConnections } from 'store/connections';
 import { defer } from 'utils/defer';
 import { flattenProps } from 'utils/flattenProps';
 

@@ -5,7 +5,7 @@ import './BiquadFilter.css';
 import { Node } from 'components/Node/Node';
 import { BiquadFilterNodeT } from './BiquadFilter.models';
 
-import { useConnections } from 'store/useConnections';
+import { useConnections } from 'store/connections';
 import { Select } from 'components/Select/Select';
 import { flattenProps } from 'utils/flattenProps';
 import { RAMP_TIME } from 'utils/constants';

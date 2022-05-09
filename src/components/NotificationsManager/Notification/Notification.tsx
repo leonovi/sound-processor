@@ -2,11 +2,11 @@ import React, { FC, useEffect, useState } from 'react';
 import { Transition } from 'react-transition-group';
 import b_ from 'b_';
 import './Notification.css';
+import { useNotifications } from 'store/notifications';
 import {
   NotificationT,
   NotificationTypes,
-  useNotifications,
-} from 'store/useNotifications';
+} from 'store/notifications/models';
 
 const TRANSITION_TIMEOUT = 200; // CSS animation duration
 const NOTIFICATION_LIFETIME = 3000;

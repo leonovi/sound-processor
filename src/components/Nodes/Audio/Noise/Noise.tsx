@@ -6,7 +6,7 @@ import './Noise.css';
 import { Node } from 'components/Node/Node';
 import { NoiseNodeT, NoiseTypes } from './Noise.models';
 
-import { useConnections } from 'store/useConnections';
+import { useConnections } from 'store/connections';
 import { Select } from 'components/Select/Select';
 import { flattenProps } from 'utils/flattenProps';
 

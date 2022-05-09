@@ -17,7 +17,7 @@ import { getOscIcon } from './Oscillator.utils';
 import { createNodeClass } from 'utils/createNodeClass';
 import { RAMP_TIME } from 'utils/constants';
 import { flattenProps } from 'utils/flattenProps';
-import { useConnections } from 'store/useConnections';
+import { useConnections } from 'store/connections';
 
 const b = b_.with('oscillator-node');
 

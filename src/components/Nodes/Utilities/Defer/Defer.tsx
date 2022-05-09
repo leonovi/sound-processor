@@ -6,7 +6,7 @@ import './Defer.css';
 import { Node } from 'components/Node/Node';
 import { DeferNodeT } from './Defer.models';
 
-import { useConnections } from 'store/useConnections';
+import { useConnections } from 'store/connections';
 import { Colors } from 'style-guide/colors';
 import { flattenProps } from 'utils/flattenProps';
 

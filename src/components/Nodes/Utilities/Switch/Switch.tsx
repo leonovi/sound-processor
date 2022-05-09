@@ -18,7 +18,7 @@ import {
   createSwitchers,
 } from './Switch.utils';
 import { flattenProps } from 'utils/flattenProps';
-import { useConnections } from 'store/useConnections';
+import { useConnections } from 'store/connections';
 import { isNumber } from 'tone';
 import { useUpdateNodeInternals } from 'react-flow-renderer';
 import { isNull } from 'utils/isNull';

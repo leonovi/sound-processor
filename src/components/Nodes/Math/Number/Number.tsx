@@ -8,7 +8,7 @@ import { NumberNodeT } from './Number.models';
 import { NumberInput } from 'components/NumberInput/NumberInput';
 import { ZERO } from 'utils/constants';
 import { flattenProps } from 'utils/flattenProps';
-import { useConnections } from 'store/useConnections';
+import { useConnections } from 'store/connections';
 import { isNumber } from 'tone';
 
 const b = b_.with('number-node');

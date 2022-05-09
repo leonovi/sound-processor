@@ -28,7 +28,7 @@ import {
 import { NodeValueT } from 'components/Flow/Flow.models';
 import { flattenProps } from 'utils/flattenProps';
 import { useUpdateNodeInternals } from 'react-flow-renderer';
-import { useConnections } from 'store/useConnections';
+import { useConnections } from 'store/connections';
 import { isNull } from 'utils/isNull';
 import { isNumber } from 'tone';
 

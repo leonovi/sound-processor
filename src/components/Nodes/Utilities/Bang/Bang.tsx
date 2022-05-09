@@ -4,7 +4,7 @@ import './Bang.css';
 import { Node } from 'components/Node/Node';
 import { BangNodeT } from './Bang.models';
 import { flattenProps } from 'utils/flattenProps';
-import { useConnections } from 'store/useConnections';
+import { useConnections } from 'store/connections';
 import { useUpdateNodeInternals } from 'react-flow-renderer';
 
 const OFF_TIMEOUT_MS = 100;

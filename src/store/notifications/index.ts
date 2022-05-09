@@ -1,23 +1,10 @@
 import { generateId } from 'utils/generateId';
 import create, { StateCreator } from 'zustand';
-
-export enum NotificationTypes {
-  InvalidConnection = 'Invalid connection',
-  RangeError = 'Range error',
-}
-
-export type NotificationT = {
-  id: string;
-  type: NotificationTypes;
-  message: string;
-};
-
-export type NotificationsStoreT = {
-  notifications: Array<NotificationT>;
-  add: (notification: NotificationT) => void;
-  remove: (id: string) => void;
-  errorHandler: (error: unknown) => void;
-};
+import {
+  NotificationsStoreT,
+  NotificationT,
+  NotificationTypes,
+} from './models';
 
 export const createNotification = (
   type: NotificationTypes,

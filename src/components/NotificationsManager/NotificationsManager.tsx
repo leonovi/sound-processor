@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import b_ from 'b_';
 import './NotificationsManager.css';
 import { Notification } from './Notification/Notification';
-import { useNotifications } from 'store/useNotifications';
+import { useNotifications } from 'store/notifications';
 
 const b = b_.with('notifications-manager');
 
