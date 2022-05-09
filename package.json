@@ -1,0 +1,11 @@
+{
+  "name": "sound-processor",
+  "scripts": {
+    "start": "concurrently \"cd ./client && npm start\" \"cd ./server && npm start\""
+  },
+  "author": "I. Leonov",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^7.1.0"
+  }
+}

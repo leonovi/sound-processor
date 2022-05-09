@@ -1,23 +1,11 @@
 {
-  "name": "sound-processor",
-  "version": "0.0.0",
-  "description": "",
+  "name": "client",
   "scripts": {
     "tsc": "tsc --noEmit",
     "start": "webpack serve --config webpack.config.ts",
     "build": "webpack --config webpack.config.ts",
     "bundle-analyzer": "export BUNDLE_ANALYZER=true && npm run build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/leonovi/sound-processor.git"
-  },
-  "author": "I. Leonov",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/leonovi/sound-processor/issues"
-  },
-  "homepage": "https://github.com/leonovi/sound-processor#readme",
   "devDependencies": {
     "@svgr/webpack": "6.2.1",
     "@types/b_": "1.3.2",
