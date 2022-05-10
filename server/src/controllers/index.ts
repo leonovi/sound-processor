@@ -1,9 +1,8 @@
 import express from 'express';
+import authController from './auth';
 
 const router = express.Router();
 
-router.get('/ping', (_, response) => {
-  response.json({ message: 'pong' });
-});
+router.use('/auth', authController);
 
 export default router;
